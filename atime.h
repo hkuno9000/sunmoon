@@ -92,7 +92,7 @@ class AstroTime {
 
 protected:
 	//----- •b‚ª“ú‚ğ‰z‚¦‚È‚¢‚æ‚¤‚É‚·‚é -------------------------------
-	void ajust();
+	void adjust();
 
 	//----- ŠeŒn‚Ì“ú‚Ì•b” ---------------------------------------
 	// UT1[•b]         ¦³Œß‚ğ0‚Æ‚·‚é
@@ -132,7 +132,7 @@ public:
 	// ¦dut1‚ÆleapSec‚Í•ÏX‚µ‚È‚¢
 	//   Œµ–§‚ÈŒvZ‚Ì‚½‚ß‚É‚ÍAsetDUT1(),setLeapSec()‚Åİ’è‚·‚é‚±‚ÆB
 	void set(const Jday& jday, double utc = 0) {
-		d = jday; s = utc - 12*3600L; ajust();
+		d = jday; s = utc - 12*3600L; adjust();
 	}
 
 	void get(Jday& jday, double& utc) const {
@@ -162,10 +162,10 @@ public:
 
 
 	//----- “ú‚Æ•b‚Ì‰ÁŒ¸Z -------------------------------------------
-	void addSec(double n) { s += n; ajust(); }
-	void addDay(long n)   { d += n; ajust(); }
-	void subSec(double n) { s -= n; ajust(); }
-	void subDay(long n)   { d -= n; ajust(); }
+	void addSec(double n) { s += n; adjust(); }
+	void addDay(long n)   { d += n; adjust(); }
+	void subSec(double n) { s -= n; adjust(); }
+	void subDay(long n)   { d -= n; adjust(); }
 
 	//----- ŠÖŒW‰‰Z -------------------------------------------------
 	bool operator==(const AstroTime& a) const { return d == a.d && s == a.s; }

@@ -39,14 +39,14 @@ AstroTime::AstroTime()
 AstroTime::AstroTime(const Jday& jday, double utc)
 	: d(jday), s(utc - 12*3600L), dut1(0), leapSec(initLeapSec)
 {
-	ajust();
+	adjust();
 }
 
 
 //----- “ú•t‚Æ‚Ì’²® -------------------------------------------------
-//. AstroTime::ajust - •b‚ª“ú‚ğ‰z‚¦‚È‚¢‚æ‚¤‚É‚·‚é
+//. AstroTime::adjust - •b‚ª“ú‚ğ‰z‚¦‚È‚¢‚æ‚¤‚É‚·‚é
 void
-AstroTime::ajust()
+AstroTime::adjust()
 {
 	while (s >= 86400.0)
 		d += 1, s -= 86400.0;
@@ -64,7 +64,7 @@ AstroTime::update()
 	d.setGdate(t.tm_year + 1900, t.tm_mon + 1, t.tm_mday);
 	s = hms2hs(t.tm_hour, t.tm_min, t.tm_sec)
 		- 12 * 3600.0; // ¢ŠE³Œß‚ª0‚É‚È‚é‚æ‚¤‚É•â³‚·‚é
-	ajust();
+	adjust();
 }
 
 //. AstroTime::updateSystemTime - Œ»İ(ƒ~ƒŠ•b’PˆÊ)‚ÉXV‚·‚é
@@ -77,14 +77,14 @@ AstroTime::updateSystemTime()
 	d.setGdate(t.wYear, t.wMonth, t.wDay);
 	s = hms2hs(t.wHour, t.wMinute, t.wSecond + t.wMilliseconds / 1000.0)
 		- 12 * 3600.0; // ¢ŠE³Œß‚ª0‚É‚È‚é‚æ‚¤‚É•â³‚·‚é
-	ajust();
+	adjust();
 #elif defined(BSD) || defined(__APPLE__) || defined(__CYGWIN__)
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
 	d.setGdate(1970, 1, 1);
 	d += (tv.tv_sec / 86400);
 	s =  (tv.tv_sec % 86400) + (tv.tv_usec / 1e6) - 12 * 3600;
-	ajust();
+	adjust();
 #else
 #error implements to your OS
 #endif
