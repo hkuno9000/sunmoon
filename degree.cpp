@@ -83,8 +83,8 @@ void sec2ims(double sec, char& sign, int&i, int& m, double& s)
 {
 	sign = (sec < 0) ? '-' : '+';
 	double f = fabs(sec);
-	i = floor(f / 3600); f = f - i * 3600.0;
-	m = floor(f / 60  ); s = f - m * 60;
+	i = (int)floor(f / 3600); f = f - i * 3600.0;
+	m = (int)floor(f / 60  ); s = f - m * 60;
 }
 
 void min2im(double min, char& sign, double&i, double& m)
@@ -98,7 +98,7 @@ void min2im(double min, char& sign, int&i, double& m)
 {
 	sign = (min < 0) ? '-' : '+';
 	double f = fabs(min);
-	i = floor(f / 60); m = f - i * 60;
+	i = (int)floor(f / 60); m = f - i * 60;
 }
 
 //------------------------------------------------------------------------

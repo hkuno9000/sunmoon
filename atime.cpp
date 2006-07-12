@@ -7,6 +7,8 @@
 #include "atime.h"
 #if defined(WIN32)
 #include <windows.h>
+#elif defined(BSD) || defined(__APPLE__) || defined(__CYGWIN__)
+#include <sys/time.h>
 #endif
 using namespace std;
 using namespace util;
@@ -76,6 +78,13 @@ AstroTime::updateSystemTime()
 	s = hms2hs(t.wHour, t.wMinute, t.wSecond + t.wMilliseconds / 1000.0)
 		- 12 * 3600.0; // 世界時正午が0になるように補正する
 	ajust();
+#elif defined(BSD) || defined(__APPLE__) || defined(__CYGWIN__)
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	d.setGdate(1970, 1, 1);
+	d += (tv.tv_sec / 86400);
+	s =  (tv.tv_sec % 86400) + (tv.tv_usec / 1e6) - 12 * 3600;
+	ajust();
 #else
 #error implements to your OS
 #endif
@@ -113,13 +122,18 @@ using namespace util;
 using namespace astro;
 int main(int argc, char** argv)
 {
-	if (argc == 2 && strcmp(argv[1], "self") == 0) {
-		// ソース中のテストパターンで自己テストする
-		system("perl -n -e \"print if /^1997/../^1978/;\" atime.cpp >$in");
-		system("atime <$in >$out");
-		system("fc $in $out");
+	if (argc == 2 && strcmp(argv[1], "update") == 0) {
+		// 現在時間更新.
+		int y, m, d; double utc;
+		AstroTime at;
+		at.get(y, m, d, utc);
+		printf("%04d.%02d.%02d %5.8g\n", y, m, d, utc);
+		at.updateSystemTime();
+		at.get(y, m, d, utc);
+		printf("%04d.%02d.%02d %5.8g\n", y, m, d, utc);
 		return EXIT_SUCCESS;
 	}
+
 	Jday dd(0);
 	char buf[256];
 	int y, m=1, d=0, sec=0;

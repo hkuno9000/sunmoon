@@ -504,19 +504,14 @@ AstroCoordinate::setLocation(const Degree& longitude, const Degree& latitude, do
 #ifdef TEST
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef WIN32
 #include <windows.h>
+#endif
 using namespace std;
 using namespace util;
 using namespace astro;
 int main(int argc, char** argv)
 {
-	if (argc == 2 && strcmp(argv[1], "self") == 0) {
-		// ソース中のテストパターンで自己テストする
-		system("perl -n -e \"print if /^1996/../^1997.11/;\" acoord.cpp >$in");
-		system("acoord <$in >$out");
-		system("fc $in $out");
-		return EXIT_SUCCESS;
-	}
 	if (argc == 2 && strcmp(argv[1], "ref") == 0) {
 		// 大気差テスト
 		AstroCoordinate ac;
@@ -574,7 +569,7 @@ int main(int argc, char** argv)
 	char buf[256];
 	int y, m, d=1; double utc;
 	AstroCoordinate ac;
-#if 1
+#ifdef WIN32
 	long t0 = GetTickCount();
 	int i;
 	for (i = 0; i < 10000; ++i)

@@ -177,13 +177,6 @@ using namespace std;
 using namespace astro;
 int main(int argc, char** argv)
 {
-	if (argc == 2 && strcmp(argv[1], "self") == 0) {
-		// ソース中のテストパターンで自己テストする
-		system("perl -n -e \"print if /^j/,/^g2000/;\" jday.cpp >$in");
-		system("jday <$in >$out");
-		system("fc $in $out");
-		return EXIT_SUCCESS;
-	}
 	static char* name[] = {"Sun", "Mon", "Tue", "Wed", "Thr", "Fri", "Sat", "?"};
 	char buf[100];
 	int y, m, d, gy, gm, gd, gw, jy, jm, jd, jw;
