@@ -1,10 +1,10 @@
 # Makefile
-# $Id: GNUmakefile,v 1.1 2006-07-12 10:00:13 hkuno Exp $
+# $Id: GNUmakefile,v 1.2 2006-07-12 10:17:00 hkuno Exp $
 #----- rules -------------------------------------------------------------
 TARGET=sunmoon.out
 CFLAGS=-Wall
 .cpp.out:
-	$(CXX) $(CFLAGS) -DTEST -o$@ $< astro.a
+	$(CXX) $(CFLAGS) -DTEST -o $@ $< astro.a
 
 #----- objects and sources -----------------------------------------------
 SRC=vec3.cpp degree.cpp jday.cpp \
