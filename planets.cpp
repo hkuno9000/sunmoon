@@ -2,15 +2,14 @@
 //	Copyright (C) 1997,1998,1999,2000 hkuno
 //	mailto:hkuno.kuno@nifty.ne.jp
 
-#include "planets.h"
 #include <cmath>
 #include "acoord.h"
-
+#include "planets.h"
 using namespace std;
 using namespace util;
 using namespace astro;
-
 namespace astro {
+
 //------------------------------------------------------------------------
 //.----- class PlanetData : 惑星位置計算用のデータ項目 -------------------
 //------------------------------------------------------------------------
@@ -26,7 +25,6 @@ struct PlanetData {
         return x;
     }
 };//endclass PlanetData
-};//endnamespace astro
 
 //----- 太陽 SUN
 const PlanetData
@@ -794,6 +792,7 @@ Planets::calc_sun(double T, Degree& l, double& r)
 	r = SUMR(sunR);
 }
 
+}//.endnamespace astro
 //------------------------------------------------------------------------
 #ifdef TEST
 int main()

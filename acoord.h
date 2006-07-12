@@ -8,7 +8,8 @@
 #include "vec3.h"
 
 namespace astro {
-	using namespace util;
+using namespace std;
+using namespace util;
 
 //------------------------------------------------------------------------
 //.----- class AstroCoordinate : ìVï∂ç¿ïWån ------------------------------

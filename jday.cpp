@@ -3,8 +3,9 @@
 //	mailto:hkuno.kuno@nifty.ne.jp
 #include <cstdlib>
 #include "jday.h"
-using namespace astro;
 using namespace std;
+using namespace astro;
+namespace astro {
 
 //------------------------------------------------------------------------
 //.----- class Jday : ユリウス日(暦日) -----------------------------------
@@ -125,7 +126,7 @@ Jday::getJdate(int& year, int& month, int& day, int& day_of_week) const
 //. 年月日と曜日 (グレゴリオ暦)
 //	計算結果をキャッシュしておき、同じ日付なら再計算を省くことで
 //	高速化をはかっている
-THREAD static class {
+static class jday_cache {
 	long jd;
 	int y, m, d, w;
 	void update(const Jday& j) {
@@ -166,16 +167,19 @@ Jday::dayOfWeek() const
 	return w;
 }
 
+}//.endnamespace astro
 //------------------------------------------------------------------------
 #ifdef TEST
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+using namespace std;
+using namespace astro;
 int main(int argc, char** argv)
 {
 	if (argc == 2 && strcmp(argv[1], "self") == 0) {
 		// ソース中のテストパターンで自己テストする
-		system("sed /^j/,/^g2000/!d jday.cpp >$in");
+		system("perl -n -e \"print if /^j/,/^g2000/;\" jday.cpp >$in");
 		system("jday <$in >$out");
 		system("fc $in $out");
 		return EXIT_SUCCESS;

@@ -1,10 +1,10 @@
 //. vec3.cpp - 3D vector
 //	Copyright (C) 1997,1998 hkuno
 //	mailto:hkuno.kuno@nifty.ne.jp
-#include "degree.h"
 #include "vec3.h"
-using namespace util;
+#include "degree.h"
 
+namespace util {
 //------------------------------------------------------------------------
 //.----- class Mat3x3 ----------------------------------------------------
 //------------------------------------------------------------------------
@@ -127,7 +127,7 @@ Vec3::setDirectionCosines()
 double
 Vec3::radius() const
 {
-	return std::sqrt(square());
+	return ::sqrt(square());
 }
 
 //. Vec3::getPolar - ‹ÉÀ•W‚ğ“¾‚é
@@ -141,7 +141,7 @@ Vec3::getPolar(Degree& phi, Degree& theta) const
 	theta.setArcTan2(y, x); // -180‹`+180‹
 
 	// “V’¸ŠpƒÓ‚ğ“¾‚é
-	phi.setArcTan2(std::sqrt(x * x + y * y), z);
+	phi.setArcTan2(::sqrt(x * x + y * y), z);
 
 	// ’·‚³‚ğŒvZ‚·‚é
 	return radius();
@@ -158,7 +158,7 @@ Vec3::getLtLg(Degree& latitude, Degree& longitude) const
 	longitude.setArcTan2(y, x); // -180‹`+180‹
 
 	// ˆÜ“x(==90‹- “V’¸ŠpƒÓ)‚ğ“¾‚é
-	latitude.setArcTan2(z, std::sqrt(x * x + y * y));
+	latitude.setArcTan2(z, ::sqrt(x * x + y * y));
 
 	// ’·‚³‚ğŒvZ‚·‚é
 	return radius();
@@ -190,4 +190,5 @@ Vec3::setLtLg(double radius, const Degree& latitude, const Degree& longitude)
 	z = radius * sin(latitude);
 }
 
+}//.endnamespace util
 //. vec3.cpp - end

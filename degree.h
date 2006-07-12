@@ -3,6 +3,7 @@
 //	mailto:hkuno.kuno@nifty.ne.jp
 #ifndef DEGREE_H_
 #define DEGREE_H_
+#include <iostream>
 #include <cmath>
 #include "defs.h"
 
@@ -213,8 +214,8 @@ public:
 	bool operator>=(const Degree& a) const { return ds >= a.ds; }
 
 	//----- 正負判定 -------------------------------------------------
-	// 0以上の判定は !isMinus()で可能
-	// 0以下の判定は !isPlus()で可能
+	// 0以上の判定は !isMinus()で可能.
+	// 0以下の判定は !isPlus()で可能.
 	bool isZero() const  { return ds == 0; }
 	bool isPlus() const  { return ds > 0; } // 0より大
 	bool isMinus() const { return ds < 0; } // 0より小
@@ -344,9 +345,9 @@ public:
 	static Degree parseHms(const char* p);
 
 	//----- 三角関数 -------------------------------------------------
-	friend double sin(const Degree& a)   { return sin(a.radian()); }
-	friend double cos(const Degree& a)   { return cos(a.radian()); }
-	friend double tan(const Degree& a)   { return tan(a.radian()); }
+	friend double sin(const Degree& a)   { return ::sin(a.radian()); }
+	friend double cos(const Degree& a)   { return ::cos(a.radian()); }
+	friend double tan(const Degree& a)   { return ::tan(a.radian()); }
 	void setArcSin(double x)             { setRadian(asin(x)); }
 	void setArcCos(double x)             { setRadian(acos(x)); }
 	void setArcTan(double x)             { setRadian(atan(x)); }

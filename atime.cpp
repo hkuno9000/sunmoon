@@ -2,13 +2,16 @@
 //	Copyright (C) 1997,1998 hkuno
 //	mailto:hkuno.kuno@nifty.ne.jp
 #include <ctime>
+#include "jday.h"
+#include "degree.h"	//!@bug VC6 bug? 直前に"namespace astro {}"を置くと degree.hの ostream参照でコンパイルエラーとなる.
 #include "atime.h"
-#include "degree.h"
 #if defined(WIN32)
 #include <windows.h>
 #endif
+using namespace std;
 using namespace util;
 using namespace astro;
+namespace astro {
 
 //------------------------------------------------------------------------
 //.----- class AstroTime : 天文時刻 --------------------------------------
@@ -101,14 +104,18 @@ AstroTime::gmst() const
 	return hs2mod1(ut1() + am); // ut1() = UT1 - 12h
 }
 
+}//.endnamespace astro
 //------------------------------------------------------------------------
 #ifdef TEST
 #include <stdio.h>
+using namespace std;
+using namespace util;
+using namespace astro;
 int main(int argc, char** argv)
 {
 	if (argc == 2 && strcmp(argv[1], "self") == 0) {
 		// ソース中のテストパターンで自己テストする
-		system("sed /^1997/,/^1978/!d atime.cpp >$in");
+		system("perl -n -e \"print if /^1997/../^1978/;\" atime.cpp >$in");
 		system("atime <$in >$out");
 		system("fc $in $out");
 		return EXIT_SUCCESS;
@@ -124,7 +131,7 @@ int main(int argc, char** argv)
 		AstroTime at(dd, sec);
 		double gmst = at.gmst();
 		char c; int hh, mm; double ss;
-		f2ims(gmst/3600, c, hh, mm, ss);
+		sec2ims(gmst, c, hh, mm, ss);
 		printf("%4d.%02d.%02d.%05d, jd:%10.8g, gmst:%10.8g (%02dh %02dm %.3fs)\n",
 			y, m, d, sec, at.jd(), gmst, hh, mm, ss);
 	}

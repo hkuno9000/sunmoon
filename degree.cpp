@@ -2,13 +2,15 @@
 //	Copyright (C) 1997,1998,1999,2000 hkuno
 //	mailto:hkuno.kuno@nifty.ne.jp
 #include <iostream>
+#include <cstdio>
 #include "degree.h"
+using namespace std;
 using namespace util;
+namespace util {
 
 //------------------------------------------------------------------------
 //.----- 定数 PI (π) ----------------------------------------------------
 //------------------------------------------------------------------------
-namespace util {
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
@@ -21,7 +23,6 @@ extern const double RAD2DD = 180 / M_PI;
 extern const double RAD2HH = 12  / M_PI;
 extern const double RAD2DS = (180*3600L) / M_PI;
 extern const double RAD2HS = ( 12*3600L) / M_PI;
-}//endnamespace util
 
 //------------------------------------------------------------------------
 //.----- fmod1, fmod2 : 丸め変換 -----------------------------------------
@@ -30,8 +31,7 @@ extern const double RAD2HS = ( 12*3600L) / M_PI;
 //. fmod2(x, r) - x を r で剰余を得て [-r/2...r/2) の範囲に丸める
 //	※rは正の数であること
 
-double
-util::fmod1(double x, double r)
+double fmod1(double x, double r)
 {
 	// m = fmod(x, r) にて mの符号はxと同じ
 	if ((x = fmod(x, r)) < 0)
@@ -39,8 +39,7 @@ util::fmod1(double x, double r)
 	return x;
 }
 
-double
-util::fmod2(double x, double r)
+double fmod2(double x, double r)
 {
 	// m = fmod(x, r) にて mの符号はxと同じ
 	if ((x = fmod(x, r)) < 0)
@@ -55,16 +54,14 @@ util::fmod2(double x, double r)
 //------------------------------------------------------------------------
 //. round(x) - 小数点第一位で四捨五入する
 //. round(x, point) - 小数部point-1桁を四捨五入し、小数部をpoint桁に丸める
-double
-util::round(double x)
+double round(double x)
 {
 	return (x < 0) ? ceil(x - 0.5) : floor(x + 0.5);
 }
 
-double
-util::round(double x, int point)
+double round(double x, int point)
 {
-	double base = pow(10, point);
+	double base = ::pow(10, point);
 	return round(x * base) / base;
 }
 
@@ -74,8 +71,7 @@ util::round(double x, int point)
 //. sec2ims(sec, sign, i, m, s) - 秒(sec)の値を符号、度分秒(i,m,s)に分ける
 //. min2im(min, sign, i, m)     - 分(min)の値を符号、度分(i,m)に分ける
 //	※符号は０以上を '+' とする
-void
-util::sec2ims(double sec, char& sign, double&i, double& m, double& s)
+void sec2ims(double sec, char& sign, double&i, double& m, double& s)
 {
 	sign = (sec < 0) ? '-' : '+';
 	double f = fabs(sec);
@@ -83,8 +79,7 @@ util::sec2ims(double sec, char& sign, double&i, double& m, double& s)
 	m = floor(f / 60  ); s = f - m * 60;
 }
 
-void
-util::sec2ims(double sec, char& sign, int&i, int& m, double& s)
+void sec2ims(double sec, char& sign, int&i, int& m, double& s)
 {
 	sign = (sec < 0) ? '-' : '+';
 	double f = fabs(sec);
@@ -92,16 +87,14 @@ util::sec2ims(double sec, char& sign, int&i, int& m, double& s)
 	m = floor(f / 60  ); s = f - m * 60;
 }
 
-void
-util::min2im(double min, char& sign, double&i, double& m)
+void min2im(double min, char& sign, double&i, double& m)
 {
 	sign = (min < 0) ? '-' : '+';
 	double f = fabs(min);
 	i = floor(f / 60); m = f - i * 60;
 }
 
-void
-util::min2im(double min, char& sign, int&i, double& m)
+void min2im(double min, char& sign, int&i, double& m)
 {
 	sign = (min < 0) ? '-' : '+';
 	double f = fabs(min);
@@ -155,7 +148,7 @@ Degree::sprintDms(char* buf, const char* fmt, int point) const
 	w.getDms(sign, d, m, s, point);
 	if (d == 0 && m == 0 && s == 0) sign = ' '; // ゼロのときは符号なし
 	if (!fmt) fmt = "%c%02dd %02dm %02.0fs";
-	return std::sprintf(buf, fmt, sign, d, m, s);
+	return ::sprintf(buf, fmt, sign, d, m, s);
 }
 
 int
@@ -169,7 +162,7 @@ Degree::sprintDm(char* buf, const char* fmt, int point) const
 	w.getDm(sign, d, m, point);
 	if (d == 0 && m == 0) sign = ' '; // ゼロのときは符号なし
 	if (!fmt) fmt = "%c%02dd %04.1fm";
-	return std::sprintf(buf, fmt, sign, d, m);
+	return ::sprintf(buf, fmt, sign, d, m);
 }
 
 int
@@ -182,7 +175,7 @@ Degree::sprintHms(char* buf, const char* fmt, int point) const
 	w.mod360();
 	w.getHms(c, h, m, s, point);
 	if (!fmt) fmt = "%02dh %02dm %02.0fs";
-	return std::sprintf(buf, fmt, h, m, s);
+	return ::sprintf(buf, fmt, h, m, s);
 }
 
 int
@@ -195,7 +188,7 @@ Degree::sprintHm(char* buf, const char* fmt, int point) const
 	w.mod360();
 	w.getHm(c, h, m, point);
 	if (!fmt) fmt = "%02dh %04.1fm";
-	return std::sprintf(buf, fmt, h, m);
+	return ::sprintf(buf, fmt, h, m);
 }
 
 //----- 文字列解析 -------------------------------------------------------
@@ -290,4 +283,5 @@ Degree::parseHms(const char* p)
 	return deg;
 }
 
+}//endnamespace util
 //. degree.cpp - end.

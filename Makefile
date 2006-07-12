@@ -1,70 +1,45 @@
 # Makefile
-#	Copyright (C) 1997,1998 hkuno
-#	mailto:hkuno.kuno@nifty.ne.jp
+# $Id: Makefile,v 1.2 2006-07-12 07:57:24 hkuno Exp $
 #----- rules -------------------------------------------------------------
-!ifdef MSVCDIR
-## Visual C++ 5.0
-MYLIB=mylibvc.lib
-CC = cl
-AR = lib
-CFLAGS = -W3 -O1
+RM=del
+TARGET=sunmoon.exe
+CFLAGS=-W3 -MD -GX -O1
 .cpp.obj:
-	$(CC) $(CFLAGS) -c $<
-.cpp.asm:
-	$(CC) $(CFLAGS) -Fa $<
-.cpp.cod:
-	$(CC) $(CFLAGS) -Fc $<
+	cl $(CFLAGS) -c $<
 .cpp.exe:
-	$(CC) $(CFLAGS) -DTEST $< $(MYLIB)
-!else
-## C++Builder
-MYLIB=mylibbc.lib
-CC = bcc32
-AR = tlib
-CFLAGS = -w -O1
-.cpp.obj:
-	$(CC) $(CFLAGS) -c { $< }
-.cpp.asm:
-	$(CC) $(CFLAGS) -S $<
-.cpp.exe:
-	$(CC) $(CFLAGS) -DTEST -o$$ $< $(MYLIB)
-!endif
+	cl $(CFLAGS) -DTEST -Fotest.obj -Fe$*.exe $< astro.lib
 
 #----- objects and sources -----------------------------------------------
-OBJ=cfile.obj strx.obj fname.obj \
-	degree.obj vec3.obj \
-	jday.obj atime.obj acoord.obj
+SRC=vec3.cpp degree.cpp jday.cpp \
+	acoord.cpp atime.cpp \
+	planets.cpp
+OBJ=$(SRC:.cpp=.obj)
 
 #----- target ------------------------------------------------------------
-$(MYLIB): $(OBJ)
-!ifdef MSVCDIR
-	$(AR) -out:$@ $(OBJ)
-!else
-	$(AR) $@ -+$(?: = -+)
-!endif
+all: $(TARGET)
 
-$(OBJ): defs.h
+# for Windows
+sunmoon.exe: sunmoon.obj astro.lib
+	cl $(CFLAGS) $**
+
+astro.lib: $(OBJ)
+	lib /OUT:$@ $**
+
+$(OBJ): $*.h defs.h Makefile
 
 #----- test --------------------------------------------------------------
 test: jday.exe atime.exe acoord.exe
+	jday self
+	atime self
+	acoord self
 
-jday.exe atime.exe acoord.exe : $(MYLIB)
+jday.exe atime.exe acoord.exe : astro.lib
 
 #----- util --------------------------------------------------------------
 clean:
-	del $$*
-	del *.obj
-	del *.tds
-	del pch.*
-	del9 *.~*
-	del9 *.bak
+	$(RM) *.obj *.lib  *.o *.l  *.bak *.tmp $$*
 
 cleanall: clean
-	del *.lib
-	del *.exe
+	$(RM) *.exe *.map *.out
 
-save:
-	zcopy *.cpp *.h makefile* *.htm *.txt fix\ /u/b
-
-lzh:
-	lha32 u -o2 ..\src *.cpp *.h makefile *.html *.txt
+#end

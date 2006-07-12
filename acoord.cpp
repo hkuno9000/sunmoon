@@ -3,8 +3,10 @@
 //	mailto:hkuno.kuno@nifty.ne.jp
 #include "acoord.h"
 #include "planets.h"
+using namespace std;
 using namespace util;
 using namespace astro;
+namespace astro {
 
 //------------------------------------------------------------------------
 //.----- class AstroCoordinate : 天文座標系 ------------------------------
@@ -497,16 +499,20 @@ AstroCoordinate::setLocation(const Degree& longitude, const Degree& latitude, do
 	location.z +=  681;
 }
 
+}//.endnamespace astro
 //------------------------------------------------------------------------
 #ifdef TEST
-#include <cstdio>
-#include <cstdlib>
+#include <stdio.h>
+#include <stdlib.h>
 #include <windows.h>
+using namespace std;
+using namespace util;
+using namespace astro;
 int main(int argc, char** argv)
 {
 	if (argc == 2 && strcmp(argv[1], "self") == 0) {
 		// ソース中のテストパターンで自己テストする
-		system("sed /^1996/,/^1997.11/!d acoord.cpp >$in");
+		system("perl -n -e \"print if /^1996/../^1997.11/;\" acoord.cpp >$in");
 		system("acoord <$in >$out");
 		system("fc $in $out");
 		return EXIT_SUCCESS;
@@ -520,7 +526,7 @@ int main(int argc, char** argv)
 			double h;	// 視高度
 			double d;	// 大気差 [″]
 			sscanf(buf, "%lf %lf", &h, &d);
-			Vec3 v(1, Degree(90 - h, 0, 0), Degree(0)); 
+			Vec3 v(1, Degree(90 - h, 0, 0), Degree(0));
 			Degree ref(ac.refractionApp(v));
 			printf("%s\t%.3f\t%.3f\n", buf, ref.sec(), d - ref.sec());
 			// Degree trueAlt(h * 3600 - ref.sec());
@@ -576,9 +582,9 @@ int main(int argc, char** argv)
 //		ac.updateSystemTime();	// calc()計算時間 5643 / 10000 ms
 		ac.setTime(ac.getTime());//calc()計算時間 1525 / 10000 ms
 	long t1 = GetTickCount();
-	cerr << "calc()計算時間 " << (t1 - t0) << " / " << i << " ms" << endl;
+	fprintf(stderr, "calc()計算時間 %lu / %d ms\n", (t1 - t0), i);
 #endif
-	cerr << "y.m.d.sec" << endl;
+	fputs("y.m.d.sec\n", stderr);
 	while (gets(buf)) {
 		if (sscanf(buf, "%d.%d.%d.%lf", &y, &m, &d, &utc) >= 3)
 			ac.setTime(AstroTime(Jday(y, m, d), utc));
@@ -590,9 +596,9 @@ int main(int argc, char** argv)
 			y, m, d, (int)utc, ac.getTime().jd());
 
 		int hh, mm; double ss; char c;
-		f2ims(ac.gmst()/3600, c, hh, mm, ss);
+		sec2ims(ac.gmst(), c, hh, mm, ss);
 		printf(", gmst:%02dh%02dm%.3fs", hh, mm, ss);
-		f2ims(ac.gast()/3600, c, hh, mm, ss);
+		sec2ims(ac.gast(), c, hh, mm, ss);
 		printf(", gast:%02dh%02dm%.3fs\n", hh, mm, ss);
 	}
 	return EXIT_SUCCESS;
