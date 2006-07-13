@@ -1,5 +1,5 @@
 # Makefile
-# $Id: GNUmakefile,v 1.2 2006-07-12 10:17:00 hkuno Exp $
+# $Id: GNUmakefile,v 1.3 2006-07-13 01:39:31 hkuno Exp $
 #----- rules -------------------------------------------------------------
 TARGET=sunmoon.out
 CFLAGS=-Wall
@@ -26,7 +26,7 @@ astro.a: $(OBJ)
 $(OBJ): defs.h Makefile
 
 #----- test --------------------------------------------------------------
-test: jday.test atime.test acoord.test
+test: jday.test atime.test acoord.test planets.test
 
 jday.test: jday.out
 	perl -n -e "print if /^j/,/^g2000/;" jday.cpp >in.tmp
@@ -43,7 +43,12 @@ acoord.test: acoord.out
 	./acoord.out <in.tmp >out.tmp
 	diff -w in.tmp out.tmp
 
-jday.out atime.out acoord.out: astro.a
+planets.test: planets.out
+	perl -n -e "print if /^1991/../^conv: l=229/;" planets.cpp >in.tmp
+	./planets.out <in.tmp >out.tmp
+	diff -w in.tmp out.tmp
+
+jday.out atime.out acoord.out planets.out: astro.a
 
 #----- util --------------------------------------------------------------
 clean:

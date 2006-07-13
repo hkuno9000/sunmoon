@@ -1,5 +1,5 @@
 # Makefile
-# $Id: Makefile,v 1.3 2006-07-12 10:00:13 hkuno Exp $
+# $Id: Makefile,v 1.4 2006-07-13 01:39:31 hkuno Exp $
 #----- rules -------------------------------------------------------------
 RM=del
 TARGET=sunmoon.exe
@@ -28,7 +28,7 @@ astro.lib: $(OBJ)
 $(OBJ): $*.h defs.h Makefile
 
 #----- test --------------------------------------------------------------
-test: jday.test atime.test acoord.test
+test: jday.test atime.test acoord.test planets.test
 
 jday.test: $*.exe
 	perl -n -e "print if /^j/,/^g2000/;" jday.cpp >in.tmp
@@ -45,7 +45,12 @@ acoord.test: $*.exe
 	acoord <in.tmp >out.tmp
 	diff -w in.tmp out.tmp
 
-jday.exe atime.exe acoord.exe: astro.lib
+planets.test: $*.exe
+	perl -n -e "print if /^1991/../^conv: l=229/;" planets.cpp >in.tmp
+	planets <in.tmp >out.tmp
+	diff -w in.tmp out.tmp
+
+jday.exe atime.exe acoord.exe planet.exe: astro.lib
 
 #----- util --------------------------------------------------------------
 clean:

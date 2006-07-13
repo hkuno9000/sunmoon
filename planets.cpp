@@ -803,11 +803,14 @@ int main()
     int y, m=1, d=0;
     fputs("input y.m.d [TDT 0h]\n",stderr);
     while (gets(buf)) {
-        if (sscanf(buf, "%d.%d.%d.%d", &y, &m, &d) < 3)
+        if (sscanf(buf, "%d.%d.%d", &y, &m, &d) < 3)
             continue;
         dd.setGdate(y, m, d);
         AstroTime atime(dd, -31-32.184);
-        pl.calc(atime);
+        AstroCoordinate acoord;
+        acoord.setTime(atime);
+        printf("%d.%d.%d\n", y, m, d);
+        pl.calc(acoord);
     }
     return EXIT_SUCCESS;
 }
