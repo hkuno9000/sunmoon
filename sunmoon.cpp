@@ -1,6 +1,6 @@
 /**@file sunmoon - 太陽、月の高度計算
  * @copyright 2006 hkuno@willsoft.co.jp
- * $Id: sunmoon.cpp,v 1.2 2006-07-13 08:30:18 hkuno Exp $
+ * $Id: sunmoon.cpp,v 1.3 2006-08-08 07:01:16 hkuno Exp $
  */
 #include <stdio.h>
 #include "degree.h"
@@ -28,7 +28,7 @@ int sprintAzAlt(char* buf, const Vec3& v)
 }
 
 //------------------------------------------------------------------------
-void print(const AstroCoordinate& acoord, double sea, const Vec3& sunH, const Vec3& moonH)
+void print(const AstroCoordinate& acoord, double sea, const Vec3& sunH, const Vec3& moonH, double moonPhase)
 {
 	char buf[256];
 	char c;
@@ -53,12 +53,14 @@ void print(const AstroCoordinate& acoord, double sea, const Vec3& sunH, const Ve
 
 	moonH.getLtLg(alt, az);
 	printf("MOON-ALT: %+05.2fd\n", alt.degree());
+
+	printf("MOON-PHASE: %+05.2fd\n", moonPhase);
 }
 
 //------------------------------------------------------------------------
 const char gUsage[] =
 	"usage: sunmoon [-r] lt=<LT> lg=<LG> [sea=<SEA>] [utc=<UTC>]\n"
-	" $Revision: 1.2 $\n"
+	" $Revision: 1.3 $\n"
 	"   -r  : add refraction to alt\n"
 	"   LT  : latidute  '35d39m16s'\n"
 	"   LG  : longitude '139d44m40s'\n"
@@ -122,6 +124,9 @@ show_help:
 	pl.calc(acoord);
 	Vec3 sun  = pl.vecQ(Planets::SUN);
 	Vec3 moon = pl.vecQ(Planets::MOON);
+	double cosSun = sun.inner(moon);
+	if (cosSun > 1) cosSun = 1; // acos()でのDOMAINエラー回避.
+
 	acoord.conv_q2h(sun);
 	acoord.conv_q2h(moon);
 	if (gAddRefraction) { // 大気差補正.
@@ -130,7 +135,7 @@ show_help:
 	}
 
 	//--- 結果表示.
-	print(acoord, sea, sun, moon);
+	print(acoord, sea, sun, moon, rad2dd(acos(cosSun)));
 	return EXIT_SUCCESS;
 }
 // sunmoon.cpp - end.
