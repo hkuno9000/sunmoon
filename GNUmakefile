@@ -1,5 +1,5 @@
 # Makefile
-# $Id: GNUmakefile,v 1.3 2006-07-13 01:39:31 hkuno Exp $
+# $Id: GNUmakefile,v 1.4 2006-08-24 09:01:05 hkuno Exp $
 #----- rules -------------------------------------------------------------
 TARGET=sunmoon.out
 CFLAGS=-Wall
@@ -11,9 +11,20 @@ SRC=vec3.cpp degree.cpp jday.cpp \
 	acoord.cpp atime.cpp \
 	planets.cpp
 OBJ=$(SRC:.cpp=.o)
+OUTDIR=~/Sites/remotecam
 
 #----- target ------------------------------------------------------------
 all: $(TARGET)
+
+install: $(TARGET)
+	install $(TARGET) /usr/bin/sunmoon
+
+setup:
+	-mkdir $(OUTDIR)
+	-mkdir $(OUTDIR)/result
+	-mkdir $(OUTDIR)/param
+	cp -i ../sample/normal.order   $(OUTDIR)/param
+	cp -i ../sample/remotecam.conf ~/.remomtecam.conf
 
 # for MacOS-X, Linux and Cygwin
 sunmoon.out: sunmoon.o astro.a
