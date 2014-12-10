@@ -118,8 +118,8 @@ show_help:
 	}
 
 	//--- 計算実行.
-	acoord.setPosition(lg, lt);
-	acoord.setLocation(lg, lt, sea);
+	acoord.setPosition(lg, lt);			// 天文緯度経度を設定する.　厳密には測地緯度経度と同じ値を与えてはいけない.
+	acoord.setLocation(lg, lt, sea);	// 測地緯度経度と海抜高度を設定する.
 	acoord.beginConvert();
 	pl.calc(acoord);
 	Vec3 sun  = pl.vecQ(Planets::SUN);

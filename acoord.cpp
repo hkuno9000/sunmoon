@@ -482,8 +482,15 @@ AstroCoordinate::subRefraction(Vec3& vh) const
 void
 AstroCoordinate::setLocation(const Degree& longitude, const Degree& latitude, double h)
 {
+#ifdef OLD_LOCATION_SYSTEM
+	// 日本測地系(ベッセル楕円体)
 	const double a = 6377397.15500;      // 地球楕円体の赤道半径[m]
 	const double e2 = 0.006674372230614; // ''          離心率^2
+#else
+	// 世界測地系(GRS80). http://ja.wikipedia.org/wiki/GRS80
+	const double a = 6378137.00000;         // 地球楕円体の赤道半径[m]
+	const double e2 = 0.006694380022900788; // ''          離心率^2
+#endif
 	const double N = a / sqrt(1 - e2 * sin(latitude)); // 東西線曲率半径
 
 	// 地球楕円体上の幾何学的位置を求める
@@ -492,11 +499,15 @@ AstroCoordinate::setLocation(const Degree& longitude, const Degree& latitude, do
 	location.y *= N + h;
 	location.z *= N * (1 - e2) + h;
 
+#ifdef OLD_LOCATION_SYSTEM	// 日本測地系(ベッセル楕円体)
 	// 地球楕円体の中心と地球重心のずれを補正し、重心を原点とする
 	// ※計算の単位はメートルである
 	location.x += -136;
 	location.y +=  521;
 	location.z +=  681;
+#else	// 世界測地系(GRS80).
+		// 重心補正は不要である.
+#endif
 }
 
 }//.endnamespace astro
