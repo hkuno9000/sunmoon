@@ -1,5 +1,5 @@
 //. atime.cpp - 天文時刻
-//	Copyright (C) 1997,1998 hkuno
+//	Copyright (C) 1997,1998,2014 hkuno
 //	mailto:hkuno.kuno@nifty.ne.jp
 #include <ctime>
 #include "jday.h"
@@ -23,8 +23,8 @@ namespace astro {
 // dut1とleapSecは適当な初期値にする。
 // 厳密な計算のためには、setDUT1(),setLeapSec()で設定すること。
 
-// 閏秒の初期値
-int AstroTime::initLeapSec = 31; // 1997.7～1999.1 の期間は 31 で良い。
+// 閏秒の初期値 [TAI-UTC] http://hpiers.obspm.fr/iers/bul/bulc/bulletinc.dat
+int AstroTime::initLeapSec = 35; // June 2012.
 
 // 現在時刻で生成する
 AstroTime::AstroTime()
