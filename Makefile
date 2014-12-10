@@ -22,6 +22,7 @@ all: $(TARGET)
 # for Windows
 sunmoon.exe: sunmoon.obj astro.lib
 	cl $(CFLAGS) $**
+	if exist $@.manifest mt /outputresource:"$@;#1" /manifest $@.manifest
 
 astro.lib: $(OBJ)
 	lib /OUT:$@ $**
