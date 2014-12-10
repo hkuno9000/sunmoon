@@ -1,5 +1,5 @@
 /**@file sunmoon - 太陽、月の高度計算
- * @copyright 2006 hkuno@willsoft.co.jp
+ * @copyright 2006,2014 hkuno@willsoft.co.jp
  * $Id: sunmoon.cpp,v 1.3 2006-08-08 07:01:16 hkuno Exp $
  */
 #include <stdio.h>
@@ -60,12 +60,12 @@ void print(const AstroCoordinate& acoord, double sea, const Vec3& sunH, const Ve
 //------------------------------------------------------------------------
 const char gUsage[] =
 	"usage: sunmoon [-r] lt=<LT> lg=<LG> [sea=<SEA>] [utc=<UTC>]\n"
-	" $Revision: 1.3 $\n"
+	" version 2014.12\n"
 	"   -r  : add refraction to alt\n"
-	"   LT  : latidute  '35d39m16s'\n"
-	"   LG  : longitude '139d44m40s'\n"
+	"   LT  : latidute.  default is NAGOYA '35d10m00s'\n"
+	"   LG  : longitude. default is NAGOYA '136d55m00s'\n"
 	"   SEA : sea level altitude[m]. default is 0\n"
-	"   UTC : ISO 8601 time format '2006-12-31T23:59:59'. default is current time\n"
+	"   UTC : ISO 8601 time format '2014-12-31T23:59:59'. default is current time\n"
 	;
 
 /** -r: 大気差補正ON */
@@ -74,9 +74,9 @@ bool gAddRefraction = false;
 //------------------------------------------------------------------------
 int main(int argc, char** argv)
 {
-	// tokyo
-	Degree lt(35, 39, 16);
-	Degree lg(139, 44, 40);
+	// nagoya
+	Degree lt(35, 10, 00);	//  35.16666..
+	Degree lg(136, 55, 00);	// 136.91666..
 	double sea = 0;
 
 	// UTC
