@@ -1,5 +1,5 @@
 //. degree.cpp - Šp“x‚ÆŽžŠÔ‚Ì•ÏŠ·
-//	Copyright (C) 1997,1998,1999,2000 hkuno
+//	Copyright (C) 1997,1998,1999,2000,2014 hkuno
 //	mailto:hkuno.kuno@nifty.ne.jp
 #include <iostream>
 #include <cstdio>
@@ -61,7 +61,7 @@ double round(double x)
 
 double round(double x, int point)
 {
-	double base = ::pow(10, point);
+	double base = ::pow(10.0, point);
 	return round(x * base) / base;
 }
 

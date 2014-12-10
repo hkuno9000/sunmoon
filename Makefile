@@ -3,7 +3,8 @@
 #----- rules -------------------------------------------------------------
 RM=del
 TARGET=sunmoon.exe
-CFLAGS=-W3 -MD -GX -O1 -nologo
+#CFLAGS=-W3 -MD -GX -O1 -nologo
+CFLAGS=-W3 -MD -EHsc -O1 -nologo -D_CRT_SECURE_NO_WARNINGS
 .cpp.obj:
 	cl $(CFLAGS) -c $<
 .cpp.exe:
