@@ -3,6 +3,7 @@
 //	mailto:hkuno.kuno@nifty.ne.jp
 #include <iostream>
 #include <cstdio>
+#include <cstring>
 #include "degree.h"
 using namespace std;
 using namespace util;
