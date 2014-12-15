@@ -42,8 +42,7 @@ void utc2localtime(int y, int m, int d, int hh, int mm, int sec, struct tm& t)
 	t.tm_yday = 0;
 	t.tm_isdst = 0;
 #ifdef WIN32
-	t.tm_sec -= _timezone;
-	time_t tt = mktime(&t);
+	time_t tt = _mkgmtime(&t);
 #else
 	time_t tt = timegm(&t);
 #endif
