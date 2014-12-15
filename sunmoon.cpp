@@ -2,7 +2,10 @@
  * @copyright 2006,2014 hkuno@willsoft.co.jp
  * $Id: sunmoon.cpp,v 1.3 2006-08-08 07:01:16 hkuno Exp $
  */
-#include <stdio.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
 #include "degree.h"
 #include "acoord.h"
 #include "planets.h"
@@ -27,6 +30,26 @@ int sprintAzAlt(char* buf, const Vec3& v)
 	return sprintf(buf, "%06.2fd(%s)  %+05.2fd", azDeg, azName, alt.degree());
 }
 
+void utc2localtime(int y, int m, int d, int hh, int mm, int sec, struct tm& t)
+{
+	t.tm_sec = sec;
+	t.tm_min = mm;
+	t.tm_hour = hh;
+	t.tm_mday = d;
+	t.tm_mon = m - 1;
+	t.tm_year = y - 1900;
+	t.tm_wday = 0;
+	t.tm_yday = 0;
+	t.tm_isdst = 0;
+#ifdef WIN32
+	t.tm_sec -= _timezone;
+	time_t tt = mktime(&t);
+#else
+	time_t tt = timegm(&t);
+#endif
+	t = *localtime(&tt);
+}
+
 //------------------------------------------------------------------------
 void print(const AstroCoordinate& acoord, double sea, const Vec3& sunH, const Vec3& moonH, double moonPhase)
 {
@@ -48,6 +71,11 @@ void print(const AstroCoordinate& acoord, double sea, const Vec3& sunH, const Ve
 	sec2ims(utc, c, hh, mm, sec);
 	printf("UTC: %04d-%02d-%02dT%02d:%02d:%02d\n", y, m, d, hh, mm, (int)sec);
 
+	struct tm t;
+	utc2localtime(y, m, d, hh, mm, (int)sec, t);
+	strftime(buf, sizeof(buf), "%Y-%m-%d %X %Z", &t);
+	printf("LOC: %s\n", buf);
+
 	sunH.getLtLg(alt, az);
 	printf("SUN-ALT: %+05.2fd\n", alt.degree());
 
@@ -60,7 +88,7 @@ void print(const AstroCoordinate& acoord, double sea, const Vec3& sunH, const Ve
 //------------------------------------------------------------------------
 const char gUsage[] =
 	"usage: sunmoon [-r] lt=<LT> lg=<LG> [sea=<SEA>] [utc=<UTC>]\n"
-	" version 2014.12\n"
+	" version 2014.12a\n"
 	"   -r  : add refraction to alt\n"
 	"   LT  : latidute.  default is NAGOYA '35d10m00s'\n"
 	"   LG  : longitude. default is NAGOYA '136d55m00s'\n"
@@ -74,6 +102,11 @@ bool gAddRefraction = false;
 //------------------------------------------------------------------------
 int main(int argc, char** argv)
 {
+#ifdef WIN32
+	_tzset();
+#else
+	tzset();
+#endif
 	// nagoya
 	Degree lt(35, 10, 00);	//  35.16666..
 	Degree lg(136, 55, 00);	// 136.91666..
