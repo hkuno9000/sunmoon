@@ -85,18 +85,39 @@ void print(const AstroCoordinate& acoord, double sea, const Vec3& sunH, const Ve
 }
 
 //------------------------------------------------------------------------
+void print_table(const char* prompt, const AstroTime& atime)
+{
+	char buf[256];
+	char c;
+	int y, m, d, hh, mm;
+	double utc, sec;
+	Degree az, alt;
+
+	atime.get(y, m, d, utc);
+	sec2ims(utc, c, hh, mm, sec);
+	struct tm t;
+	utc2localtime(y, m, d, hh, mm, (int)sec, t);
+	strftime(buf, sizeof(buf), "%Y-%m-%d %X %Z", &t);
+	printf("%s: %s\n", prompt, buf);
+}
+
+//------------------------------------------------------------------------
 const char gUsage[] =
-	"usage: sunmoon [-r] lt=<LT> lg=<LG> [sea=<SEA>] [utc=<UTC>]\n"
-	" version 2014.12a\n"
+	"usage: sunmoon [-r] lt=<LT> lg=<LG> [sea=<SEA>] [utc=<UTC>] [table=<DAYS>]\n"
+	" version 2014.12b\n"
 	"   -r  : add refraction to alt\n"
 	"   LT  : latidute.  default is NAGOYA '35d10m00s'\n"
 	"   LG  : longitude. default is NAGOYA '136d55m00s'\n"
 	"   SEA : sea level altitude[m]. default is 0\n"
 	"   UTC : ISO 8601 time format '2014-12-31T23:59:59'. default is current time\n"
+	"   DAYS: time table days of sunrise, sunset, moonrise and moonset. default is 0\n"
 	;
 
 /** -r: ‘å‹C·•â³ON */
 bool gAddRefraction = false;
+
+/** table: o–v•\“ú”. */
+unsigned gTableDays = 0;
 
 //------------------------------------------------------------------------
 int main(int argc, char** argv)
@@ -136,6 +157,8 @@ show_help:
 			lg = Degree::parseDms(arg + 3);
 		else if (sscanf(arg, "sea=%lf", &sea) == 1)
 			;
+		else if (sscanf(arg, "table=%u", &gTableDays) == 1)
+			;
 		else if (sscanf(arg, "utc=%d-%d-%dT%d:%d:%lf", &y, &m, &d, &hh, &mm, &sec) >= 3) {
 			//--- ŠÔİ’è.
 			AstroTime atime(Jday(y, m, d), hh*3600+mm*60+sec);
@@ -168,6 +191,38 @@ show_help:
 
 	//--- Œ‹‰Ê•\¦.
 	print(acoord, sea, sun, moon, rad2dd(acos(cosSun)));
+
+	//--- o–vŒvZ.
+	if (gTableDays != 0) {
+		AstroTime t = acoord.getTime();
+		const double jd0 = t.jd();
+		const double sun_z  = sin(dms2rad(0,0,960));	// ‘¾—z‹”¼Œa‚É‚æ‚éo–v•â³. ‹”¼Œa‚Í 960" ‚ÅŒˆ‚ß‘Å‚¿.
+		const double min3_z = sin(hms2rad(0,3,0));		// Šp3•ª‚Ì‚“x‚ÌzÀ•W’l.
+		while (t.jd() < jd0 + gTableDays) {
+			const Vec3 sun0 = sun;
+			const Vec3 moon0 = moon;
+			if (fabs(sun0.z) > min3_z && fabs(moon0.z) > min3_z) {
+				t.addSec(60); // ‚“x‚ª}Šp3•ªˆÈã‚È‚ç1•ª’PˆÊ‚Å‚´‚Á‚­‚è‚ği‚ß‚é.
+			}
+			else {
+				t.addSec(1); // ‚“x‚ª}Šp3•ªˆÈ“à‚È‚ç1•b’PˆÊ‚Å‚ği‚ß‚é.
+			}
+			acoord.setTime(t);
+			acoord.beginConvert();
+			pl.calc(acoord);
+			sun  = pl.vecQ(Planets::SUN);
+			moon = pl.vecQ(Planets::MOON);
+			acoord.conv_q2h(sun);
+			acoord.conv_q2h(moon);
+			// ‘å‹C·•â³‚ÍíÀ{‚·‚é.
+			acoord.addRefraction(sun);
+			acoord.addRefraction(moon);
+			if (sun0.z < -sun_z && sun.z >= -sun_z) print_table("SUN-RISE", t);
+			if (sun0.z >= -sun_z && sun.z < -sun_z) print_table("SUN-SET",  t);
+			if (moon0.z < 0 && moon.z >= 0) print_table("MOON-RISE", t);
+			if (moon0.z >= 0 && moon.z < 0) print_table("MOON-SET",  t);
+		}
+	}
 	return EXIT_SUCCESS;
 }
 // sunmoon.cpp - end.
