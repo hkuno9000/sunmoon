@@ -104,7 +104,7 @@ void print_table(const char* prompt, const AstroTime& atime)
 //------------------------------------------------------------------------
 const char gUsage[] =
 	"usage: sunmoon [-r] lt=<LT> lg=<LG> [sea=<SEA>] [utc=<UTC>] [table=<DAYS>]\n"
-	" version 2014.12b\n"
+	" version 2015.1\n"
 	"   -r  : add refraction to alt\n"
 	"   LT  : latidute.  default is NAGOYA '35d10m00s'\n"
 	"   LG  : longitude. default is NAGOYA '136d55m00s'\n"
@@ -195,18 +195,15 @@ show_help:
 	//--- 出没計算.
 	if (gTableDays != 0) {
 		AstroTime t = acoord.getTime();
-		const double jd0 = t.jd();
+		const double jd_end = t.jd() + gTableDays;
 		const double sun_z  = sin(dms2rad(0,0,960));	// 太陽視半径による出没補正. 視半径は 960" で決め打ち.
 		const double min3_z = sin(hms2rad(0,3,0));		// 時角3分の高度のz座標値.
-		while (t.jd() < jd0 + gTableDays) {
+		int step = -1;	// 初回は指定時刻の1秒前の高度を計算する.
+		for (t.addSec(step); t.jd() < jd_end; t.addSec(step)) {
+			// 前回時刻の高度を保存する. ただし、初回はこの値を使ってはいけない.
 			const Vec3 sun0 = sun;
 			const Vec3 moon0 = moon;
-			if (fabs(sun0.z) > min3_z && fabs(moon0.z) > min3_z) {
-				t.addSec(60); // 高度が±時角3分以上なら1分単位でざっくり時刻を進める.
-			}
-			else {
-				t.addSec(1); // 高度が±時角3分以内なら1秒単位で時刻を進める.
-			}
+			// 今回時刻の高度を計算する.
 			acoord.setTime(t);
 			acoord.beginConvert();
 			pl.calc(acoord);
@@ -217,10 +214,17 @@ show_help:
 			// 大気差補正は常時実施する.
 			acoord.addRefraction(sun);
 			acoord.addRefraction(moon);
-			if (sun0.z < -sun_z && sun.z >= -sun_z) print_table("SUN-RISE", t);
-			if (sun0.z >= -sun_z && sun.z < -sun_z) print_table("SUN-SET",  t);
-			if (moon0.z < 0 && moon.z >= 0) print_table("MOON-RISE", t);
-			if (moon0.z >= 0 && moon.z < 0) print_table("MOON-SET",  t);
+			if (step > 0) {
+				// 前回時刻の高度と比較し、境界値を跨いだ時刻を出没時刻として表示する.
+				if (sun0.z < -sun_z && sun.z >= -sun_z) print_table("SUN-RISE", t);
+				if (sun0.z >= -sun_z && sun.z < -sun_z) print_table("SUN-SET",  t);
+				if (moon0.z < 0 && moon.z >= 0) print_table("MOON-RISE", t);
+				if (moon0.z >= 0 && moon.z < 0) print_table("MOON-SET",  t);
+			}
+			if (fabs(sun.z - sun_z) > min3_z && fabs(moon.z) > min3_z)
+				step = 60; // 高度が±時角3分以上なら1分単位でざっくり時刻を進める.
+			else
+				step = 1; // 高度が±時角3分以内なら1秒単位で時刻を進める.
 		}
 	}
 	return EXIT_SUCCESS;
