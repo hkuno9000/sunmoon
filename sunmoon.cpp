@@ -30,6 +30,18 @@ int sprintAzAlt(char* buf, const Vec3& v)
 	return sprintf(buf, "%06.2fd(%s)  %+05.2fd", azDeg, azName, alt.degree());
 }
 
+int sprintRaDec(char* buf, const Vec3& v)
+{
+	char* p = buf;
+	Degree ra, dec;
+	v.getLtLg(dec, ra);
+	p += ra.sprintHms(p, NULL);
+	p += sprintf(p, "(%06.2fd)  ", ra.degree());
+	p += dec.sprintDms(p, NULL);
+	p += sprintf(p, "(%+05.2fd)", dec.degree());
+	return p - buf;
+}
+
 void utc2localtime(int y, int m, int d, int hh, int mm, int sec, struct tm& t)
 {
 	t.tm_sec = sec;
@@ -108,9 +120,10 @@ void print_table(const char* prompt, const AstroTime& atime)
 
 //------------------------------------------------------------------------
 const char gUsage[] =
-	"usage: sunmoon [-r] lt=<LT> lg=<LG> [sea=<SEA>] [utc=<UTC>] [table=<DAYS>]\n"
-	" version 2015.1a\n"
-	"   -r  : add refraction to alt\n"
+	"usage: sunmoon [-r] [-p] lt=<LT> lg=<LG> [sea=<SEA>] [utc=<UTC>] [table=<DAYS>]\n"
+	" version 2015.2\n"
+	"   -r  : add refraction to ALT\n"
+	"   -p  : print RADEC,J2000,AZALT\n"
 	"   LT  : latidute.  default is NAGOYA '35d10m00s'\n"
 	"   LG  : longitude. default is NAGOYA '136d55m00s'\n"
 	"   SEA : sea level altitude[m]. default is 0\n"
@@ -121,8 +134,30 @@ const char gUsage[] =
 /** -r: 大気差補正ON */
 bool gAddRefraction = false;
 
+/** -p: 全惑星の赤経赤緯表示ON */
+bool gPlanetRaDc = false;
+
 /** table: 出没表日数. */
 unsigned gTableDays = 0;
+
+//------------------------------------------------------------------------
+void print_planet(const AstroCoordinate& acoord, const Planets& pl, const char* name, int id)
+{
+	char azalt[256];
+	char radec[256];
+	char j2000[256];
+
+	Vec3 v = pl.vecQ(id);	// 地心平均赤道座標(MOONのみ測心)
+	acoord.conv_q2tq(v);	// 平均位置→真位置(章動補正).
+	Vec3 q = v;
+	acoord.conv_q2h(v);		// 赤道座標→地平座標.
+	if (gAddRefraction) acoord.addRefraction(v);	// 大気差補正.
+
+	sprintAzAlt(azalt, v);
+	sprintRaDec(radec, q);
+	sprintRaDec(j2000, pl.vecJ(id));
+	printf("%-8s: RADEC[%s], J2000[%s], AZALT[%s]\n", name, radec, j2000, azalt);
+}
 
 //------------------------------------------------------------------------
 int main(int argc, char** argv)
@@ -156,6 +191,8 @@ show_help:
 			goto show_help;
 		if (strcmp(arg, "-r") == 0)
 			gAddRefraction = true;
+		else if (strcmp(arg, "-p") == 0)
+			gPlanetRaDc = true;
 		else if (strncmp(arg, "lt=", 3) == 0)
 			lt = Degree::parseDms(arg + 3);
 		else if (strncmp(arg, "lg=", 3) == 0)
@@ -187,6 +224,8 @@ show_help:
 	double cosSun = sun.inner(moon);
 	if (cosSun > 1) cosSun = 1; // acos()でのDOMAINエラー回避.
 
+	acoord.conv_q2tq(sun);
+	acoord.conv_q2tq(moon);
 	acoord.conv_q2h(sun);
 	acoord.conv_q2h(moon);
 	if (gAddRefraction) { // 大気差補正.
@@ -196,6 +235,20 @@ show_help:
 
 	//--- 結果表示.
 	print(acoord, sea, sun, moon, rad2dd(acos(cosSun)));
+
+	//--- 全惑星の赤経赤緯表示.
+	if (gPlanetRaDc) {
+		print_planet(acoord, pl, "SUN",     Planets::SUN);
+		print_planet(acoord, pl, "MOON",    Planets::MOON);
+		print_planet(acoord, pl, "MERCURY", Planets::MERCURY);
+		print_planet(acoord, pl, "VENUS",   Planets::VENUS);
+		print_planet(acoord, pl, "MARS",    Planets::MARS);
+		print_planet(acoord, pl, "JUPITER", Planets::JUPITER);
+		print_planet(acoord, pl, "SATURN",  Planets::SATURN);
+		print_planet(acoord, pl, "URANUS",  Planets::URANUS);
+		print_planet(acoord, pl, "NEPTUNE", Planets::NEPTUNE);
+		print_planet(acoord, pl, "PLUTO",   Planets::PLUTO);
+	}
 
 	//--- 出没計算.
 	if (gTableDays != 0) {
@@ -216,6 +269,8 @@ show_help:
 			pl.calc(acoord);
 			sun  = pl.vecQ(Planets::SUN);
 			moon = pl.vecQ(Planets::MOON);
+			acoord.conv_q2tq(sun);
+			acoord.conv_q2tq(moon);
 			acoord.conv_q2h(sun);
 			acoord.conv_q2h(moon);
 			// 大気差補正は常時実施する.
