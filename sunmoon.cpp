@@ -222,9 +222,12 @@ show_help:
 	pl.calc(acoord);
 	Vec3 sun  = pl.vecQ(Planets::SUN);
 	Vec3 moon = pl.vecQ(Planets::MOON);
-	double cosSun = sun.inner(moon);
-	if (cosSun > 1) cosSun = 1; // acos()でのDOMAINエラー回避.
-
+	double cosSun = sun.inner(moon);	// sun/moonは方向余弦なので、その内積は位相角のcosである.
+	if (cosSun > 1) cosSun = 1;			// acos()でのDOMAINエラー回避.
+	Degree phase; phase.setRadian(acos(cosSun));
+	if (sun.x * moon.y - sun.y * moon.x < 0) { // XY平面の外積値が負の値なら、位相角度を 180～360度の範囲に補正する.
+		phase.setNeg(); phase.mod360();
+	}
 	acoord.conv_q2tq(sun);
 	acoord.conv_q2tq(moon);
 	acoord.conv_q2h(sun);
@@ -235,7 +238,7 @@ show_help:
 	}
 
 	//--- 結果表示.
-	print(acoord, sea, sun, moon, rad2dd(acos(cosSun)));
+	print(acoord, sea, sun, moon, phase.degree());
 
 	//--- 全惑星の赤経赤緯表示.
 	if (gPlanetRaDc) {
