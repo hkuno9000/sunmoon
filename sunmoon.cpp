@@ -122,14 +122,14 @@ void print_table(const char* prompt, const AstroTime& atime)
 //------------------------------------------------------------------------
 const char gUsage[] =
 	"usage: sunmoon [-r] [-p] lt=<LT> lg=<LG> [sea=<SEA>] [utc=<UTC>] [table=<DAYS>]\n"
-	" version 2015.2\n"
+	" version 2015.2a\n"
 	"   -r  : add refraction to ALT\n"
 	"   -p  : print RADEC,J2000,AZALT\n"
 	"   LT  : latidute.  default is NAGOYA '35d10m00s'\n"
 	"   LG  : longitude. default is NAGOYA '136d55m00s'\n"
 	"   SEA : sea level altitude[m]. default is 0\n"
 	"   UTC : ISO 8601 time format '2014-12-31T23:59:59'. default is current time\n"
-	"   DAYS: time table days of sunrise, sunset, moonrise and moonset. default is 0\n"
+	"   DAYS: time table days of sunrise, sunset, moonrise, moonset and culmination. default is 0\n"
 	;
 
 /** -r: 大気差補正ON */
@@ -288,8 +288,13 @@ show_help:
 				if (sun0.z >= 0 && sun.z < 0) print_table("SUN-SET",  t);
 				if (moon0.z < 0 && moon.z >= 0) print_table("MOON-RISE", t);
 				if (moon0.z >= 0 && moon.z < 0) print_table("MOON-SET",  t);
+				// 前回時刻の東西と比較し、子午線を跨いだ時刻を南中時刻として表示する.
+				if (sun0.y >= 0 && sun.y < 0) print_table("SUN-CULM",  t);
+				if (moon0.y >= 0 && moon.y < 0) print_table("MOON-CULM",  t);
 			}
 			double z = min_value(fabs(sun.z), fabs(moon.z));
+			double y = min_value(fabs(sun.y), fabs(moon.y));
+			z = min_value(z, y);	// 地平線通過、子午線通過付近の最小座標値を求める.
 			if (z >= min30_z)
 				step = 20*60; // 高度が±時角30分以上なら20分単位で時刻を進める.
 			else if (z >= min3_z)
