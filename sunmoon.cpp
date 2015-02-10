@@ -121,7 +121,7 @@ void print_table(const char* prompt, const AstroTime& atime)
 
 //------------------------------------------------------------------------
 const char gUsage[] =
-	"usage: sunmoon [-r] [-p] lt=<LT> lg=<LG> [sea=<SEA>] [utc=<UTC>] [table=<DAYS>]\n"
+	"usage: sunmoon [-r] [-p] lt=<LT> lg=<LG> [sea=<SEA>] [utc=<UTC>] [leap=<LEAP>] [table=<DAYS>]\n"
 	" version 2015.2a\n"
 	"   -r  : add refraction to ALT\n"
 	"   -p  : print RADEC,J2000,AZALT\n"
@@ -130,6 +130,7 @@ const char gUsage[] =
 	"   SEA : sea level altitude[m]. default is 0\n"
 	"   UTC : ISO 8601 time format '2014-12-31T23:59:59'. default is current time\n"
 	"   DAYS: time table days of sunrise, sunset, moonrise, moonset and culmination. default is 0\n"
+	"   LEAP: TAI-UTC leap seconds. default is +35(July 2012). see http://tycho.usno.navy.mil/leapsec.html\n";
 	;
 
 /** -r: ‘å‹C·•â³ON */
@@ -175,6 +176,7 @@ int main(int argc, char** argv)
 
 	// UTC
 	int y, m, d, hh=0, mm=0; double sec=0;
+	int leap;
 
 	// astro class
 	AstroCoordinate acoord;	// Œ»ÝŽž‚Å‰Šú‰».
@@ -200,6 +202,8 @@ show_help:
 			lg = Degree::parseDms(arg + 3);
 		else if (sscanf(arg, "sea=%lf", &sea) == 1)
 			;
+		else if (sscanf(arg, "leap=%d", &leap) == 1)
+			acoord.setLeapSec(AstroTime::initLeapSec = leap);
 		else if (sscanf(arg, "table=%u", &gTableDays) == 1)
 			;
 		else if (sscanf(arg, "utc=%d-%d-%dT%d:%d:%lf", &y, &m, &d, &hh, &mm, &sec) >= 3) {

@@ -1,5 +1,5 @@
 //. acoord.h - 天文座標系
-//	Copyright (C) 1997,1998 hkuno
+//	Copyright (C) 1997,1998,2015 hkuno
 //	mailto:hkuno.kuno@nifty.ne.jp
 #ifndef ACOORD_H_
 #define ACOORD_H_
@@ -148,6 +148,8 @@ public:
 
 	// 天文時刻を設定する
 	void setTime(const AstroTime& a) { atime = a; calc(); }
+
+	void setLeapSec(int leapSec) { atime.setLeapSec(leapSec); calc(); }
 
 	// 設定した天文時刻を得る
 	const AstroTime& getTime() const { return atime; }
