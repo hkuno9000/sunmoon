@@ -27,7 +27,7 @@ int sprintAzAlt(char* buf, const Vec3& v)
 	az.setNeg(); az.mod360();   // “ì‚ğ0‹‚Æ‚µŒvü‚è(¼90‹A–k180‹A“Œ270‹)
 	double azDeg = az.degree();
 	const char* azName = gAzimuthName[(int)util::round(azDeg * 16 / 360)];
-	return sprintf(buf, "%06.2fd(%s)  %+05.2fd", azDeg, azName, alt.degree());
+	return sprintf(buf, "%06.2fd(%s)  %+06.2fd", azDeg, azName, alt.degree());
 }
 
 int sprintRaDec(char* buf, const Vec3& v)
@@ -35,10 +35,11 @@ int sprintRaDec(char* buf, const Vec3& v)
 	char* p = buf;
 	Degree ra, dec;
 	v.getLtLg(dec, ra);
+	normRaDec(ra, dec);
 	p += ra.sprintHms(p, NULL);
 	p += sprintf(p, "(%06.2fd)  ", ra.degree());
 	p += dec.sprintDms(p, NULL);
-	p += sprintf(p, "(%+05.2fd)", dec.degree());
+	p += sprintf(p, "(%+06.2fd)", dec.degree());
 	return p - buf;
 }
 
