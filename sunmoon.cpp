@@ -93,6 +93,9 @@ void print(const AstroCoordinate& acoord, double sea, const Vec3& sunH, const Ve
 	strftime(buf, sizeof(buf), "%Y-%m-%d %X %Z", &t);
 	printf("LOC: %s\n", buf);
 
+	Degree lst; lst.setHs(acoord.lst()); lst.sprintHms(buf, NULL);
+	printf("LST: %s\n", buf);
+
 	sunH.getLtLg(alt, az);
 	printf("SUN-ALT: %+05.2fd\n", alt.degree());
 
@@ -122,7 +125,7 @@ void print_table(const char* prompt, const AstroTime& atime)
 //------------------------------------------------------------------------
 const char gUsage[] =
 	"usage: sunmoon [-r] [-p] lt=<LT> lg=<LG> [sea=<SEA>] [utc=<UTC>] [leap=<LEAP>] [table=<DAYS>]\n"
-	" version 2015.2a\n"
+	" version 2015.2b\n"
 	"   -r  : add refraction to ALT\n"
 	"   -p  : print RADEC,J2000,AZALT\n"
 	"   LT  : latidute.  default is NAGOYA '35d10m00s'\n"
@@ -229,7 +232,7 @@ show_help:
 	double cosSun = sun.inner(moon);	// sun/moonは方向余弦なので、その内積は位相角のcosである.
 	if (cosSun > 1) cosSun = 1;			// acos()でのDOMAINエラー回避.
 	if (cosSun < -1) cosSun = -1;		// acos()でのDOMAINエラー回避.
-	Degree phase; phase.setRadian(acos(cosSun));	// acos は 0..180度の範囲で値を返す.
+	Degree phase; phase.setArcCos(cosSun);	// acos は 0..180度の範囲で値を返す.
 	if (sun.x * moon.y - sun.y * moon.x < 0) { // XY平面の外積値が負の値なら、位相角度を 180～360度の範囲に補正する.
 		phase.setNeg(); phase.mod360();
 	}
