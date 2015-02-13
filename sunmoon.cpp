@@ -228,7 +228,8 @@ show_help:
 	Vec3 moon = pl.vecQ(Planets::MOON);
 	double cosSun = sun.inner(moon);	// sun/moonは方向余弦なので、その内積は位相角のcosである.
 	if (cosSun > 1) cosSun = 1;			// acos()でのDOMAINエラー回避.
-	Degree phase; phase.setRadian(acos(cosSun));
+	if (cosSun < -1) cosSun = -1;		// acos()でのDOMAINエラー回避.
+	Degree phase; phase.setRadian(acos(cosSun));	// acos は 0..180度の範囲で値を返す.
 	if (sun.x * moon.y - sun.y * moon.x < 0) { // XY平面の外積値が負の値なら、位相角度を 180～360度の範囲に補正する.
 		phase.setNeg(); phase.mod360();
 	}
