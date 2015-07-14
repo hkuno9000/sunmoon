@@ -1,5 +1,5 @@
 //. atime.h - “V•¶
-//	Copyright (C) 1997,1998 hkuno
+//	Copyright (C) 1997,1998,2015 hkuno
 //	mailto:hkuno.kuno@nifty.ne.jp
 #ifndef ATIME_H_
 #define ATIME_H_
@@ -111,6 +111,9 @@ public:
 
 	// ‰[•b‚Ì‰Šú’l
 	static int initLeapSec;
+
+	/// ‰[•b‚Ì‰Šú’là–¾.
+	static const char* initLeapText;
 
 	// Œ»İ‚Å¶¬‚·‚é
 	AstroTime();

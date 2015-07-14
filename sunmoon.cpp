@@ -1,5 +1,5 @@
 /**@file sunmoon - 太陽、月の高度計算
- * @copyright 2006,2014 hkuno@willsoft.co.jp
+ * @copyright 2006,2014,2015 hkuno@willsoft.co.jp
  * $Id: sunmoon.cpp,v 1.3 2006-08-08 07:01:16 hkuno Exp $
  */
 #include <cstdio>
@@ -125,7 +125,7 @@ void print_table(const char* prompt, const AstroTime& atime)
 //------------------------------------------------------------------------
 const char gUsage[] =
 	"usage: sunmoon [-r] [-p] lt=<LT> lg=<LG> [sea=<SEA>] [utc=<UTC>] [leap=<LEAP>] [table=<DAYS>]\n"
-	" version 2015.2b\n"
+	" version 2015.7\n"
 	"   -r  : add refraction to ALT\n"
 	"   -p  : print RADEC,J2000,AZALT\n"
 	"   LT  : latidute.  default is NAGOYA '35d10m00s'\n"
@@ -133,7 +133,7 @@ const char gUsage[] =
 	"   SEA : sea level altitude[m]. default is 0\n"
 	"   UTC : ISO 8601 time format '2014-12-31T23:59:59'. default is current time\n"
 	"   DAYS: time table days of sunrise, sunset, moonrise, moonset and culmination. default is 0\n"
-	"   LEAP: TAI-UTC leap seconds. default is +35(July 2012). see http://tycho.usno.navy.mil/leapsec.html\n";
+	"   LEAP: TAI-UTC leap seconds. default is %s\n";
 	;
 
 /** -r: 大気差補正ON */
@@ -188,7 +188,7 @@ int main(int argc, char** argv)
 	//--- コマンドラインを解析する.
 	if (argc < 2) {
 show_help:
-		fputs(gUsage, stderr);
+		fprintf(stderr, gUsage, AstroTime::initLeapText);
 		exit(1);
 	}
 	while (argc > 1) {
