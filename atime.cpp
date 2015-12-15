@@ -7,7 +7,7 @@
 #include "atime.h"
 #if defined(WIN32)
 #include <windows.h>
-#elif defined(BSD) || defined(__APPLE__) || defined(__CYGWIN__)
+#elif defined(BSD) || defined(__APPLE__) || defined(__CYGWIN__) || defined(__linux__)
 #include <sys/time.h>
 #endif
 using namespace std;
@@ -79,7 +79,7 @@ AstroTime::updateSystemTime()
 	s = hms2hs(t.wHour, t.wMinute, t.wSecond + t.wMilliseconds / 1000.0)
 		- 12 * 3600.0; // ê¢äEéûê≥åﬂÇ™0Ç…Ç»ÇÈÇÊÇ§Ç…ï‚ê≥Ç∑ÇÈ
 	adjust();
-#elif defined(BSD) || defined(__APPLE__) || defined(__CYGWIN__)
+#elif defined(BSD) || defined(__APPLE__) || defined(__CYGWIN__) || defined(__linux__)
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
 	d.setGdate(1970, 1, 1);
