@@ -1,4 +1,4 @@
-//. acoord.cpp - “V•¶À•WŒn
+ï»¿//. acoord.cpp - å¤©æ–‡åº§æ¨™ç³»
 //	Copyright (C) 1997,1998 hkuno
 //	mailto:hkuno.kuno@nifty.ne.jp
 #include "acoord.h"
@@ -9,116 +9,116 @@ using namespace astro;
 namespace astro {
 
 //------------------------------------------------------------------------
-//.----- class AstroCoordinate : “V•¶À•WŒn ------------------------------
+//.----- class AstroCoordinate : å¤©æ–‡åº§æ¨™ç³» ------------------------------
 //------------------------------------------------------------------------
 
 //------------------------------------------------------------------------
-//. •½‹ÏP¯E“úŒ•½‹Ï‰©ŒoEÎ·EÍ“®‚ğŒvZ‚·‚é
+//. å¹³å‡æ’æ˜Ÿæ™‚ãƒ»æ—¥æœˆå¹³å‡é»„çµŒãƒ»æ­³å·®ãƒ»ç« å‹•ã‚’è¨ˆç®—ã™ã‚‹
 
-//. AstroCoordinate::calc - ŒvZƒƒCƒ“
+//. AstroCoordinate::calc - è¨ˆç®—ãƒ¡ã‚¤ãƒ³
 void
 AstroCoordinate::calc()
 {
-	// •½‹ÏP¯
+	// å¹³å‡æ’æ˜Ÿæ™‚
 	m_gmst = atime.gmst();
 
-	// T = J2000.0‚©‚ç‚Ìƒ†ƒŠƒEƒX¢‹I[TD]
+	// T = J2000.0ã‹ã‚‰ã®ãƒ¦ãƒªã‚¦ã‚¹ä¸–ç´€[TD]
 	const double T = atime.j2000() / 36525;
 
-	// ·‚ª10•bˆÈ“à‚È‚çAÎ·‚âÍ“®‚Í•Ï‰»—Ê‚ª¬‚³‚¢‚Ì‚ÅŒvZ•s—v‚Å‚ ‚é
+	// æ™‚åˆ»å·®ãŒ10ç§’ä»¥å†…ãªã‚‰ã€æ­³å·®ã‚„ç« å‹•ã¯å¤‰åŒ–é‡ãŒå°ã•ã„ã®ã§è¨ˆç®—ä¸è¦ã§ã‚ã‚‹
 	if (lastT == 0 || fabs(T - lastT) * (36525 * 86400.0) >= 10) {
-		calc2(lastT = T); // Î·‚ÆÍ“®A•ª“_·‚ÌŒvZ
+		calc2(lastT = T); // æ­³å·®ã¨ç« å‹•ã€åˆ†ç‚¹å·®ã®è¨ˆç®—
 		recalcMat2 = true;
 	}
 	recalcMat = true;
 }
 
-//. AstroCoordinate::calc2 - Î·EÍ“®‚ÌŒvZ
+//. AstroCoordinate::calc2 - æ­³å·®ãƒ»ç« å‹•ã®è¨ˆç®—
 void
 AstroCoordinate::calc2(double T)
 {
-	// T = J2000.0‚©‚ç‚Ìƒ†ƒŠƒEƒX¢‹I[TD]
+	// T = J2000.0ã‹ã‚‰ã®ãƒ¦ãƒªã‚¦ã‚¹ä¸–ç´€[TD]
 	const double T2 = T * T;
 	const double T3 = T * T * T;
 	double x;
 
-	// ˆê”ÊÎ·(general precession J2000.0)‚ÌŠp“x[Degree]
-	// •Ï‰»—Ê‚Í 7e-7/ sec ‚®‚ç‚¢‚Å‚ ‚é
-	// ƒÄA = 2306.2181T + 0.30188T^2 + 0.017998T^3
-	// ƒ¤A = 2306.2181T + 1.09468T^2 + 0.018203T^3
-	// ƒÆA = 2004.3109T - 0.42665T^2 - 0.041833T^3
-	// ƒÏA = 5029.0966T - 1.11113T^2 - 0.000006T^3
+	// ä¸€èˆ¬æ­³å·®(general precession J2000.0)ã®è§’åº¦[Degree]
+	// å¤‰åŒ–é‡ã¯ 7e-7â€³/ sec ãã‚‰ã„ã§ã‚ã‚‹
+	// Î¶A = 2306.2181â€³T + 0.30188â€³T^2 + 0.017998â€³T^3
+	// Î–A = 2306.2181â€³T + 1.09468â€³T^2 + 0.018203â€³T^3
+	// Î¸A = 2004.3109â€³T - 0.42665â€³T^2 - 0.041833â€³T^3
+	// ÏA = 5029.0966â€³T - 1.11113â€³T^2 - 0.000006â€³T^3
 	za.setSec(2306.2181 * T + 0.30188 * T2 + 0.017998 * T3);
 	Za.setSec(2306.2181 * T + 1.09468 * T2 + 0.018203 * T3);
 	ta.setSec(2004.3109 * T - 0.42665 * T2 - 0.041833 * T3);
 	Pa.setSec(5029.0966 * T - 1.11113 * T2 - 0.000006 * T3);
 
-	// •½‹Ï‰©“¹ŒXŠp(mean obliquity of the ecliptic)[rad]
-	// •Ï‰»—Ê‚Í 1e-8/ sec ‚®‚ç‚¢‚Å‚ ‚é
-	// ƒÃA = 23‹26Œ21.448
-	//		- 46.8150T - 0.00059T^2 + 0.001813T^3
+	// å¹³å‡é»„é“å‚¾è§’(mean obliquity of the ecliptic)[rad]
+	// å¤‰åŒ–é‡ã¯ 1e-8â€³/ sec ãã‚‰ã„ã§ã‚ã‚‹
+	// ÎµA = 23Â°26â€²21.448â€³
+	//		- 46.8150â€³T - 0.00059â€³T^2 + 0.001813â€³T^3
 	x = dms2ds(23, 26, 21.448)
 			- 46.8150 * T - 0.00059 * T2 + 0.001813 * T3;
 	moe = ds2rad(x);
 
-	// ‘¾—z‚Ì•½‹Ï‰©Œo
-	// •Ï‰»—Ê‚Í 0.04/ sec ‚Å‚ ‚é
-	// L = 280‹27Œ59.24 + 129602771.103T + 1.092T^2
-	//   =       ''         + 100r2771.103T  + 1.092T^2
+	// å¤ªé™½ã®å¹³å‡é»„çµŒ
+	// å¤‰åŒ–é‡ã¯ 0.04â€³/ sec ã§ã‚ã‚‹
+	// L = 280Â°27â€²59.24â€³ + 129602771.103â€³T + 1.092â€³T^2
+	//   =       ''         + 100r2771.103â€³T  + 1.092â€³T^2
 	x = dms2ds(280, 27, 59.24)
 			+ 1296000.0 * fmod(100 * T, 1) + 2771.103 * T + 1.092 * T2;
 	const double L = ds2rad(ds2mod1(x));
 
-	// Œ‚Ì•½‹Ï‰©Œo
-	// •Ï‰»—Ê‚Í 0.54/ sec ‚Å‚ ‚é
-	// Lm= 218‹18Œ59.92+ 1336r307‹52Œ52.581T - 5.279T^2
-	//   =        ''       + 1336r1108372.581T     - 5.279T^2
+	// æœˆã®å¹³å‡é»„çµŒ
+	// å¤‰åŒ–é‡ã¯ 0.54â€³/ sec ã§ã‚ã‚‹
+	// Lm= 218Â°18â€²59.92â€³+ 1336r307Â°52â€²52.581â€³T - 5.279â€³T^2
+	//   =        ''       + 1336r1108372.581â€³T     - 5.279â€³T^2
 	x = dms2ds(218, 18, 59.92)
 			+ 1296000.0 * fmod(1336 * T, 1) + 1108372.581 * T - 5.279 * T2;
 	const double Lm = ds2rad(ds2mod1(x));
 
-	// ‘¾—z‚Ì‹ß’n“_‚Ì•½‹Ï‰©Œo
-	// ƒ¡ = 282‹56Œ14.45+ 6190.055T + 1.645T^2
+	// å¤ªé™½ã®è¿‘åœ°ç‚¹ã®å¹³å‡é»„çµŒ
+	// Î“ = 282Â°56â€²14.45â€³+ 6190.055â€³T + 1.645â€³T^2
 	x = dms2ds(282, 56, 14.45) + 6190.055 * T + 1.645 * T2;
 	const double gamma = ds2rad(x);
 
-	// Œ‚Ì‹ß’n“_‚Ì•½‹Ï‰©Œo
-	// ƒ¡' = 83‹21Œ11.68+ 11r109‹00Œ49.364T - 37.158T^2
-	//     =        ''      + 11r392449.364T      - 37.158T^2
+	// æœˆã®è¿‘åœ°ç‚¹ã®å¹³å‡é»„çµŒ
+	// Î“' = 83Â°21â€²11.68â€³+ 11r109Â°00â€²49.364â€³T - 37.158â€³T^2
+	//     =        ''      + 11r392449.364â€³T      - 37.158â€³T^2
 	x = dms2ds(83, 21, 11.68)
 			+ 1296000.0 * fmod(11 * T, 1) + 392449.364 * T + 37.158 * T2;
 	const double gamma_m = ds2rad(x);
 
-	// Œ‚Ì•½‹Ï¸Œğ“_‰©Œo
-	// ƒ¶= 125‹02Œ40.40- 5r134‹08Œ10.267T + 7.472T^2
-	//   =        ''       - 5r482890.267T + 7.472T^2
+	// æœˆã®å¹³å‡æ˜‡äº¤ç‚¹é»„çµŒ
+	// Î©= 125Â°02â€²40.40â€³- 5r134Â°08â€²10.267â€³T + 7.472â€³T^2
+	//   =        ''       - 5r482890.267â€³T + 7.472â€³T^2
 	x = dms2ds(125, 2, 40.40)
 			- 1296000.0 * fmod(5 * T, 1) - 482890.267 * T + 7.472 * T2;
 	const double omega = ds2rad(x);
 
-	// ‰©Œo‚ÌÍ“® (IAU1980Í“®—˜_ ‚©‚ç 0.004ˆÈã‚Ì‚à‚Ì‚Ì‚İ)
-	// P¯‚Ì‹ˆÊ’u‚ğ0.001s‚Ì’PˆÊ‚É‚µ‚½‚¢‚Ì‚Å‚â‚â‚¸“x‚ÌŒvZ‚ğ‚µ‚Ä‚¢‚é
-	// •Ï‰»—Ê‚Í 1e-6/ sec ‚®‚ç‚¢‚Å‚ ‚é
-	// ƒ¢ƒÓ=(-17.1996- 0.01742T) sin(ƒ¶)       üŠú6798“ú
-	//      +(-1.3187- 0.00016T) sin(2L)       üŠú 183“ú
-	//      +(+0.2062+ 0.00002T) sin(2ƒ¶)      üŠú3399“ú
-	//      +(+0.1426- 0.00034T) sin(L-ƒ¡)     üŠú 365“ú
-	//      +(-0.0517+ 0.00012T) sin(3L-ƒ¡)    üŠú 122“ú
-	//      +(+0.0217- 0.00005T) sin(L+ƒ¡)     üŠú 365“ú
-	//      +(+0.0129+ 0.00001T) sin(2L-ƒ¶)    üŠú 178“ú
-	//      +(+0.0048            ) sin(2L-2ƒ¡')  üŠú 206“ú
-	//      +(+0.0046            ) sin(2ƒ¡'-ƒ¶)  üŠú1305“ú
-	//      +(-0.2274- 0.00002T) sin(2Lm)        üŠú13.7“ú
-	//      +(+0.0712+ 0.00001T) sin(Lm-ƒ¡')     üŠú27.6“ú
-	//      +(-0.0386- 0.00004T) sin(2Lm-ƒ¶)     üŠú13.6“ú
-	//      +(-0.0301            ) sin(3Lm-ƒ¡')    üŠú 9.1“ú
-	//      +(-0.0158            ) sin(-Lm+2L-ƒ¡') üŠú31.8“ú
-	//      +(+0.0123            ) sin(Lm+ƒ¡')     üŠú27.1“ú
-	//      +(+0.0063+ 0.00001T) sin(Lm-ƒ¡'+ƒ¶)  üŠú27.7“ú
-	//      +(+0.0063            ) sin(2Lm-2L)     üŠú14.8“ú
-	//      +(-0.0059            ) sin(3Lm-2L+ƒ¡') üŠú 9.6“ú
-	//      +(-0.0058- 0.00001T) sin(-Lm+ƒ¡'+ƒ¶) üŠú27.4“ú
-	//      +(-0.0051            ) sin(3Lm-ƒ¡'-ƒ¶) üŠú 9.1“ú
+	// é»„çµŒã®ç« å‹• (IAU1980ç« å‹•ç†è«– ã‹ã‚‰ 0.004â€³ä»¥ä¸Šã®ã‚‚ã®ã®ã¿)
+	// æ’æ˜Ÿæ™‚ã®è¦–ä½ç½®ã‚’0.001sã®å˜ä½ã«ã—ãŸã„ã®ã§ã‚„ã‚„é«˜ç²¾åº¦ã®è¨ˆç®—ã‚’ã—ã¦ã„ã‚‹
+	// å¤‰åŒ–é‡ã¯ 1e-6â€³/ sec ãã‚‰ã„ã§ã‚ã‚‹
+	// Î”Ï†=(-17.1996â€³- 0.01742â€³T) sin(Î©)       å‘¨æœŸ6798æ—¥
+	//      +(-1.3187â€³- 0.00016â€³T) sin(2L)       å‘¨æœŸ 183æ—¥
+	//      +(+0.2062â€³+ 0.00002â€³T) sin(2Î©)      å‘¨æœŸ3399æ—¥
+	//      +(+0.1426â€³- 0.00034â€³T) sin(L-Î“)     å‘¨æœŸ 365æ—¥
+	//      +(-0.0517â€³+ 0.00012â€³T) sin(3L-Î“)    å‘¨æœŸ 122æ—¥
+	//      +(+0.0217â€³- 0.00005â€³T) sin(L+Î“)     å‘¨æœŸ 365æ—¥
+	//      +(+0.0129â€³+ 0.00001â€³T) sin(2L-Î©)    å‘¨æœŸ 178æ—¥
+	//      +(+0.0048â€³            ) sin(2L-2Î“')  å‘¨æœŸ 206æ—¥
+	//      +(+0.0046â€³            ) sin(2Î“'-Î©)  å‘¨æœŸ1305æ—¥
+	//      +(-0.2274â€³- 0.00002â€³T) sin(2Lm)        å‘¨æœŸ13.7æ—¥
+	//      +(+0.0712â€³+ 0.00001â€³T) sin(Lm-Î“')     å‘¨æœŸ27.6æ—¥
+	//      +(-0.0386â€³- 0.00004â€³T) sin(2Lm-Î©)     å‘¨æœŸ13.6æ—¥
+	//      +(-0.0301â€³            ) sin(3Lm-Î“')    å‘¨æœŸ 9.1æ—¥
+	//      +(-0.0158â€³            ) sin(-Lm+2L-Î“') å‘¨æœŸ31.8æ—¥
+	//      +(+0.0123â€³            ) sin(Lm+Î“')     å‘¨æœŸ27.1æ—¥
+	//      +(+0.0063â€³+ 0.00001â€³T) sin(Lm-Î“'+Î©)  å‘¨æœŸ27.7æ—¥
+	//      +(+0.0063â€³            ) sin(2Lm-2L)     å‘¨æœŸ14.8æ—¥
+	//      +(-0.0059â€³            ) sin(3Lm-2L+Î“') å‘¨æœŸ 9.6æ—¥
+	//      +(-0.0058â€³- 0.00001â€³T) sin(-Lm+Î“'+Î©) å‘¨æœŸ27.4æ—¥
+	//      +(-0.0051â€³            ) sin(3Lm-Î“'-Î©) å‘¨æœŸ 9.1æ—¥
 
 	x = 	(-17.1996 - 0.01742 * T) * sin(omega)
 		+(-1.3187 - 0.00016 * T) * sin(2 * L)
@@ -143,12 +143,12 @@ AstroCoordinate::calc2(double T)
 		;
 	nlg = ds2rad(x);
 
-	// ‰©“¹ŒXŠp‚ÌÍ“® (IAU1980Í“®—˜_ ‚©‚ç 0.05ˆÈã‚Ì‚à‚Ì‚Ì‚İ)
-	// •Ï‰»—Ê‚Í 1e-6/ sec ‚®‚ç‚¢‚Å‚ ‚é
-	// ƒ¢ƒÃ =(+9.2025+ 0.00089T) cos(ƒ¶)    üŠú6798“ú
-	//     + (+0.5736- 0.00031T) cos(2L)    üŠú 183“ú
-	//     + (-0.0895+ 0.00005T) cos(2ƒ¶)   üŠú3399“ú
-	//     + (+0.0977- 0.00005T) cos(2Lm)   üŠú13.7“ú
+	// é»„é“å‚¾è§’ã®ç« å‹• (IAU1980ç« å‹•ç†è«– ã‹ã‚‰ 0.05â€³ä»¥ä¸Šã®ã‚‚ã®ã®ã¿)
+	// å¤‰åŒ–é‡ã¯ 1e-6â€³/ sec ãã‚‰ã„ã§ã‚ã‚‹
+	// Î”Îµ =(+9.2025â€³+ 0.00089â€³T) cos(Î©)    å‘¨æœŸ6798æ—¥
+	//     + (+0.5736â€³- 0.00031â€³T) cos(2L)    å‘¨æœŸ 183æ—¥
+	//     + (-0.0895â€³+ 0.00005â€³T) cos(2Î©)   å‘¨æœŸ3399æ—¥
+	//     + (+0.0977â€³- 0.00005â€³T) cos(2Lm)   å‘¨æœŸ13.7æ—¥
 	x = 	(  9.2025  + 0.00089 * T) * cos(omega)
 		+( 0.5736  - 0.00031 * T) * cos(2 * L)
 		+(-0.0895  + 0.00005 * T) * cos(2 * omega)
@@ -156,106 +156,106 @@ AstroCoordinate::calc2(double T)
 		;
 	nob = ds2rad(x);
 
-	// •ª“_·(ÔŒo•ûŒü‚ÌÍ“®)
-	// •Ï‰»—Ê‚Í 1e-7/ sec ‚®‚ç‚¢‚Å‚ ‚é
-	// •½‹ÏP¯‚©‚ç‹P¯‚ğ‹‚ß‚é‚½‚ß‚Ég—p‚·‚é
+	// åˆ†ç‚¹å·®(èµ¤çµŒæ–¹å‘ã®ç« å‹•)
+	// å¤‰åŒ–é‡ã¯ 1e-7â€³/ sec ãã‚‰ã„ã§ã‚ã‚‹
+	// å¹³å‡æ’æ˜Ÿæ™‚ã‹ã‚‰è¦–æ’æ˜Ÿæ™‚ã‚’æ±‚ã‚ã‚‹ãŸã‚ã«ä½¿ç”¨ã™ã‚‹
 	Eq = rad2hs(nlg) * cos(moe + nob);
 
-    // ‘¾—z‰©ŒoA’nS‹——£ŒvZ
+    // å¤ªé™½é»„çµŒã€åœ°å¿ƒè·é›¢è¨ˆç®—
     Planets::calc_sun(T, Ls, Rs);
 }
 
 
 //------------------------------------------------------------------------
-//. À•W•ÏŠ·s—ñ‚ğŒvZ‚·‚é
+//. åº§æ¨™å¤‰æ›è¡Œåˆ—ã‚’è¨ˆç®—ã™ã‚‹
 
-//. AstroCoordinate::calcMat - ‹Ô“¹^’n•½À•W•ÏŠ·s—ñ‚ÌŒvZ
+//. AstroCoordinate::calcMat - è¦–èµ¤é“ï¼åœ°å¹³åº§æ¨™å¤‰æ›è¡Œåˆ—ã®è¨ˆç®—
 void
 AstroCoordinate::calcMat()
 {
 	Degree z(lst(), asHs());
-	Degree y(90, 0, -lt.sec()); // 90‹- lt  Ô“¹‚Ì‚“x
+	Degree y(90, 0, -lt.sec()); // 90Â°- lt  èµ¤é“ã®é«˜åº¦
 
-	// ’n•½¨Ô“¹À•W•ÏŠ·s—ñ
+	// åœ°å¹³â†’èµ¤é“åº§æ¨™å¤‰æ›è¡Œåˆ—
 	h2q.setRotate(y, 'Y');
 	h2q *= Mat3x3(z, 'Z');
 
-	// Ô“¹¨’n•½À•W•ÏŠ·s—ñ
+	// èµ¤é“â†’åœ°å¹³åº§æ¨™å¤‰æ›è¡Œåˆ—
 	z.setNeg();
 	y.setNeg();
 	q2h.setRotate(z, 'Z');
 	q2h *= Mat3x3(y, 'Y');
 
-	// ÄŒvZŠ®—¹
+	// å†è¨ˆç®—å®Œäº†
 	recalcMat = false;
 }
 
-//. AstroCoordinate::calcMat2 - Î·EÍ“®EÔ“¹^‰©“¹À•W•ÏŠ·s—ñ‚ÌŒvZ
+//. AstroCoordinate::calcMat2 - æ­³å·®ãƒ»ç« å‹•ãƒ»èµ¤é“ï¼é»„é“åº§æ¨™å¤‰æ›è¡Œåˆ—ã®è¨ˆç®—
 void
 AstroCoordinate::calcMat2()
 {
-	// Î·i50.3^”Nj•â³s—ñ
-	Degree d1(za); d1 -= Degree(90*3600); // ƒÄA - 90‹
-	Degree d2(ta); d2.setNeg();           // -ƒÆA
-	Degree d3(Za); d3 += Degree(90*3600); // ƒ¤A + 90‹
+	// æ­³å·®ï¼ˆ50.3â€³ï¼å¹´ï¼‰è£œæ­£è¡Œåˆ—
+	Degree d1(za); d1 -= Degree(90*3600); // Î¶A - 90Â°
+	Degree d2(ta); d2.setNeg();           // -Î¸A
+	Degree d3(Za); d3 += Degree(90*3600); // Î–A + 90Â°
 	j2q.setRotate(d1, 'Z');
 	j2q *= Mat3x3(d2, 'X');
-	j2q *= Mat3x3(d3, 'Z'); 	// J2000.0Ô“¹ ¨ •½‹ÏÔ“¹
+	j2q *= Mat3x3(d3, 'Z'); 	// J2000.0èµ¤é“ â†’ å¹³å‡èµ¤é“
 	d1.setNeg();
 	d2.setNeg();
 	d3.setNeg();
 	q2j.setRotate(d3, 'Z');
 	q2j *= Mat3x3(d2, 'X');
-	q2j *= Mat3x3(d1, 'Z'); 	// J2000.0Ô“¹ © •½‹ÏÔ“¹
+	q2j *= Mat3x3(d1, 'Z'); 	// J2000.0èµ¤é“ â† å¹³å‡èµ¤é“
 
-	// Í“®i}9j•â³s—ñ
-	d1.setRadian(-moe);         // -ƒÃA
-	d2.setRadian(nlg);          // ƒ¢ƒÓ
-	d3.setRadian(moe + nob);    // ƒÃA + ƒ¢ƒÃ
+	// ç« å‹•ï¼ˆÂ±9â€³ï¼‰è£œæ­£è¡Œåˆ—
+	d1.setRadian(-moe);         // -ÎµA
+	d2.setRadian(nlg);          // Î”Ï†
+	d3.setRadian(moe + nob);    // ÎµA + Î”Îµ
 	q2tq.setRotate(d1, 'X');
 	q2tq *= Mat3x3(d2, 'Z');
-	q2tq *= Mat3x3(d3, 'X');	// •½‹ÏÔ“¹  ¨ ^Ô“¹
+	q2tq *= Mat3x3(d3, 'X');	// å¹³å‡èµ¤é“  â†’ çœŸèµ¤é“
 	d1.setNeg();
 	d2.setNeg();
 	d3.setNeg();
 	tq2q.setRotate(d3, 'X');
 	tq2q *= Mat3x3(d2, 'Z');
-	tq2q *= Mat3x3(d1, 'X');	// •½‹ÏÔ“¹  © ^Ô“¹
+	tq2q *= Mat3x3(d1, 'X');	// å¹³å‡èµ¤é“  â† çœŸèµ¤é“
 
-	// ”NüŒõs·(Å‘å20)•â³ƒxƒNƒgƒ‹
+	// å¹´å‘¨å…‰è¡Œå·®(æœ€å¤§20â€³)è£œæ­£ãƒ™ã‚¯ãƒˆãƒ«
 	const double cosL = cos(Ls);
-	const double k = 9.936508e-5;	// Œõs·’è”
-	k_abr.x = k * sin(Ls);		// k * ’n‹…Œö“]‰^“®‚Ì•ûŒü—]Œ·
+	const double k = 9.936508e-5;	// å…‰è¡Œå·®å®šæ•°
+	k_abr.x = k * sin(Ls);		// k * åœ°çƒå…¬è»¢é‹å‹•ã®æ–¹å‘ä½™å¼¦
 	k_abr.y = k * -cosL * cos(moe + nob);
 	k_abr.z = k * -cosL * sin(moe + nob);
 
-	// •½‹ÏÔ“¹^‰©“¹À•W•ÏŠ·s—ñ
+	// å¹³å‡èµ¤é“ï¼é»„é“åº§æ¨™å¤‰æ›è¡Œåˆ—
 	d1.setRadian(moe);
-	c2q.setRotate(d1, 'X');		// •½‹Ï‰©“¹  ¨ •½‹ÏÔ“¹
+	c2q.setRotate(d1, 'X');		// å¹³å‡é»„é“  â†’ å¹³å‡èµ¤é“
 	d1.setNeg();
-	q2c.setRotate(d1, 'X');		// •½‹Ï‰©“¹  © •½‹ÏÔ“¹
+	q2c.setRotate(d1, 'X');		// å¹³å‡é»„é“  â† å¹³å‡èµ¤é“
 
-	// ^Ô“¹^‰©“¹À•W•ÏŠ·s—ñ
-	d1.setRadian(moe + nob);    // ƒÃA + ƒ¢ƒÃ
-	tc2tq.setRotate(d1, 'X');	// ^‰©“¹  ¨ •½‹ÏÔ“¹
+	// çœŸèµ¤é“ï¼é»„é“åº§æ¨™å¤‰æ›è¡Œåˆ—
+	d1.setRadian(moe + nob);    // ÎµA + Î”Îµ
+	tc2tq.setRotate(d1, 'X');	// çœŸé»„é“  â†’ å¹³å‡èµ¤é“
 	d1.setNeg();
-	tq2tc.setRotate(d1, 'X');   // ^‰©“¹  © •½‹ÏÔ“¹
+	tq2tc.setRotate(d1, 'X');   // çœŸé»„é“  â† å¹³å‡èµ¤é“
 
-    // ‘¾—z‚Ì’nSŠô‰½ŠwÔ“¹À•W[AU] ¦Œõs·ŠÜ‚Ü‚¸
-    sunJ.setLtLg(Rs, Degree(0), Ls - Pa);					// J2000.0‚Ì‰©“¹À•W
-    sunJ *= Mat3x3(Degree(dms2ds(23, 26, 21.448)), 'X');	// J2000.0‚Ì•½‹Ï‰©“¹ŒXŠp
-    sunQ.setLtLg(Rs, Degree(0), Ls);		// u‚Ì•½‹Ï‰©“¹À•W
+    // å¤ªé™½ã®åœ°å¿ƒå¹¾ä½•å­¦èµ¤é“åº§æ¨™[AU] â€»å…‰è¡Œå·®å«ã¾ãš
+    sunJ.setLtLg(Rs, Degree(0), Ls - Pa);					// J2000.0ã®é»„é“åº§æ¨™
+    sunJ *= Mat3x3(Degree(dms2ds(23, 26, 21.448)), 'X');	// J2000.0ã®å¹³å‡é»„é“å‚¾è§’
+    sunQ.setLtLg(Rs, Degree(0), Ls);		// ç¬æ™‚ã®å¹³å‡é»„é“åº§æ¨™
     sunQ *= c2q;
 
-	// ÄŒvZŠ®—¹
+	// å†è¨ˆç®—å®Œäº†
 	recalcMat2 = false;
 }
 
 #define NEWABR
 //------------------------------------------------------------------------
-//. Œõs·
+//. å…‰è¡Œå·®
 
-//. AstroCoordinate::addAnnualAberration - P¯‚Ì”NüŒõs·’Ç‰Á
+//. AstroCoordinate::addAnnualAberration - æ’æ˜Ÿã®å¹´å‘¨å…‰è¡Œå·®è¿½åŠ 
 void
 AstroCoordinate::addAnnualAberration(Vec3& v) const
 {
@@ -276,7 +276,7 @@ AstroCoordinate::addAnnualAberration(Vec3& v) const
 #endif
 }
 
-//. AstroCoordinate::subAnnualAberration - P¯‚Ì”NüŒõs·œ‹
+//. AstroCoordinate::subAnnualAberration - æ’æ˜Ÿã®å¹´å‘¨å…‰è¡Œå·®é™¤å»
 void
 AstroCoordinate::subAnnualAberration(Vec3& v) const
 {
@@ -299,16 +299,16 @@ AstroCoordinate::subAnnualAberration(Vec3& v) const
 
 
 //------------------------------------------------------------------------
-//. ‘å‹C· (‘å‹C· = ‹‚“x - ^‚“x)
+//. å¤§æ°—å·® (å¤§æ°—å·® = è¦–é«˜åº¦ - çœŸé«˜åº¦)
 
-//. refractionApp - ‹‚“x‚É‘Î‚·‚é‘å‹C·‚ğ“¾‚é.
-// •¶Œ£‚P‚Ìƒ‰ƒh[‚Ì‘å‹C·•\(RADAU'S REFRACTION)‚É‹ß—‚µ‚½’l‚ª“¾‚ç‚ê‚é
-// ‚æ‚¤‚ÉÀŒ±®‚ğ‘g‚İ—§‚Ä‚ÄŒvZ‚µ‚Ä‚¢‚éB®‚Ì¸“x‚ÍA
-// ‹‚“x 90‹`11‹‚É‘Î‚µ‚Ä }0.1A
-// ‹‚“x 11‹`-1‹‚É‘Î‚µ‚Ä }2‚Ì¸“x‚Å‚ ‚éB
-// [•¶Œ£1]•½¬‚X”N “V‘ÌˆÊ’u•\AŠCã•ÛˆÀ’¡
+//. refractionApp - è¦–é«˜åº¦ã«å¯¾ã™ã‚‹å¤§æ°—å·®ã‚’å¾—ã‚‹.
+// æ–‡çŒ®ï¼‘ã®ãƒ©ãƒ‰ãƒ¼ã®å¤§æ°—å·®è¡¨(RADAU'S REFRACTION)ã«è¿‘ä¼¼ã—ãŸå€¤ãŒå¾—ã‚‰ã‚Œã‚‹
+// ã‚ˆã†ã«å®Ÿé¨“å¼ã‚’çµ„ã¿ç«‹ã¦ã¦è¨ˆç®—ã—ã¦ã„ã‚‹ã€‚å¼ã®ç²¾åº¦ã¯ã€
+// è¦–é«˜åº¦ 90Â°ï½11Â°ã«å¯¾ã—ã¦ Â±0.1â€³ã€
+// è¦–é«˜åº¦ 11Â°ï½-1Â°ã«å¯¾ã—ã¦ Â±2â€³ã®ç²¾åº¦ã§ã‚ã‚‹ã€‚
+// [æ–‡çŒ®1]å¹³æˆï¼™å¹´ å¤©ä½“ä½ç½®è¡¨ã€æµ·ä¸Šä¿å®‰åº
 //
-//	‹‚“x	‘å‹C·[]
+//	è¦–é«˜åº¦	å¤§æ°—å·®[â€³]
 //	-1	3387.5
 //	0	2196.0
 //	2	1146.6
@@ -327,9 +327,9 @@ AstroCoordinate::subAnnualAberration(Vec3& v) const
 //	70	21.9
 //	80	10.6
 //	90	0
-// @param sinAlt sin(‹‚“x)
-// @param cosAlt cos(‹‚“x)
-// @return ‘å‹C·
+// @param sinAlt sin(è¦–é«˜åº¦)
+// @param cosAlt cos(è¦–é«˜åº¦)
+// @return å¤§æ°—å·®
 Degree
 AstroCoordinate::refractionApp(double sinAlt, double cosAlt) const
 {
@@ -349,7 +349,7 @@ AstroCoordinate::refractionApp(double sinAlt, double cosAlt) const
 
 	double ds;
 	if (sinAlt <= x5) {
-		// ‚“x11‹ˆÈ‰º‚Í˜A•ª”•âŠÔ‚Å‘å‹C·‚ğZo‚·‚é
+		// é«˜åº¦11Â°ä»¥ä¸‹ã¯é€£åˆ†æ•°è£œé–“ã§å¤§æ°—å·®ã‚’ç®—å‡ºã™ã‚‹
 		ds = y0 + (sinAlt - x0) /
 			(y1 + (sinAlt - x1) /
 			(y2 + (sinAlt - x2) /
@@ -358,21 +358,21 @@ AstroCoordinate::refractionApp(double sinAlt, double cosAlt) const
 			 y5))));
 	}
 	else {
-		// ‚“x11‹ˆÈã‚ÍÀŒ±“I‚È‹ß—®‚ÅZo‚·‚é
-		double tanz = cosAlt / sinAlt;	// tan(‹“V’¸‹——£) == 1 / tan(‹‚“x)
+		// é«˜åº¦11Â°ä»¥ä¸Šã¯å®Ÿé¨“çš„ãªè¿‘ä¼¼å¼ã§ç®—å‡ºã™ã‚‹
+		double tanz = cosAlt / sinAlt;	// tan(è¦–å¤©é ‚è·é›¢) == 1 / tan(è¦–é«˜åº¦)
 		ds = 60.06058 * tanz - 0.06058 * tanz * tanz * tanz;
 	}
 	return Degree(ds);
 }
 
-//. refractionTrue - ^‚“x‚É‘Î‚·‚é‘å‹C·‚ğ“¾‚é
-// @param alt ^‚“x
-// @return ‘å‹C·
+//. refractionTrue - çœŸé«˜åº¦ã«å¯¾ã™ã‚‹å¤§æ°—å·®ã‚’å¾—ã‚‹
+// @param alt çœŸé«˜åº¦
+// @return å¤§æ°—å·®
 Degree
 AstroCoordinate::refractionTrue(Degree alt) const
 {
-	Degree app;		// ‹‚“x
-	Degree ref(0);		// ‘å‹C·
+	Degree app;		// è¦–é«˜åº¦
+	Degree ref(0);		// å¤§æ°—å·®
 	do {
 		app = alt + ref;
 		ref = refractionApp(app);
@@ -380,9 +380,9 @@ AstroCoordinate::refractionTrue(Degree alt) const
 	return ref;
 }
 
-//. ‹’n•½À•W‚É‘Î‚·‚é‘å‹C·‚ğ“¾‚é
-// @param vh ‹’n•½À•W
-// @return ‘å‹C· (‹‚“x - ^‚“x)
+//. è¦–åœ°å¹³åº§æ¨™ã«å¯¾ã™ã‚‹å¤§æ°—å·®ã‚’å¾—ã‚‹
+// @param vh è¦–åœ°å¹³åº§æ¨™
+// @return å¤§æ°—å·® (è¦–é«˜åº¦ - çœŸé«˜åº¦)
 Degree
 AstroCoordinate::refractionApp(const Vec3& vh) const
 {
@@ -394,9 +394,9 @@ AstroCoordinate::refractionApp(const Vec3& vh) const
 		return Degree(0);
 }
 
-//. ^’n•½À•W‚É‘Î‚·‚é‘å‹C·‚ğ“¾‚é
-// @param vh ^’n•½À•W
-// @return ‘å‹C· (‹‚“x - ^‚“x)
+//. çœŸåœ°å¹³åº§æ¨™ã«å¯¾ã™ã‚‹å¤§æ°—å·®ã‚’å¾—ã‚‹
+// @param vh çœŸåœ°å¹³åº§æ¨™
+// @return å¤§æ°—å·® (è¦–é«˜åº¦ - çœŸé«˜åº¦)
 Degree
 AstroCoordinate::refractionTrue(const Vec3& vh) const
 {
@@ -406,27 +406,27 @@ AstroCoordinate::refractionTrue(const Vec3& vh) const
 	return refractionTrue(alt);
 }
 
-//. AstroCoordinate::addRefraction -‘å‹C·’Ç‰Á
+//. AstroCoordinate::addRefraction -å¤§æ°—å·®è¿½åŠ 
 void
 AstroCoordinate::addRefraction(Vec3& vh) const
 {
-	// ^“V’¸—£Šp Z ‚Ì sin,cos‚ÆAƒxƒNƒ^‚Ì“®Œa r ‚ğ“¾‚é
+	// çœŸå¤©é ‚é›¢è§’ Z ã® sin,cosã¨ã€ãƒ™ã‚¯ã‚¿ã®å‹•å¾„ r ã‚’å¾—ã‚‹
 	double r = vh.radius();
 	double cos_z = vh.z / r;
 	double sin_z = sqrt(vh.x * vh.x + vh.y * vh.y) / r;
 
-	// sin_zà0 ‚È‚çA‘±‚­ŒvZ‚Å0œZ‚ª”­¶‚·‚é‚Ì‚Å‘Å‚¿Ø‚é
-	// ‚±‚Ì‚Æ‚«“V’¸—£Šu zà0‹‚Å‚ ‚èA‘å‹C·0‹‚È‚Ì‚Å‘Å‚¿Ø‚Á‚Ä‚à–â‘è‚È‚¢
-	// 1e-10 [rad] == 6.28e-9 ˆÈ‰º‚Ì‚Æ‚«‘Å‚¿Ø‚é‚±‚Æ‚É‚·‚é
+	// sin_zâ‰’0 ãªã‚‰ã€ç¶šãè¨ˆç®—ã§0é™¤ç®—ãŒç™ºç”Ÿã™ã‚‹ã®ã§æ‰“ã¡åˆ‡ã‚‹
+	// ã“ã®ã¨ãå¤©é ‚é›¢éš” zâ‰’0Â°ã§ã‚ã‚Šã€å¤§æ°—å·®0Â°ãªã®ã§æ‰“ã¡åˆ‡ã£ã¦ã‚‚å•é¡Œãªã„
+	// 1e-10 [rad] == 6.28e-9â€³ ä»¥ä¸‹ã®ã¨ãæ‰“ã¡åˆ‡ã‚‹ã“ã¨ã«ã™ã‚‹
 	if (sin_z <= 1e-10) return;
 
-	// ^“V’¸—£Šp Z ‚ğ‘å‹C· ref ‚¾‚¯Œ¸‚¶‚Ä(‚“x‚ğ‚‚­‚µ‚Ä)‹‚“x‚É‚·‚é
-	// ŒvZ®‚ÍˆÈ‰º‚Ì’Ê‚è‚Å‚ ‚é
+	// çœŸå¤©é ‚é›¢è§’ Z ã‚’å¤§æ°—å·® ref ã ã‘æ¸›ã˜ã¦(é«˜åº¦ã‚’é«˜ãã—ã¦)è¦–é«˜åº¦ã«ã™ã‚‹
+	// è¨ˆç®—å¼ã¯ä»¥ä¸‹ã®é€šã‚Šã§ã‚ã‚‹
 	//   K = sin(Z - ref) / sin Z;
 	//   x = x * K;
 	//   y = y * K;
 	//   z = r * cos(Z - ref);
-	// ÀÛ‚ÌŒvZ‚Å‚Í K ‚Æ z ‚Ì®‚ğOŠpŠÖ”‚Ì‰Á–@’è—‚Å“WŠJ‚·‚é
+	// å®Ÿéš›ã®è¨ˆç®—ã§ã¯ K ã¨ z ã®å¼ã‚’ä¸‰è§’é–¢æ•°ã®åŠ æ³•å®šç†ã§å±•é–‹ã™ã‚‹
 	//   K = cos(ref) - cos(Z)*sin(ref)/sin(Z);
 	//   z = r * (cos(Z)*cos(ref) + sin(Z)*sin(ref));
 	Degree ref(refractionTrue(vh));
@@ -438,27 +438,27 @@ AstroCoordinate::addRefraction(Vec3& vh) const
 	vh.z = r * (cos_z * cos_ref + sin_z * sin_ref);
 }
 
-//. AstroCoordinate::subRefraction - ‘å‹C·œ‹
+//. AstroCoordinate::subRefraction - å¤§æ°—å·®é™¤å»
 void
 AstroCoordinate::subRefraction(Vec3& vh) const
 {
-	// “V’¸—£Šp Z ‚Ì sin,cos‚ÆAƒxƒNƒ^‚Ì“®Œa r ‚ğ“¾‚é
+	// å¤©é ‚é›¢è§’ Z ã® sin,cosã¨ã€ãƒ™ã‚¯ã‚¿ã®å‹•å¾„ r ã‚’å¾—ã‚‹
 	double r = vh.radius();
 	double cos_z = vh.z / r;
 	double sin_z = sqrt(vh.x * vh.x + vh.y * vh.y) / r;
 
-	// sin_zà0 ‚È‚çA‘±‚­ŒvZ‚Å0œZ‚ª”­¶‚·‚é‚Ì‚Å‘Å‚¿Ø‚é
-	// ‚±‚Ì‚Æ‚«“V’¸—£Šu zà0‹‚Å‚ ‚èA‘å‹C·0‹‚È‚Ì‚Å‘Å‚¿Ø‚Á‚Ä‚à–â‘è‚È‚¢
-	// 1e-10 [rad] == 6.28e-9 ˆÈ‰º‚Ì‚Æ‚«‘Å‚¿Ø‚é‚±‚Æ‚É‚·‚é
+	// sin_zâ‰’0 ãªã‚‰ã€ç¶šãè¨ˆç®—ã§0é™¤ç®—ãŒç™ºç”Ÿã™ã‚‹ã®ã§æ‰“ã¡åˆ‡ã‚‹
+	// ã“ã®ã¨ãå¤©é ‚é›¢éš” zâ‰’0Â°ã§ã‚ã‚Šã€å¤§æ°—å·®0Â°ãªã®ã§æ‰“ã¡åˆ‡ã£ã¦ã‚‚å•é¡Œãªã„
+	// 1e-10 [rad] == 6.28e-9â€³ ä»¥ä¸‹ã®ã¨ãæ‰“ã¡åˆ‡ã‚‹ã“ã¨ã«ã™ã‚‹
 	if (sin_z <= 1e-10) return;
 
-	// “V’¸—£Šp Z ‚ğ‘å‹C· ref ‚¾‚¯‘‚µ‚Ä(‚“x‚ğ’á‚­‚µ‚Ä)^‚“x‚É‚·‚é
-	// ŒvZ®‚ÍˆÈ‰º‚Ì’Ê‚è‚Å‚ ‚é
+	// å¤©é ‚é›¢è§’ Z ã‚’å¤§æ°—å·® ref ã ã‘å¢—ã—ã¦(é«˜åº¦ã‚’ä½ãã—ã¦)çœŸé«˜åº¦ã«ã™ã‚‹
+	// è¨ˆç®—å¼ã¯ä»¥ä¸‹ã®é€šã‚Šã§ã‚ã‚‹
 	//   K = sin(Z + ref) / sin Z;
 	//   x = x * K;
 	//   y = y * K;
 	//   z = r * cos(Z + ref);
-	// ÀÛ‚ÌŒvZ‚Å‚Í K ‚Æ z ‚Ì®‚ğOŠpŠÖ”‚Ì‰Á–@’è—‚Å“WŠJ‚·‚é
+	// å®Ÿéš›ã®è¨ˆç®—ã§ã¯ K ã¨ z ã®å¼ã‚’ä¸‰è§’é–¢æ•°ã®åŠ æ³•å®šç†ã§å±•é–‹ã™ã‚‹
 	//   K = cos(ref) + cos(Z)*sin(ref)/sin(Z);
 	//   z = r * (cos(Z)*cos(ref) - sin(Z)*sin(ref));
 	Degree ref(refractionApp(cos_z, sin_z));
@@ -472,41 +472,41 @@ AstroCoordinate::subRefraction(Vec3& vh) const
 
 
 //------------------------------------------------------------------------
-//. ’nSÀ•W•ÏŠ·
+//. åœ°å¿ƒåº§æ¨™å¤‰æ›
 
-//. AstroCoordinate::setLocation - ŠÏ‘ªˆÊ’u‚ğİ’è‚·‚é
-// Œ‚âlH‰q¯‚È‚Ç’n‹…‹ß–T‚Ì“V‘Ì‚É‘Î‚·‚é•â³‚ğs‚¤‚½‚ß‚Ég—p‚·‚é
-// @param longitude ‘ª’nŒo“x(“ŒŒo‚ğ³A¼Œo‚ğ•‰‚Æ‚·‚é)
-// @param latitude  ‘ª’nˆÜ“x
-// @param h         ŠC”²‚“x[m]
+//. AstroCoordinate::setLocation - è¦³æ¸¬ä½ç½®ã‚’è¨­å®šã™ã‚‹
+// æœˆã‚„äººå·¥è¡›æ˜Ÿãªã©åœ°çƒè¿‘å‚ã®å¤©ä½“ã«å¯¾ã™ã‚‹è£œæ­£ã‚’è¡Œã†ãŸã‚ã«ä½¿ç”¨ã™ã‚‹
+// @param longitude æ¸¬åœ°çµŒåº¦(æ±çµŒã‚’æ­£ã€è¥¿çµŒã‚’è² ã¨ã™ã‚‹)
+// @param latitude  æ¸¬åœ°ç·¯åº¦
+// @param h         æµ·æŠœé«˜åº¦[m]
 void
 AstroCoordinate::setLocation(const Degree& longitude, const Degree& latitude, double h)
 {
 #ifdef OLD_LOCATION_SYSTEM
-	// “ú–{‘ª’nŒn(ƒxƒbƒZƒ‹‘È‰~‘Ì)
-	const double a = 6377397.15500;      // ’n‹…‘È‰~‘Ì‚ÌÔ“¹”¼Œa[m]
-	const double e2 = 0.006674372230614; // ''          —£S—¦^2
+	// æ—¥æœ¬æ¸¬åœ°ç³»(ãƒ™ãƒƒã‚»ãƒ«æ¥•å††ä½“)
+	const double a = 6377397.15500;      // åœ°çƒæ¥•å††ä½“ã®èµ¤é“åŠå¾„[m]
+	const double e2 = 0.006674372230614; // ''          é›¢å¿ƒç‡^2
 #else
-	// ¢ŠE‘ª’nŒn(GRS80). http://ja.wikipedia.org/wiki/GRS80
-	const double a = 6378137.00000;         // ’n‹…‘È‰~‘Ì‚ÌÔ“¹”¼Œa[m]
-	const double e2 = 0.006694380022900788; // ''          —£S—¦^2
+	// ä¸–ç•Œæ¸¬åœ°ç³»(GRS80). http://ja.wikipedia.org/wiki/GRS80
+	const double a = 6378137.00000;         // åœ°çƒæ¥•å††ä½“ã®èµ¤é“åŠå¾„[m]
+	const double e2 = 0.006694380022900788; // ''          é›¢å¿ƒç‡^2
 #endif
-	const double N = a / sqrt(1 - e2 * sin(latitude)); // “Œ¼ü‹È—¦”¼Œa
+	const double N = a / sqrt(1 - e2 * sin(latitude)); // æ±è¥¿ç·šæ›²ç‡åŠå¾„
 
-	// ’n‹…‘È‰~‘Ìã‚ÌŠô‰½Šw“IˆÊ’u‚ğ‹‚ß‚é
+	// åœ°çƒæ¥•å††ä½“ä¸Šã®å¹¾ä½•å­¦çš„ä½ç½®ã‚’æ±‚ã‚ã‚‹
 	location.setLtLg(1, latitude, longitude);
 	location.x *= N + h;
 	location.y *= N + h;
 	location.z *= N * (1 - e2) + h;
 
-#ifdef OLD_LOCATION_SYSTEM	// “ú–{‘ª’nŒn(ƒxƒbƒZƒ‹‘È‰~‘Ì)
-	// ’n‹…‘È‰~‘Ì‚Ì’†S‚Æ’n‹…dS‚Ì‚¸‚ê‚ğ•â³‚µAdS‚ğŒ´“_‚Æ‚·‚é
-	// ¦ŒvZ‚Ì’PˆÊ‚Íƒ[ƒgƒ‹‚Å‚ ‚é
+#ifdef OLD_LOCATION_SYSTEM	// æ—¥æœ¬æ¸¬åœ°ç³»(ãƒ™ãƒƒã‚»ãƒ«æ¥•å††ä½“)
+	// åœ°çƒæ¥•å††ä½“ã®ä¸­å¿ƒã¨åœ°çƒé‡å¿ƒã®ãšã‚Œã‚’è£œæ­£ã—ã€é‡å¿ƒã‚’åŸç‚¹ã¨ã™ã‚‹
+	// â€»è¨ˆç®—ã®å˜ä½ã¯ãƒ¡ãƒ¼ãƒˆãƒ«ã§ã‚ã‚‹
 	location.x += -136;
 	location.y +=  521;
 	location.z +=  681;
-#else	// ¢ŠE‘ª’nŒn(GRS80).
-		// dS•â³‚Í•s—v‚Å‚ ‚é.
+#else	// ä¸–ç•Œæ¸¬åœ°ç³»(GRS80).
+		// é‡å¿ƒè£œæ­£ã¯ä¸è¦ã§ã‚ã‚‹.
 #endif
 }
 
@@ -524,13 +524,13 @@ using namespace astro;
 int main(int argc, char** argv)
 {
 	if (argc == 2 && strcmp(argv[1], "ref") == 0) {
-		// ‘å‹C·ƒeƒXƒg
+		// å¤§æ°—å·®ãƒ†ã‚¹ãƒˆ
 		AstroCoordinate ac;
 		freopen("kisa.txt", "r", stdin);
 		char buf[256];
 		while (gets(buf)) {
-			double h;	// ‹‚“x
-			double d;	// ‘å‹C· []
+			double h;	// è¦–é«˜åº¦
+			double d;	// å¤§æ°—å·® [â€³]
 			sscanf(buf, "%lf %lf", &h, &d);
 			Vec3 v(1, Degree(90 - h, 0, 0), Degree(0));
 			Degree ref(ac.refractionApp(v));
@@ -542,7 +542,7 @@ int main(int argc, char** argv)
 		return EXIT_SUCCESS;
 	}
 	if (argc == 2 && strcmp(argv[1], "abr") == 0) {
-		// Œõs·ƒeƒXƒg
+		// å…‰è¡Œå·®ãƒ†ã‚¹ãƒˆ
 		AstroCoordinate ac;
 		ac.setTime(AstroTime(Jday(1978, 6, 10), 0));
 		ac.beginConvert();
@@ -584,11 +584,11 @@ int main(int argc, char** argv)
 	long t0 = GetTickCount();
 	int i;
 	for (i = 0; i < 10000; ++i)
-//		ac.updateTime();	// calc()ŒvZŠÔ 5367 / 10000 ms
-//		ac.updateSystemTime();	// calc()ŒvZŠÔ 5643 / 10000 ms
-		ac.setTime(ac.getTime());//calc()ŒvZŠÔ 1525 / 10000 ms
+//		ac.updateTime();	// calc()è¨ˆç®—æ™‚é–“ 5367 / 10000 ms
+//		ac.updateSystemTime();	// calc()è¨ˆç®—æ™‚é–“ 5643 / 10000 ms
+		ac.setTime(ac.getTime());//calc()è¨ˆç®—æ™‚é–“ 1525 / 10000 ms
 	long t1 = GetTickCount();
-	fprintf(stderr, "calc()ŒvZŠÔ %lu / %d ms\n", (t1 - t0), i);
+	fprintf(stderr, "calc()è¨ˆç®—æ™‚é–“ %lu / %d ms\n", (t1 - t0), i);
 #endif
 	fputs("y.m.d.sec\n", stderr);
 	while (gets(buf)) {

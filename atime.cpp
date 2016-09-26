@@ -1,9 +1,9 @@
-//. atime.cpp - “V•¶
+ï»¿//. atime.cpp - å¤©æ–‡æ™‚åˆ»
 //	Copyright (C) 1997,1998,2014,2015 hkuno
 //	mailto:hkuno.kuno@nifty.ne.jp
 #include <ctime>
 #include "jday.h"
-#include "degree.h"	//!@bug VC6 bug? ’¼‘O‚É"namespace astro {}"‚ğ’u‚­‚Æ degree.h‚Ì ostreamQÆ‚ÅƒRƒ“ƒpƒCƒ‹ƒGƒ‰[‚Æ‚È‚é.
+#include "degree.h"	//!@bug VC6 bug? ç›´å‰ã«"namespace astro {}"ã‚’ç½®ãã¨ degree.hã® ostreamå‚ç…§ã§ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã‚¨ãƒ©ãƒ¼ã¨ãªã‚‹.
 #include "atime.h"
 #if defined(WIN32)
 #include <windows.h>
@@ -16,27 +16,27 @@ using namespace astro;
 namespace astro {
 
 //------------------------------------------------------------------------
-//.----- class AstroTime : “V•¶ --------------------------------------
+//.----- class AstroTime : å¤©æ–‡æ™‚åˆ» --------------------------------------
 //------------------------------------------------------------------------
 
-//----- ƒRƒ“ƒXƒgƒ‰ƒNƒ^ ---------------------------------------------------
-// dut1‚ÆleapSec‚Í“K“–‚È‰Šú’l‚É‚·‚éB
-// Œµ–§‚ÈŒvZ‚Ì‚½‚ß‚É‚ÍAsetDUT1(),setLeapSec()‚Åİ’è‚·‚é‚±‚ÆB
+//----- ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ ---------------------------------------------------
+// dut1ã¨leapSecã¯é©å½“ãªåˆæœŸå€¤ã«ã™ã‚‹ã€‚
+// å³å¯†ãªè¨ˆç®—ã®ãŸã‚ã«ã¯ã€setDUT1(),setLeapSec()ã§è¨­å®šã™ã‚‹ã“ã¨ã€‚
 
-// ‰[•b‚Ì‰Šú’l [TAI-UTC]
+// é–ç§’ã®åˆæœŸå€¤ [TAI-UTC]
 int AstroTime::initLeapSec = 36;
 const char* AstroTime::initLeapText = "+36(2015 July 1). see https://hpiers.obspm.fr/iers/bul/bulc/bulletinc.dat";
 
-// Œ»İ‚Å¶¬‚·‚é
+// ç¾åœ¨æ™‚åˆ»ã§ç”Ÿæˆã™ã‚‹
 AstroTime::AstroTime()
 	: d(0), s(0), dut1(0), leapSec(initLeapSec)
 {
 	update();
 }
 
-// w’è‚Ì“ú•t‚Æ‚Å¶¬‚·‚é
-// @param jd  ¢ŠE³Œß‚Ì“ú•t
-// @param utc ¢ŠE‚O‚©‚ç‚ÌŒo‰ß•b”
+// æŒ‡å®šã®æ—¥ä»˜ã¨æ™‚åˆ»ã§ç”Ÿæˆã™ã‚‹
+// @param jd  ä¸–ç•Œæ™‚æ­£åˆã®æ—¥ä»˜
+// @param utc ä¸–ç•Œæ™‚ï¼æ™‚ã‹ã‚‰ã®çµŒéç§’æ•°
 AstroTime::AstroTime(const Jday& jday, double utc)
 	: d(jday), s(utc - 12*3600L), dut1(0), leapSec(initLeapSec)
 {
@@ -44,8 +44,8 @@ AstroTime::AstroTime(const Jday& jday, double utc)
 }
 
 
-//----- “ú•t‚Æ‚Ì’²® -------------------------------------------------
-//. AstroTime::adjust - •b‚ª“ú‚ğ‰z‚¦‚È‚¢‚æ‚¤‚É‚·‚é
+//----- æ—¥ä»˜ã¨æ™‚åˆ»ã®èª¿æ•´ -------------------------------------------------
+//. AstroTime::adjust - ç§’ãŒæ—¥ã‚’è¶Šãˆãªã„ã‚ˆã†ã«ã™ã‚‹
 void
 AstroTime::adjust()
 {
@@ -55,8 +55,8 @@ AstroTime::adjust()
 		d -= 1, s += 86400.0;
 }
 
-//----- Œ»İ‚ÉXV‚·‚é -----------------------------------------------
-//. AstroTime::update - Œ»İ(•b’PˆÊ)‚ÉXV‚·‚é
+//----- ç¾åœ¨æ™‚åˆ»ã«æ›´æ–°ã™ã‚‹ -----------------------------------------------
+//. AstroTime::update - ç¾åœ¨æ™‚åˆ»(ç§’å˜ä½)ã«æ›´æ–°ã™ã‚‹
 void
 AstroTime::update()
 {
@@ -64,20 +64,20 @@ AstroTime::update()
 	struct tm& t = *gmtime(&tt);
 	d.setGdate(t.tm_year + 1900, t.tm_mon + 1, t.tm_mday);
 	s = hms2hs(t.tm_hour, t.tm_min, t.tm_sec)
-		- 12 * 3600.0; // ¢ŠE³Œß‚ª0‚É‚È‚é‚æ‚¤‚É•â³‚·‚é
+		- 12 * 3600.0; // ä¸–ç•Œæ™‚æ­£åˆãŒ0ã«ãªã‚‹ã‚ˆã†ã«è£œæ­£ã™ã‚‹
 	adjust();
 }
 
-//. AstroTime::updateSystemTime - Œ»İ(ƒ~ƒŠ•b’PˆÊ)‚ÉXV‚·‚é
+//. AstroTime::updateSystemTime - ç¾åœ¨æ™‚åˆ»(ãƒŸãƒªç§’å˜ä½)ã«æ›´æ–°ã™ã‚‹
 void
 AstroTime::updateSystemTime()
 {
 #if defined(WIN32)
 	::SYSTEMTIME t;
-	::GetSystemTime(&t); // ¢ŠE‚Å“ú•t‚ğ“¾‚é
+	::GetSystemTime(&t); // ä¸–ç•Œæ™‚ã§æ—¥ä»˜æ™‚åˆ»ã‚’å¾—ã‚‹
 	d.setGdate(t.wYear, t.wMonth, t.wDay);
 	s = hms2hs(t.wHour, t.wMinute, t.wSecond + t.wMilliseconds / 1000.0)
-		- 12 * 3600.0; // ¢ŠE³Œß‚ª0‚É‚È‚é‚æ‚¤‚É•â³‚·‚é
+		- 12 * 3600.0; // ä¸–ç•Œæ™‚æ­£åˆãŒ0ã«ãªã‚‹ã‚ˆã†ã«è£œæ­£ã™ã‚‹
 	adjust();
 #elif defined(BSD) || defined(__APPLE__) || defined(__CYGWIN__) || defined(__linux__)
 	struct timeval tv;
@@ -91,22 +91,22 @@ AstroTime::updateSystemTime()
 #endif
 }
 
-//----- P¯ -----------------------------------------------------------
-//. AstroTime::gmst - ƒOƒŠƒjƒW•½‹ÏP¯[•b] [0`86400)
+//----- æ’æ˜Ÿæ™‚ -----------------------------------------------------------
+//. AstroTime::gmst - ã‚°ãƒªãƒ‹ã‚¸å¹³å‡æ’æ˜Ÿæ™‚[ç§’] [0ï½86400)
 double
 AstroTime::gmst() const
 {
-	// —‰È”N•\ ¢ŠE‚Ì€‚æ‚è
-	// GMST = UT1 - 12h + ƒ¿m
-	// ƒ¿m  = 18h 41m 50.54841s
+	// ç†ç§‘å¹´è¡¨ ä¸–ç•Œæ™‚ã®é …ã‚ˆã‚Š
+	// GMST = UT1 - 12h + Î±m
+	// Î±m  = 18h 41m 50.54841s
 	//      + 8640184.812866s Tu + 0.093104s Tu^2 - 0.0000062s Tu^3
-	// Tu = 2000”N1Œ1“ú12(UT1)‚©‚çƒ†ƒŠƒEƒX¢‹I’PˆÊ‚Å‘ª‚Á‚½¢ŠE
-	// UT1 = UTC + DUT1 (¢ŠE)
-	// ¦ƒ¿m‚ÍƒOƒŠƒjƒWŠî€“V‘Ì(•½‹Ï‘¾—z)
-	// ‚±‚Ì®‚Å‚Ù‚Ú 0.001•b‚Ì¸“x‚ª‚ ‚é
-	// ‚µ‚©‚µ DUT1‚Ì¸“x‚Í 0.1•b‚Å‚ ‚é‚½‚ßAÀ¿‚Í 0.1•b‚Ì¸“x‚Æ‚È‚é
-	// ‚³‚ç‚ÉDUT1‚ª–¢İ’è‚È‚ç UT1‚ÆUTC‚ÌÅ‘å·‚Å‚ ‚é}0.9•b‚ª¸“x‚Æ‚È‚é
-	const double Tu = (jd1() - Jday::AD2000_1_1_12UT) / 36525U;	// ƒ†ƒŠƒEƒX¢‹I
+	// Tu = 2000å¹´1æœˆ1æ—¥12æ™‚(UT1)ã‹ã‚‰ãƒ¦ãƒªã‚¦ã‚¹ä¸–ç´€å˜ä½ã§æ¸¬ã£ãŸä¸–ç•Œæ™‚
+	// UT1 = UTC + DUT1 (ä¸–ç•Œæ™‚)
+	// â€»Î±mã¯ã‚°ãƒªãƒ‹ã‚¸åŸºæº–å¤©ä½“(å¹³å‡å¤ªé™½)
+	// ã“ã®å¼ã§ã»ã¼ 0.001ç§’ã®ç²¾åº¦ãŒã‚ã‚‹
+	// ã—ã‹ã— DUT1ã®ç²¾åº¦ã¯ 0.1ç§’ã§ã‚ã‚‹ãŸã‚ã€å®Ÿè³ªã¯ 0.1ç§’ã®ç²¾åº¦ã¨ãªã‚‹
+	// ã•ã‚‰ã«DUT1ãŒæœªè¨­å®šãªã‚‰ UT1ã¨UTCã®æœ€å¤§å·®ã§ã‚ã‚‹Â±0.9ç§’ãŒç²¾åº¦ã¨ãªã‚‹
+	const double Tu = (jd1() - Jday::AD2000_1_1_12UT) / 36525U;	// ãƒ¦ãƒªã‚¦ã‚¹ä¸–ç´€
 	const double Tu2 = Tu * Tu;
 	const double Tu3 = Tu * Tu * Tu;
 	const double am = hms2hs(18, 41, 50.54841)
@@ -124,7 +124,7 @@ using namespace astro;
 int main(int argc, char** argv)
 {
 	if (argc == 2 && strcmp(argv[1], "update") == 0) {
-		// Œ»İŠÔXV.
+		// ç¾åœ¨æ™‚é–“æ›´æ–°.
 		int y, m, d; double utc;
 		AstroTime at;
 		at.get(y, m, d, utc);

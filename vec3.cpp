@@ -1,4 +1,4 @@
-//. vec3.cpp - 3D vector
+ï»¿//. vec3.cpp - 3D vector
 //	Copyright (C) 1997,1998 hkuno
 //	mailto:hkuno.kuno@nifty.ne.jp
 #include "vec3.h"
@@ -9,7 +9,7 @@ namespace util {
 //.----- class Mat3x3 ----------------------------------------------------
 //------------------------------------------------------------------------
 
-//. Mat3x3::setE() - ’PˆÊs—ñİ’è
+//. Mat3x3::setE() - å˜ä½è¡Œåˆ—è¨­å®š
 void
 Mat3x3::setE()
 {
@@ -17,7 +17,7 @@ Mat3x3::setE()
 	m12 = m13 = m21 = m23 = m31 = m32 = 0;
 }
 
-//. Mat3x3::setRotate - ‰ñ“]s—ñİ’è
+//. Mat3x3::setRotate - å›è»¢è¡Œåˆ—è¨­å®š
 void
 Mat3x3::setRotate(const Degree& angle, int axis)
 {
@@ -45,7 +45,7 @@ Mat3x3::setRotate(const Degree& angle, int axis)
 }
 
 
-//. Mat3x3::operator+=() - ‰ÁZ
+//. Mat3x3::operator+=() - åŠ ç®—
 Mat3x3&
 Mat3x3::operator+=(const Mat3x3& m)
 {
@@ -57,7 +57,7 @@ Mat3x3::operator+=(const Mat3x3& m)
 	return *this;
 }
 
-//. Mat3x3::operator-=() - Œ¸Z
+//. Mat3x3::operator-=() - æ¸›ç®—
 Mat3x3&
 Mat3x3::operator-=(const Mat3x3& m)
 {
@@ -69,7 +69,7 @@ Mat3x3::operator-=(const Mat3x3& m)
 	return *this;
 }
 
-//. Mat3x3::operator*=() - ŒW”æZ
+//. Mat3x3::operator*=() - ä¿‚æ•°ä¹—ç®—
 Mat3x3&
 Mat3x3::operator*=(double k)
 {
@@ -81,7 +81,7 @@ Mat3x3::operator*=(double k)
 	return *this;
 }
 
-//. Mat3x3::operator/=() - ŒW”œZ
+//. Mat3x3::operator/=() - ä¿‚æ•°é™¤ç®—
 Mat3x3&
 Mat3x3::operator/=(double k)
 {
@@ -93,7 +93,7 @@ Mat3x3::operator/=(double k)
 	return *this;
 }
 
-//. Mat3x3::operator*=() - æZ
+//. Mat3x3::operator*=() - ä¹—ç®—
 Mat3x3&
 Mat3x3::operator*=(const Mat3x3& m)
 {
@@ -111,10 +111,10 @@ Mat3x3::operator*=(const Mat3x3& m)
 
 
 //------------------------------------------------------------------------
-//.----- class Vec3 : ‚Ps‚R—ñ‚ÌƒxƒNƒgƒ‹ ---------------------------------
+//.----- class Vec3 : ï¼‘è¡Œï¼“åˆ—ã®ãƒ™ã‚¯ãƒˆãƒ« ---------------------------------
 //------------------------------------------------------------------------
 
-//. Vec3::setDirectionCosines - •ûŒü—]Œ·‰»
+//. Vec3::setDirectionCosines - æ–¹å‘ä½™å¼¦åŒ–
 void
 Vec3::setDirectionCosines()
 {
@@ -123,51 +123,51 @@ Vec3::setDirectionCosines()
 		*this /= r;
 }
 
-//. Vec3::radius - “®ŒaAƒxƒNƒgƒ‹‚Ì’·‚³
+//. Vec3::radius - å‹•å¾„ã€ãƒ™ã‚¯ãƒˆãƒ«ã®é•·ã•
 double
 Vec3::radius() const
 {
 	return ::sqrt(square());
 }
 
-//. Vec3::getPolar - ‹ÉÀ•W‚ğ“¾‚é
-// @param phi     “V’¸ŠpƒÓ (0`180‹)
-// @param theta   •ûˆÊŠpƒÆ (-180‹`+180‹)
-// @return        “®Œa‚’
+//. Vec3::getPolar - æ¥µåº§æ¨™ã‚’å¾—ã‚‹
+// @param phi     å¤©é ‚è§’Ï† (0ï½180Â°)
+// @param theta   æ–¹ä½è§’Î¸ (-180Â°ï½+180Â°)
+// @return        å‹•å¾„ï½’
 double
 Vec3::getPolar(Degree& phi, Degree& theta) const
 {
-	// •ûˆÊŠpƒÆ‚ğ“¾‚é
-	theta.setArcTan2(y, x); // -180‹`+180‹
+	// æ–¹ä½è§’Î¸ã‚’å¾—ã‚‹
+	theta.setArcTan2(y, x); // -180Â°ï½+180Â°
 
-	// “V’¸ŠpƒÓ‚ğ“¾‚é
+	// å¤©é ‚è§’Ï†ã‚’å¾—ã‚‹
 	phi.setArcTan2(::sqrt(x * x + y * y), z);
 
-	// ’·‚³‚ğŒvZ‚·‚é
+	// é•·ã•ã‚’è¨ˆç®—ã™ã‚‹
 	return radius();
 }
 
-//. Vec3::getLtLg - ˆÜ“xŒo“x‚ğ“¾‚é
-// @param latitude  ˆÜ“x
-// @param longitude Œo“x(“ŒŒo‚ğ³‚Æ‚·‚é)
-// @return          “®Œa‚’
+//. Vec3::getLtLg - ç·¯åº¦çµŒåº¦ã‚’å¾—ã‚‹
+// @param latitude  ç·¯åº¦
+// @param longitude çµŒåº¦(æ±çµŒã‚’æ­£ã¨ã™ã‚‹)
+// @return          å‹•å¾„ï½’
 double
 Vec3::getLtLg(Degree& latitude, Degree& longitude) const
 {
-	// Œo“x(==•ûˆÊŠpƒÆ)‚ğ“¾‚é
-	longitude.setArcTan2(y, x); // -180‹`+180‹
+	// çµŒåº¦(==æ–¹ä½è§’Î¸)ã‚’å¾—ã‚‹
+	longitude.setArcTan2(y, x); // -180Â°ï½+180Â°
 
-	// ˆÜ“x(==90‹- “V’¸ŠpƒÓ)‚ğ“¾‚é
+	// ç·¯åº¦(==90Â°- å¤©é ‚è§’Ï†)ã‚’å¾—ã‚‹
 	latitude.setArcTan2(z, ::sqrt(x * x + y * y));
 
-	// ’·‚³‚ğŒvZ‚·‚é
+	// é•·ã•ã‚’è¨ˆç®—ã™ã‚‹
 	return radius();
 }
 
-//. Vec3::setPolar - ‹ÉÀ•W‚ğİ’è‚·‚é
-// @param radius  “®Œa‚’
-// @param phi     “V’¸ŠpƒÓ
-// @param theta   •ûˆÊŠpƒÆ
+//. Vec3::setPolar - æ¥µåº§æ¨™ã‚’è¨­å®šã™ã‚‹
+// @param radius  å‹•å¾„ï½’
+// @param phi     å¤©é ‚è§’Ï†
+// @param theta   æ–¹ä½è§’Î¸
 void
 Vec3::setPolar(double radius, const Degree& phi, const Degree& theta)
 {
@@ -177,10 +177,10 @@ Vec3::setPolar(double radius, const Degree& phi, const Degree& theta)
 	z = radius * cos(phi);
 }
 
-//. Vec3::setLtLg - ˆÜ“xŒo“x‚ğİ’è‚·‚é
-// @param radius    “®Œa‚’
-// @param latitude  ˆÜ“x
-// @param longitude Œo“x(“ŒŒo‚ğ³‚Æ‚·‚é)
+//. Vec3::setLtLg - ç·¯åº¦çµŒåº¦ã‚’è¨­å®šã™ã‚‹
+// @param radius    å‹•å¾„ï½’
+// @param latitude  ç·¯åº¦
+// @param longitude çµŒåº¦(æ±çµŒã‚’æ­£ã¨ã™ã‚‹)
 void
 Vec3::setLtLg(double radius, const Degree& latitude, const Degree& longitude)
 {

@@ -1,4 +1,4 @@
-//. defs.h - common, basic definitions
+ï»¿//. defs.h - common, basic definitions
 //	Copyright (C) 1997,1998 hkuno
 //	mailto:hkuno.kuno@nifty.ne.jp
 #ifndef DEFS_H_
@@ -6,24 +6,24 @@
 #include <stdexcept>
 
 //------------------------------------------------------------------------
-//. ŠÂ‹«ƒXƒCƒbƒ`
+//. ç’°å¢ƒã‚¹ã‚¤ãƒƒãƒ
 //------------------------------------------------------------------------
 #if (defined(__WIN32__) || defined(_WIN32)) && !defined(WIN32)
-	// WIN32ŠÂ‹«‚ÌƒXƒCƒbƒ`‚ğ‹¤’Ê‰»‚·‚é
-	// BCB‚Å‚Í  __WIN32__
-	// VC++‚Å‚Í _WIN32
+	// WIN32ç’°å¢ƒã®ã‚¹ã‚¤ãƒƒãƒã‚’å…±é€šåŒ–ã™ã‚‹
+	// BCBã§ã¯  __WIN32__
+	// VC++ã§ã¯ _WIN32
 	#define WIN32
 #endif
 
 //------------------------------------------------------------------------
-//. ‹L‰¯ƒNƒ‰ƒX‘®«
+//. è¨˜æ†¶ã‚¯ãƒ©ã‚¹å±æ€§
 //------------------------------------------------------------------------
 #if defined(_MSC_VER) || defined(__BORLANDC__)
 	#define THREAD	__declspec(thread)
 	#define EXPORT	__declspec(export)
 	#define IMPORT	__declspec(import)
 #else
-	// DLL‚âƒXƒŒƒbƒh‚ğƒTƒ|[ƒg‚µ‚È‚¢ŠÂ‹«‚Å‚Í‹óƒ}ƒNƒ‚É‚µ‚Ä‚¨‚­
+	// DLLã‚„ã‚¹ãƒ¬ãƒƒãƒ‰ã‚’ã‚µãƒãƒ¼ãƒˆã—ãªã„ç’°å¢ƒã§ã¯ç©ºãƒã‚¯ãƒ­ã«ã—ã¦ãŠã
 	#define THREAD
 	#define EXPORT
 	#define IMPORT
@@ -41,7 +41,7 @@ typedef unsigned long	ulong;
 //------------------------------------------------------------------------
 //. bit-sized int
 //------------------------------------------------------------------------
-// ¦ˆ—Œn‚âƒ^[ƒQƒbƒgŠÂ‹«‚É‚æ‚Á‚Ä‚ÍC³‚ª•K—v‚Å‚ ‚é
+// â€»å‡¦ç†ç³»ã‚„ã‚¿ãƒ¼ã‚²ãƒƒãƒˆç’°å¢ƒã«ã‚ˆã£ã¦ã¯ä¿®æ­£ãŒå¿…è¦ã§ã‚ã‚‹
 typedef signed char	int8;
 typedef short		int16;
 typedef long		int32;
@@ -50,7 +50,7 @@ typedef unsigned short	uint16;
 typedef unsigned long	uint32;
 
 //------------------------------------------------------------------------
-//. —áŠO
+//. ä¾‹å¤–
 //------------------------------------------------------------------------
 class IOException : public std::runtime_error {
 public: IOException(const char* msg) : std::runtime_error(msg) {}
@@ -70,7 +70,7 @@ public: NullPointer(const char* msg) : std::logic_error(msg) {}
 //. macros
 //------------------------------------------------------------------------
 
-//. ELEMENTS_OF - ”z—ñ—v‘f”‚Ìæ“¾
+//. ELEMENTS_OF - é…åˆ—è¦ç´ æ•°ã®å–å¾—
 #define ELEMENTS_OF(array) \
 	(sizeof(array) / sizeof(array[0]))
 

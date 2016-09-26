@@ -1,4 +1,4 @@
-/**@file sunmoon - ‘¾—zAŒ‚Ì‚“xŒvZ
+ï»¿/**@file sunmoon - å¤ªé™½ã€æœˆã®é«˜åº¦è¨ˆç®—
  * @copyright 2006,2014,2015 hkuno@willsoft.co.jp
  * $Id: sunmoon.cpp,v 1.3 2006-08-08 07:01:16 hkuno Exp $
  */
@@ -24,7 +24,7 @@ int sprintAzAlt(char* buf, const Vec3& v)
 {
 	Degree az, alt;
 	v.getLtLg(alt, az);
-	az.setNeg(); az.mod360();   // “ì‚ğ0‹‚Æ‚µŒvü‚è(¼90‹A–k180‹A“Œ270‹)
+	az.setNeg(); az.mod360();   // å—ã‚’0Â°ã¨ã—æ™‚è¨ˆå‘¨ã‚Š(è¥¿90Â°ã€åŒ—180Â°ã€æ±270Â°)
 	double azDeg = az.degree();
 	const char* azName = gAzimuthName[(int)util::round(azDeg * 16 / 360)];
 	return sprintf(buf, "%06.2fd(%s)  %+06.2fd", azDeg, azName, alt.degree());
@@ -136,13 +136,13 @@ const char gUsage[] =
 	"   LEAP: TAI-UTC leap seconds. default is %s\n";
 	;
 
-/** -r: ‘å‹C·•â³ON */
+/** -r: å¤§æ°—å·®è£œæ­£ON */
 bool gAddRefraction = false;
 
-/** -p: ‘S˜f¯‚ÌÔŒoÔˆÜ•\¦ON */
+/** -p: å…¨æƒ‘æ˜Ÿã®èµ¤çµŒèµ¤ç·¯è¡¨ç¤ºON */
 bool gPlanetRaDc = false;
 
-/** table: o–v•\“ú”. */
+/** table: å‡ºæ²¡è¡¨æ—¥æ•°. */
 unsigned gTableDays = 0;
 
 //------------------------------------------------------------------------
@@ -152,11 +152,11 @@ void print_planet(const AstroCoordinate& acoord, const Planets& pl, const char* 
 	char radec[256];
 	char j2000[256];
 
-	Vec3 v = pl.vecQ(id);	// ’nS•½‹ÏÔ“¹À•W(MOON‚Ì‚İ‘ªS)
-	acoord.conv_q2tq(v);	// •½‹ÏˆÊ’u¨^ˆÊ’u(Í“®•â³).
+	Vec3 v = pl.vecQ(id);	// åœ°å¿ƒå¹³å‡èµ¤é“åº§æ¨™(MOONã®ã¿æ¸¬å¿ƒ)
+	acoord.conv_q2tq(v);	// å¹³å‡ä½ç½®â†’çœŸä½ç½®(ç« å‹•è£œæ­£).
 	Vec3 q = v;
-	acoord.conv_q2h(v);		// Ô“¹À•W¨’n•½À•W.
-	if (gAddRefraction) acoord.addRefraction(v);	// ‘å‹C·•â³.
+	acoord.conv_q2h(v);		// èµ¤é“åº§æ¨™â†’åœ°å¹³åº§æ¨™.
+	if (gAddRefraction) acoord.addRefraction(v);	// å¤§æ°—å·®è£œæ­£.
 
 	sprintAzAlt(azalt, v);
 	sprintRaDec(radec, q);
@@ -182,10 +182,10 @@ int main(int argc, char** argv)
 	int leap;
 
 	// astro class
-	AstroCoordinate acoord;	// Œ»İ‚Å‰Šú‰».
+	AstroCoordinate acoord;	// ç¾åœ¨æ™‚åˆ»ã§åˆæœŸåŒ–.
 	Planets pl;
 
-	//--- ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“‚ğ‰ğÍ‚·‚é.
+	//--- ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ã‚’è§£æã™ã‚‹.
 	if (argc < 2) {
 show_help:
 		fprintf(stderr, gUsage, AstroTime::initLeapText);
@@ -210,7 +210,7 @@ show_help:
 		else if (sscanf(arg, "table=%u", &gTableDays) == 1)
 			;
 		else if (sscanf(arg, "utc=%d-%d-%dT%d:%d:%lf", &y, &m, &d, &hh, &mm, &sec) >= 3) {
-			//--- ŠÔİ’è.
+			//--- æ™‚é–“è¨­å®š.
 			AstroTime atime(Jday(y, m, d), hh*3600+mm*60+sec);
 			acoord.setTime(atime);
 		}
@@ -222,33 +222,33 @@ show_help:
 		--argc;
 	}
 
-	//--- ŒvZÀs.
-	acoord.setPosition(lg, lt);			// “V•¶ˆÜ“xŒo“x‚ğİ’è‚·‚é.@Œµ–§‚É‚Í‘ª’nˆÜ“xŒo“x‚Æ“¯‚¶’l‚ğ—^‚¦‚Ä‚Í‚¢‚¯‚È‚¢.
-	acoord.setLocation(lg, lt, sea);	// ‘ª’nˆÜ“xŒo“x‚ÆŠC”²‚“x‚ğİ’è‚·‚é.
+	//--- è¨ˆç®—å®Ÿè¡Œ.
+	acoord.setPosition(lg, lt);			// å¤©æ–‡ç·¯åº¦çµŒåº¦ã‚’è¨­å®šã™ã‚‹.ã€€å³å¯†ã«ã¯æ¸¬åœ°ç·¯åº¦çµŒåº¦ã¨åŒã˜å€¤ã‚’ä¸ãˆã¦ã¯ã„ã‘ãªã„.
+	acoord.setLocation(lg, lt, sea);	// æ¸¬åœ°ç·¯åº¦çµŒåº¦ã¨æµ·æŠœé«˜åº¦ã‚’è¨­å®šã™ã‚‹.
 	acoord.beginConvert();
 	pl.calc(acoord);
 	Vec3 sun  = pl.vecQ(Planets::SUN);
 	Vec3 moon = pl.vecQ(Planets::MOON);
-	double cosSun = sun.inner(moon);	// sun/moon‚Í•ûŒü—]Œ·‚È‚Ì‚ÅA‚»‚Ì“àÏ‚ÍˆÊ‘ŠŠp‚Ìcos‚Å‚ ‚é.
-	if (cosSun > 1) cosSun = 1;			// acos()‚Å‚ÌDOMAINƒGƒ‰[‰ñ”ğ.
-	if (cosSun < -1) cosSun = -1;		// acos()‚Å‚ÌDOMAINƒGƒ‰[‰ñ”ğ.
-	Degree phase; phase.setArcCos(cosSun);	// acos ‚Í 0..180“x‚Ì”ÍˆÍ‚Å’l‚ğ•Ô‚·.
-	if (sun.x * moon.y - sun.y * moon.x < 0) { // XY•½–Ê‚ÌŠOÏ’l‚ª•‰‚Ì’l‚È‚çAˆÊ‘ŠŠp“x‚ğ 180`360“x‚Ì”ÍˆÍ‚É•â³‚·‚é.
+	double cosSun = sun.inner(moon);	// sun/moonã¯æ–¹å‘ä½™å¼¦ãªã®ã§ã€ãã®å†…ç©ã¯ä½ç›¸è§’ã®cosã§ã‚ã‚‹.
+	if (cosSun > 1) cosSun = 1;			// acos()ã§ã®DOMAINã‚¨ãƒ©ãƒ¼å›é¿.
+	if (cosSun < -1) cosSun = -1;		// acos()ã§ã®DOMAINã‚¨ãƒ©ãƒ¼å›é¿.
+	Degree phase; phase.setArcCos(cosSun);	// acos ã¯ 0..180åº¦ã®ç¯„å›²ã§å€¤ã‚’è¿”ã™.
+	if (sun.x * moon.y - sun.y * moon.x < 0) { // XYå¹³é¢ã®å¤–ç©å€¤ãŒè² ã®å€¤ãªã‚‰ã€ä½ç›¸è§’åº¦ã‚’ 180ï½360åº¦ã®ç¯„å›²ã«è£œæ­£ã™ã‚‹.
 		phase.setNeg(); phase.mod360();
 	}
 	acoord.conv_q2tq(sun);
 	acoord.conv_q2tq(moon);
 	acoord.conv_q2h(sun);
 	acoord.conv_q2h(moon);
-	if (gAddRefraction) { // ‘å‹C·•â³.
+	if (gAddRefraction) { // å¤§æ°—å·®è£œæ­£.
 		acoord.addRefraction(sun);
 		acoord.addRefraction(moon);
 	}
 
-	//--- Œ‹‰Ê•\¦.
+	//--- çµæœè¡¨ç¤º.
 	print(acoord, sea, sun, moon, phase.degree());
 
-	//--- ‘S˜f¯‚ÌÔŒoÔˆÜ•\¦.
+	//--- å…¨æƒ‘æ˜Ÿã®èµ¤çµŒèµ¤ç·¯è¡¨ç¤º.
 	if (gPlanetRaDc) {
 		print_planet(acoord, pl, "SUN",     Planets::SUN);
 		print_planet(acoord, pl, "MOON",    Planets::MOON);
@@ -262,20 +262,20 @@ show_help:
 		print_planet(acoord, pl, "PLUTO",   Planets::PLUTO);
 	}
 
-	//--- o–vŒvZ.
+	//--- å‡ºæ²¡è¨ˆç®—.
 	if (gTableDays != 0) {
 		AstroTime t = acoord.getTime();
 		const double jd_end = t.jd() + gTableDays;
-		const double sun_rz  = sin(dms2rad(0,0,960));	// ‘¾—z‹”¼Œa‚É‚æ‚éo–v•â³. ‹”¼Œa‚Í 960" ‚ÅŒˆ‚ß‘Å‚¿.
-		const double min30_z = sin(hms2rad(0,30,0));	// Šp30•ª‚Ì‚“x‚ÌzÀ•W’l.
-		const double min3_z  = sin(hms2rad(0,3,0));	// Šp1•ª‚Ì‚“x‚ÌzÀ•W’l.
-		const double sec15_z = sin(hms2rad(0,0,15));	// Šp15•b‚Ì‚“x‚ÌzÀ•W’l.
-		int step = -1;	// ‰‰ñ‚Íw’è‚Ì1•b‘O‚Ì‚“x‚ğŒvZ‚·‚é.
+		const double sun_rz  = sin(dms2rad(0,0,960));	// å¤ªé™½è¦–åŠå¾„ã«ã‚ˆã‚‹å‡ºæ²¡è£œæ­£. è¦–åŠå¾„ã¯ 960" ã§æ±ºã‚æ‰“ã¡.
+		const double min30_z = sin(hms2rad(0,30,0));	// æ™‚è§’30åˆ†ã®é«˜åº¦ã®zåº§æ¨™å€¤.
+		const double min3_z  = sin(hms2rad(0,3,0));	// æ™‚è§’1åˆ†ã®é«˜åº¦ã®zåº§æ¨™å€¤.
+		const double sec15_z = sin(hms2rad(0,0,15));	// æ™‚è§’15ç§’ã®é«˜åº¦ã®zåº§æ¨™å€¤.
+		int step = -1;	// åˆå›ã¯æŒ‡å®šæ™‚åˆ»ã®1ç§’å‰ã®é«˜åº¦ã‚’è¨ˆç®—ã™ã‚‹.
 		for (t.addSec(step); t.jd() < jd_end; t.addSec(step)) {
-			// ‘O‰ñ‚Ì‚“x‚ğ•Û‘¶‚·‚é. ‚½‚¾‚µA‰‰ñ‚Í‚±‚Ì’l‚ğg‚Á‚Ä‚Í‚¢‚¯‚È‚¢.
+			// å‰å›æ™‚åˆ»ã®é«˜åº¦ã‚’ä¿å­˜ã™ã‚‹. ãŸã ã—ã€åˆå›ã¯ã“ã®å€¤ã‚’ä½¿ã£ã¦ã¯ã„ã‘ãªã„.
 			const Vec3 sun0 = sun;
 			const Vec3 moon0 = moon;
-			// ¡‰ñ‚Ì‚“x‚ğŒvZ‚·‚é.
+			// ä»Šå›æ™‚åˆ»ã®é«˜åº¦ã‚’è¨ˆç®—ã™ã‚‹.
 			acoord.setTime(t);
 			acoord.beginConvert();
 			pl.calc(acoord);
@@ -285,32 +285,32 @@ show_help:
 			acoord.conv_q2tq(moon);
 			acoord.conv_q2h(sun);
 			acoord.conv_q2h(moon);
-			// ‘å‹C·•â³‚ÍíÀ{‚·‚é.
+			// å¤§æ°—å·®è£œæ­£ã¯å¸¸æ™‚å®Ÿæ–½ã™ã‚‹.
 			acoord.addRefraction(sun);
 			acoord.addRefraction(moon);
-			// ‘¾—z‹”¼Œa•ª‚ğ‚“x•â³‚·‚é.
+			// å¤ªé™½è¦–åŠå¾„åˆ†ã‚’é«˜åº¦è£œæ­£ã™ã‚‹.
 			sun.z += sun_rz;
 			if (step > 0) {
-				// ‘O‰ñ‚Ì‚“x‚Æ”äŠr‚µA‹«ŠE’l‚ğŒ×‚¢‚¾‚ğo–v‚Æ‚µ‚Ä•\¦‚·‚é.
+				// å‰å›æ™‚åˆ»ã®é«˜åº¦ã¨æ¯”è¼ƒã—ã€å¢ƒç•Œå€¤ã‚’è·¨ã„ã æ™‚åˆ»ã‚’å‡ºæ²¡æ™‚åˆ»ã¨ã—ã¦è¡¨ç¤ºã™ã‚‹.
 				if (sun0.z < 0 && sun.z >= 0) print_table("SUN-RISE", t);
 				if (sun0.z >= 0 && sun.z < 0) print_table("SUN-SET",  t);
 				if (moon0.z < 0 && moon.z >= 0) print_table("MOON-RISE", t);
 				if (moon0.z >= 0 && moon.z < 0) print_table("MOON-SET",  t);
-				// ‘O‰ñ‚Ì“Œ¼‚Æ”äŠr‚µAqŒßü‚ğŒ×‚¢‚¾‚ğ“ì’†‚Æ‚µ‚Ä•\¦‚·‚é.
+				// å‰å›æ™‚åˆ»ã®æ±è¥¿ã¨æ¯”è¼ƒã—ã€å­åˆç·šã‚’è·¨ã„ã æ™‚åˆ»ã‚’å—ä¸­æ™‚åˆ»ã¨ã—ã¦è¡¨ç¤ºã™ã‚‹.
 				if (sun0.y >= 0 && sun.y < 0) print_table("SUN-CULM",  t);
 				if (moon0.y >= 0 && moon.y < 0) print_table("MOON-CULM",  t);
 			}
 			double z = min_value(fabs(sun.z), fabs(moon.z));
 			double y = min_value(fabs(sun.y), fabs(moon.y));
-			z = min_value(z, y);	// ’n•½ü’Ê‰ßAqŒßü’Ê‰ß•t‹ß‚ÌÅ¬À•W’l‚ğ‹‚ß‚é.
+			z = min_value(z, y);	// åœ°å¹³ç·šé€šéã€å­åˆç·šé€šéä»˜è¿‘ã®æœ€å°åº§æ¨™å€¤ã‚’æ±‚ã‚ã‚‹.
 			if (z >= min30_z)
-				step = 20*60; // ‚“x‚ª}Šp30•ªˆÈã‚È‚ç20•ª’PˆÊ‚Å‚ği‚ß‚é.
+				step = 20*60; // é«˜åº¦ãŒÂ±æ™‚è§’30åˆ†ä»¥ä¸Šãªã‚‰20åˆ†å˜ä½ã§æ™‚åˆ»ã‚’é€²ã‚ã‚‹.
 			else if (z >= min3_z)
-				step = 2*60; // ‚“x‚ª}Šp3•ªˆÈã‚È‚ç2•ª’PˆÊ‚Å‚ği‚ß‚é.
+				step = 2*60; // é«˜åº¦ãŒÂ±æ™‚è§’3åˆ†ä»¥ä¸Šãªã‚‰2åˆ†å˜ä½ã§æ™‚åˆ»ã‚’é€²ã‚ã‚‹.
 			else if (z >= sec15_z)
-				step = 10; // ‚“x‚ª}Šp15•bˆÈã‚È‚ç10•b’PˆÊ‚Å‚ği‚ß‚é.
+				step = 10; // é«˜åº¦ãŒÂ±æ™‚è§’15ç§’ä»¥ä¸Šãªã‚‰10ç§’å˜ä½ã§æ™‚åˆ»ã‚’é€²ã‚ã‚‹.
 			else
-				step = 1; // 1•b’PˆÊ‚Å‚ği‚ß‚é.
+				step = 1; // 1ç§’å˜ä½ã§æ™‚åˆ»ã‚’é€²ã‚ã‚‹.
 		}
 	}
 	return EXIT_SUCCESS;
