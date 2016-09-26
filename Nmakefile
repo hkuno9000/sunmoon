@@ -27,7 +27,7 @@ sunmoon.exe: sunmoon.obj astro.lib
 astro.lib: $(OBJ)
 	lib /OUT:$@ $**
 
-$(OBJ): $*.h defs.h Makefile
+$(OBJ): $*.h defs.h Nmakefile
 
 #----- test --------------------------------------------------------------
 test: jday.test atime.test acoord.test planets.test
@@ -59,6 +59,6 @@ clean:
 	$(RM) *.obj *.lib  *.o *.a  *.bak *.tmp
 
 cleanall: clean
-	$(RM) *.exe *.map *.out
+	$(RM) *.exe *.map *.out *.manifest
 
 #end

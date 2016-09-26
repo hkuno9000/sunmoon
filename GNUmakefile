@@ -2,6 +2,9 @@
 # $Id: GNUmakefile,v 1.5 2006-08-24 09:14:43 hkuno Exp $
 #----- rules -------------------------------------------------------------
 TARGET=sunmoon.out
+ifndef PREFIX
+PREFIX=/usr/local
+endif
 CFLAGS=-Wall
 .cpp.out:
 	$(CXX) $(CFLAGS) -DTEST -o $@ $< astro.a
@@ -16,7 +19,7 @@ OBJ=$(SRC:.cpp=.o)
 all: $(TARGET)
 
 install: $(TARGET)
-	install $(TARGET) /usr/bin/sunmoon
+	install $(TARGET) $(PREFIX)/bin/sunmoon
 
 # for MacOS-X, Linux and Cygwin
 sunmoon.out: sunmoon.o astro.a
@@ -26,7 +29,7 @@ astro.a: $(OBJ)
 	ar cru $@ $^
 	ranlib $@
 
-$(OBJ): defs.h Makefile
+$(OBJ): defs.h GNUmakefile
 
 #----- test --------------------------------------------------------------
 test: jday.test atime.test acoord.test planets.test
