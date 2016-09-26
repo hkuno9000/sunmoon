@@ -177,13 +177,13 @@ using namespace std;
 using namespace astro;
 int main(int argc, char** argv)
 {
-	static char* name[] = {"Sun", "Mon", "Tue", "Wed", "Thr", "Fri", "Sat", "?"};
+	static const char* name[] = {"Sun", "Mon", "Tue", "Wed", "Thr", "Fri", "Sat", "?"};
 	char buf[100];
 	int y, m, d, gy, gm, gd, gw, jy, jm, jd, jw;
 	char jg;
 	Jday dd(0);
 	fputs("jday test. input [gj]yyyy.mm.dd\n", stderr);
-	while (gets(buf)) {
+	while (fgets(buf, sizeof(buf), stdin)) {
 		if (sscanf(buf, " %c%d.%d.%d", &jg, &y, &m, &d) != 4)
 			continue;
 		if (jg == 'j') {

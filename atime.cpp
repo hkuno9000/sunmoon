@@ -118,6 +118,8 @@ AstroTime::gmst() const
 //------------------------------------------------------------------------
 #ifdef TEST
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 using namespace std;
 using namespace util;
 using namespace astro;
@@ -139,7 +141,7 @@ int main(int argc, char** argv)
 	char buf[256];
 	int y, m=1, d=0, sec=0;
 	fputs("atime test. imput y,m,d,sec\n",stderr);
-	while (gets(buf)) {
+	while (fgets(buf, sizeof(buf), stdin)) {
 		if (sscanf(buf, "%d.%d.%d.%d", &y, &m, &d, &sec) < 3)
 			continue;
 		dd.setGdate(y, m, d);

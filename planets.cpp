@@ -3,6 +3,8 @@
 //	mailto:hkuno.kuno@nifty.ne.jp
 
 #include <cmath>
+#include <cstdio>
+#include <cstdlib>
 #include "acoord.h"
 #include "planets.h"
 using namespace std;
@@ -802,7 +804,7 @@ int main()
     char buf[256];
     int y, m=1, d=0;
     fputs("input y.m.d [TDT 0h]\n",stderr);
-    while (gets(buf)) {
+    while (fgets(buf, sizeof(buf), stdin)) {
         if (sscanf(buf, "%d.%d.%d", &y, &m, &d) < 3)
             continue;
         dd.setGdate(y, m, d);

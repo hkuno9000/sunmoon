@@ -515,6 +515,7 @@ AstroCoordinate::setLocation(const Degree& longitude, const Degree& latitude, do
 #ifdef TEST
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #ifdef WIN32
 #include <windows.h>
 #endif
@@ -528,7 +529,7 @@ int main(int argc, char** argv)
 		AstroCoordinate ac;
 		freopen("kisa.txt", "r", stdin);
 		char buf[256];
-		while (gets(buf)) {
+		while (fgets(buf, sizeof(buf), stdin)) {
 			double h;	// 視高度
 			double d;	// 大気差 [″]
 			sscanf(buf, "%lf %lf", &h, &d);
@@ -591,7 +592,7 @@ int main(int argc, char** argv)
 	fprintf(stderr, "calc()計算時間 %lu / %d ms\n", (t1 - t0), i);
 #endif
 	fputs("y.m.d.sec\n", stderr);
-	while (gets(buf)) {
+	while (fgets(buf, sizeof(buf), stdin)) {
 		if (sscanf(buf, "%d.%d.%d.%lf", &y, &m, &d, &utc) >= 3)
 			ac.setTime(AstroTime(Jday(y, m, d), utc));
 		else
