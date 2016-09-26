@@ -806,16 +806,17 @@ int main()
         if (sscanf(buf, "%d.%d.%d", &y, &m, &d) < 3)
             continue;
         dd.setGdate(y, m, d);
-        AstroTime atime(dd, -31-32.184);
+        AstroTime atime(dd, -32.184); // offset to TDT.
+        atime.setLeapSec(0); // remove leapSec offset.
         AstroCoordinate acoord;
         acoord.setTime(atime);
-        printf("%d.%d.%d\n", y, m, d);
+        printf("%d.%d.%d [TDT 0h]\n", y, m, d);
         pl.calc(acoord);
     }
     return EXIT_SUCCESS;
 }
 /*
-1991.5.24
+1991.5.24 [TDT 0h]
 SUN:  L=62.35109377 R=1.01256784
 MOON: L=191.20472784 B=-5.06906236 P=0.93588661
 conv: l=321.23875670 b=-6.99444806 r=0.40761082
