@@ -3,6 +3,7 @@
  * $Id: sunmoon.cpp,v 1.3 2006-08-08 07:01:16 hkuno Exp $
  */
 #include <cstdio>
+#include <cstdarg>
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
@@ -123,17 +124,22 @@ void print_table(const char* prompt, const AstroTime& atime)
 }
 
 //------------------------------------------------------------------------
-const char gUsage[] =
-	"usage: sunmoon [-r] [-p] lt=<LT> lg=<LG> [sea=<SEA>] [utc=<UTC>] [leap=<LEAP>] [table=<DAYS>]\n"
-	" version 2015.7\n"
-	"   -r  : add refraction to ALT\n"
-	"   -p  : print RADEC,J2000,AZALT\n"
-	"   LT  : latidute.  default is NAGOYA '35d10m00s'\n"
-	"   LG  : longitude. default is NAGOYA '136d55m00s'\n"
-	"   SEA : sea level altitude[m]. default is 0\n"
-	"   UTC : ISO 8601 time format '2014-12-31T23:59:59'. default is current time\n"
-	"   DAYS: time table days of sunrise, sunset, moonrise, moonset and culmination. default is 0\n"
-	"   LEAP: TAI-UTC leap seconds. default is %s\n";
+/** short help-message */
+const char gUsage[] = "usage: sunmoon [-h?rp] [lt=<LT>] [lg=<LG>] [sea=<SEA>] [utc=<UTC>] [leap=<LEAP>] [table=<DAYS>]\n";
+
+/** detail help-message for options and version */
+const char gDetailHelp[] =
+	"  version 2016.9\n"
+	"  -h -?: this help\n"
+	"  -r   : add refraction to ALT\n"
+	"  -p   : print RADEC,J2000,AZALT of Sun, Moon and planets\n"
+	"  LT   : latidute.  default is NAGOYA '35d10m00s'\n"
+	"  LG   : longitude. default is NAGOYA '136d55m00s'\n"
+	"  SEA  : sea level altitude[m]. default is 0\n"
+	"  UTC  : ISO 8601 time format '2014-12-31T23:59:59'. default is current time\n"
+	"  DAYS : time table days of sunrise, sunset, moonrise, moonset and culmination. default is 0\n"
+	"  LEAP : TAI-UTC leap seconds. default is %s\n"
+	"\n  supports and source codes at: https://github.com/hkuno9000/sunmoon/\n"
 	;
 
 /** -r: 大気差補正ON */
@@ -144,6 +150,20 @@ bool gPlanetRaDc = false;
 
 /** table: 出没表日数. */
 unsigned gTableDays = 0;
+
+//------------------------------------------------------------------------
+/** usageとエラーメッセージを表示後に、exitする */
+void error_abort(const char* msg, ...)
+{
+	fputs(gUsage, stderr);
+	if (msg) {
+		va_list arg;
+		va_start(arg, msg);
+		vfprintf(stderr, msg, arg);
+		va_end(arg);
+	}
+	exit(EXIT_FAILURE);
+}
 
 //------------------------------------------------------------------------
 void print_planet(const AstroCoordinate& acoord, const Planets& pl, const char* name, int id)
@@ -186,19 +206,27 @@ int main(int argc, char** argv)
 	Planets pl;
 
 	//--- コマンドラインを解析する.
-	if (argc < 2) {
-show_help:
-		fprintf(stderr, gUsage, AstroTime::initLeapText);
-		exit(1);
-	}
 	while (argc > 1) {
 		char* arg = argv[1];
-		if (strcmp(arg, "help") == 0)
-			goto show_help;
-		if (strcmp(arg, "-r") == 0)
-			gAddRefraction = true;
-		else if (strcmp(arg, "-p") == 0)
-			gPlanetRaDc = true;
+		if (arg[0] == '-') {
+			char* sw = arg+1;
+			do {
+				switch (*sw) {
+				case 'h': case '?':
+					goto show_help;
+				case 'r':
+					gAddRefraction = true; break;
+				case 'p':
+					gPlanetRaDc = true; break;
+				default:
+					error_abort("unknown option: -%c\n", *sw);
+				}
+			} while (*++sw);
+		}
+		else if (strcmp(arg, "help") == 0) {
+show_help:
+			error_abort(gDetailHelp, AstroTime::initLeapText);
+		}
 		else if (strncmp(arg, "lt=", 3) == 0)
 			lt = Degree::parseDms(arg + 3);
 		else if (strncmp(arg, "lg=", 3) == 0)
@@ -215,8 +243,7 @@ show_help:
 			acoord.setTime(atime);
 		}
 		else {
-			fputs("unknown argument.\n", stderr);
-			goto show_help;
+			error_abort("unknown argument: %s\n", arg);
 		}
 		++argv;
 		--argc;

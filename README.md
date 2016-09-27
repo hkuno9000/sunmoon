@@ -74,16 +74,17 @@ SUN-RISE: 2016-09-30 05:45:43
 
 ## Usage
 ```
-usage: sunmoon [-r] [-p] lt=<LT> lg=<LG> [sea=<SEA>] [utc=<UTC>] [leap=<LEAP>] [table=<DAYS>]
- version 2015.7
-   -r  : add refraction to ALT
-   -p  : print RADEC,J2000,AZALT
-   LT  : latidute.  default is NAGOYA '35d10m00s'
-   LG  : longitude. default is NAGOYA '136d55m00s'
-   SEA : sea level altitude[m]. default is 0
-   UTC : ISO 8601 time format '2014-12-31T23:59:59'. default is current time
-   DAYS: time table days of sunrise, sunset, moonrise, moonset and culmination. default is 0
-   LEAP: TAI-UTC leap seconds. default is +36(2015 July 1). see https://hpiers.obspm.fr/iers/bul/bulc/bulletinc.dat
+usage: sunmoon [-h?rp] [lt=<LT>] [lg=<LG>] [sea=<SEA>] [utc=<UTC>] [leap=<LEAP>] [table=<DAYS>]
+  version 2016.9
+  -h -?: this help
+  -r   : add refraction to ALT
+  -p   : print RADEC,J2000,AZALT of Sun, Moon and planets
+  LT   : latidute.  default is NAGOYA '35d10m00s'
+  LG   : longitude. default is NAGOYA '136d55m00s'
+  SEA  : sea level altitude[m]. default is 0
+  UTC  : ISO 8601 time format '2014-12-31T23:59:59'. default is current time
+  DAYS : time table days of sunrise, sunset, moonrise, moonset and culmination. default is 0
+  LEAP : TAI-UTC leap seconds. default is +36(2015 July 1). see https://hpiers.obspm.fr/iers/bul/bulc/bulletinc.dat
 ```
 
 ## Install
