@@ -1,5 +1,5 @@
 ﻿/**@file sunmoon - 太陽、月の高度計算
- * @copyright 2006,2014,2015 hkuno@willsoft.co.jp
+ * @copyright 2006,2014,2015,2018 hkuno@willsoft.co.jp
  * $Id: sunmoon.cpp,v 1.3 2006-08-08 07:01:16 hkuno Exp $
  */
 #include <cstdio>
@@ -140,7 +140,7 @@ const char gUsage[] = "usage: sunmoon [-h?rpj] [lt=<LT>] [lg=<LG>] [sea=<SEA>] [
 
 /** detail help-message for options and version */
 const char gDetailHelp[] =
-	"  version 2016.9\n"
+	"  version 2018.5\n"
 	"  -h -?: this help\n"
 	"  -r   : add refraction to ALT\n"
 	"  -p   : print RADEC,J2000,AZALT of Sun, Moon and planets\n"

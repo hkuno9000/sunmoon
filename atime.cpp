@@ -1,5 +1,5 @@
 ﻿//. atime.cpp - 天文時刻
-//	Copyright (C) 1997,1998,2014,2015 hkuno
+//	Copyright (C) 1997,1998,2014,2015,2018 hkuno
 //	mailto:hkuno.kuno@nifty.ne.jp
 #include <ctime>
 #include "jday.h"
