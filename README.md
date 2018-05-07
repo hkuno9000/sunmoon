@@ -1,5 +1,8 @@
 # sunmoon
+
 make time table of sunrise, sunset, moonrise, moonset and culmination.
+
+supports and source codes at: [github](https://github.com/hkuno9000/sunmoon/)
 
 ## What to do
 
@@ -10,7 +13,7 @@ LT: +35d 10m 00s
 LG: E136d 55m 00s
 SEA: 0m
 UTC: 2016-09-27T00:32:34
-LOC: 2016-09-27 09:32:34
+LOC: 2016-09-27 09:32:34 JST
 LST: 10h 05m 11s
 SUN-ALT: +42.12d
 MOON-ALT: +65.57d
@@ -24,7 +27,7 @@ LT: +35d 10m 00s
 LG: E136d 55m 00s
 SEA: 0m
 UTC: 2016-09-27T00:34:18
-LOC: 2016-09-27 09:34:18
+LOC: 2016-09-27 09:34:18 JST
 LST: 10h 06m 55s
 SUN-ALT: +42.37d
 MOON-ALT: +65.41d
@@ -48,7 +51,7 @@ LT: +35d 10m 00s
 LG: E136d 55m 00s
 SEA: 0m
 UTC: 2016-09-27T00:40:46
-LOC: 2016-09-27 09:40:46
+LOC: 2016-09-27 09:40:46 JST
 LST: 10h 13m 24s
 SUN-ALT: +43.31d
 MOON-ALT: +64.77d
@@ -102,14 +105,16 @@ sudo make install
 ```
 
 ## History
-Jul.2015
+
+#### Jul.2015
 * move to GitHub from my local svn-repos r371.
 ```
 git svn clone --trunk=trunk/src --authors-file=users.txt --prefix=svn/ http://c196/svn/remotecam sunmoon-git
 git remote add origin https://hkuno9000@github.com/hkuno9000/sunmoon.git
 git push -u -f origin master
 ```
-Jul.2006
+
+#### Jul.2006
 * start the project.
 
 ## License
