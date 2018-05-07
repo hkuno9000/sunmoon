@@ -212,6 +212,100 @@ void print_planet(const AstroCoordinate& acoord, const Planets& pl, const char* 
 }
 
 //------------------------------------------------------------------------
+void calc_main(AstroCoordinate& acoord, Planets& pl)
+{
+	acoord.beginConvert();
+	pl.calc(acoord);
+	Vec3 sun  = pl.vecQ(Planets::SUN);
+	Vec3 moon = pl.vecQ(Planets::MOON);
+	double cosSun = sun.inner(moon);	// sun/moonは方向余弦なので、その内積は位相角のcosである.
+	if (cosSun > 1) cosSun = 1;			// acos()でのDOMAINエラー回避.
+	if (cosSun < -1) cosSun = -1;		// acos()でのDOMAINエラー回避.
+	Degree phase; phase.setArcCos(cosSun);	// acos は 0..180度の範囲で値を返す.
+	if (sun.x * moon.y - sun.y * moon.x < 0) { // XY平面の外積値が負の値なら、位相角度を 180～360度の範囲に補正する.
+		phase.setNeg(); phase.mod360();
+	}
+	acoord.conv_q2tq(sun);
+	acoord.conv_q2tq(moon);
+	acoord.conv_q2h(sun);
+	acoord.conv_q2h(moon);
+	if (gAddRefraction) { // 大気差補正.
+		acoord.addRefraction(sun);
+		acoord.addRefraction(moon);
+	}
+
+	//--- 結果表示.
+	print_time(acoord);
+	print_alt(sun, moon, phase.degree());
+
+	//--- 全惑星の赤経赤緯表示.
+	if (gPlanetRaDc) {
+		print_planet(acoord, pl, "SUN",     Planets::SUN);
+		print_planet(acoord, pl, "MOON",    Planets::MOON);
+		print_planet(acoord, pl, "MERCURY", Planets::MERCURY);
+		print_planet(acoord, pl, "VENUS",   Planets::VENUS);
+		print_planet(acoord, pl, "MARS",    Planets::MARS);
+		print_planet(acoord, pl, "JUPITER", Planets::JUPITER);
+		print_planet(acoord, pl, "SATURN",  Planets::SATURN);
+		print_planet(acoord, pl, "URANUS",  Planets::URANUS);
+		print_planet(acoord, pl, "NEPTUNE", Planets::NEPTUNE);
+		print_planet(acoord, pl, "PLUTO",   Planets::PLUTO);
+	}
+
+	//--- 出没計算.
+	if (gTableDays != 0) {
+		AstroTime t = acoord.getTime();
+		const double jd_end = t.jd() + gTableDays;
+		const double sun_rz  = sin(dms2rad(0,0,960));	// 太陽視半径による出没補正. 視半径は 960" で決め打ち.
+		const double min30_z = sin(hms2rad(0,30,0));	// 時角30分の高度のz座標値.
+		const double min3_z  = sin(hms2rad(0,3,0));	// 時角1分の高度のz座標値.
+		const double sec15_z = sin(hms2rad(0,0,15));	// 時角15秒の高度のz座標値.
+		int step = -1;	// 初回は指定時刻の1秒前の高度を計算する.
+		for (t.addSec(step); t.jd() < jd_end; t.addSec(step)) {
+			// 前回時刻の高度を保存する. ただし、初回はこの値を使ってはいけない.
+			const Vec3 sun0 = sun;
+			const Vec3 moon0 = moon;
+			// 今回時刻の高度を計算する.
+			acoord.setTime(t);
+			acoord.beginConvert();
+			pl.calc(acoord);
+			sun  = pl.vecQ(Planets::SUN);
+			moon = pl.vecQ(Planets::MOON);
+			acoord.conv_q2tq(sun);
+			acoord.conv_q2tq(moon);
+			acoord.conv_q2h(sun);
+			acoord.conv_q2h(moon);
+			// 大気差補正は常時実施する.
+			acoord.addRefraction(sun);
+			acoord.addRefraction(moon);
+			// 太陽視半径分を高度補正する.
+			sun.z += sun_rz;
+			if (step > 0) {
+				// 前回時刻の高度と比較し、境界値を跨いだ時刻を出没時刻として表示する.
+				if (sun0.z < 0 && sun.z >= 0) print_table("SUN-RISE", t);
+				if (sun0.z >= 0 && sun.z < 0) print_table("SUN-SET",  t);
+				if (moon0.z < 0 && moon.z >= 0) print_table("MOON-RISE", t);
+				if (moon0.z >= 0 && moon.z < 0) print_table("MOON-SET",  t);
+				// 前回時刻の東西と比較し、子午線を跨いだ時刻を南中時刻として表示する.
+				if (sun0.y >= 0 && sun.y < 0) print_table("SUN-CULM",  t);
+				if (moon0.y >= 0 && moon.y < 0) print_table("MOON-CULM",  t);
+			}
+			double z = min_value(fabs(sun.z), fabs(moon.z));
+			double y = min_value(fabs(sun.y), fabs(moon.y));
+			z = min_value(z, y);	// 地平線通過、子午線通過付近の最小座標値を求める.
+			if (z >= min30_z)
+				step = 20*60; // 高度が±時角30分以上なら20分単位で時刻を進める.
+			else if (z >= min3_z)
+				step = 2*60; // 高度が±時角3分以上なら2分単位で時刻を進める.
+			else if (z >= sec15_z)
+				step = 10; // 高度が±時角15秒以上なら10秒単位で時刻を進める.
+			else
+				step = 1; // 1秒単位で時刻を進める.
+		}
+	}
+}
+
+//------------------------------------------------------------------------
 int main(int argc, char** argv)
 {
 #ifdef WIN32
@@ -296,97 +390,9 @@ show_help:
 	print_location(acoord, sea);
 	unsigned repeat = 0;
 	for (AstroTime atime = acoord.getTime(); gRepeatCount--; atime.addSec(gRepeatStep)) {
-	acoord.setTime(atime);
-	acoord.beginConvert();
-	pl.calc(acoord);
-	Vec3 sun  = pl.vecQ(Planets::SUN);
-	Vec3 moon = pl.vecQ(Planets::MOON);
-	double cosSun = sun.inner(moon);	// sun/moonは方向余弦なので、その内積は位相角のcosである.
-	if (cosSun > 1) cosSun = 1;			// acos()でのDOMAINエラー回避.
-	if (cosSun < -1) cosSun = -1;		// acos()でのDOMAINエラー回避.
-	Degree phase; phase.setArcCos(cosSun);	// acos は 0..180度の範囲で値を返す.
-	if (sun.x * moon.y - sun.y * moon.x < 0) { // XY平面の外積値が負の値なら、位相角度を 180～360度の範囲に補正する.
-		phase.setNeg(); phase.mod360();
-	}
-	acoord.conv_q2tq(sun);
-	acoord.conv_q2tq(moon);
-	acoord.conv_q2h(sun);
-	acoord.conv_q2h(moon);
-	if (gAddRefraction) { // 大気差補正.
-		acoord.addRefraction(sun);
-		acoord.addRefraction(moon);
-	}
-
-	//--- 結果表示.
-	if (++repeat > 1) puts("---"); // 2回以後の繰り返しに対して分離マーカを出力する.
-	print_time(acoord);
-	print_alt(sun, moon, phase.degree());
-
-	//--- 全惑星の赤経赤緯表示.
-	if (gPlanetRaDc) {
-		print_planet(acoord, pl, "SUN",     Planets::SUN);
-		print_planet(acoord, pl, "MOON",    Planets::MOON);
-		print_planet(acoord, pl, "MERCURY", Planets::MERCURY);
-		print_planet(acoord, pl, "VENUS",   Planets::VENUS);
-		print_planet(acoord, pl, "MARS",    Planets::MARS);
-		print_planet(acoord, pl, "JUPITER", Planets::JUPITER);
-		print_planet(acoord, pl, "SATURN",  Planets::SATURN);
-		print_planet(acoord, pl, "URANUS",  Planets::URANUS);
-		print_planet(acoord, pl, "NEPTUNE", Planets::NEPTUNE);
-		print_planet(acoord, pl, "PLUTO",   Planets::PLUTO);
-	}
-
-	//--- 出没計算.
-	if (gTableDays != 0) {
-		AstroTime t = acoord.getTime();
-		const double jd_end = t.jd() + gTableDays;
-		const double sun_rz  = sin(dms2rad(0,0,960));	// 太陽視半径による出没補正. 視半径は 960" で決め打ち.
-		const double min30_z = sin(hms2rad(0,30,0));	// 時角30分の高度のz座標値.
-		const double min3_z  = sin(hms2rad(0,3,0));	// 時角1分の高度のz座標値.
-		const double sec15_z = sin(hms2rad(0,0,15));	// 時角15秒の高度のz座標値.
-		int step = -1;	// 初回は指定時刻の1秒前の高度を計算する.
-		for (t.addSec(step); t.jd() < jd_end; t.addSec(step)) {
-			// 前回時刻の高度を保存する. ただし、初回はこの値を使ってはいけない.
-			const Vec3 sun0 = sun;
-			const Vec3 moon0 = moon;
-			// 今回時刻の高度を計算する.
-			acoord.setTime(t);
-			acoord.beginConvert();
-			pl.calc(acoord);
-			sun  = pl.vecQ(Planets::SUN);
-			moon = pl.vecQ(Planets::MOON);
-			acoord.conv_q2tq(sun);
-			acoord.conv_q2tq(moon);
-			acoord.conv_q2h(sun);
-			acoord.conv_q2h(moon);
-			// 大気差補正は常時実施する.
-			acoord.addRefraction(sun);
-			acoord.addRefraction(moon);
-			// 太陽視半径分を高度補正する.
-			sun.z += sun_rz;
-			if (step > 0) {
-				// 前回時刻の高度と比較し、境界値を跨いだ時刻を出没時刻として表示する.
-				if (sun0.z < 0 && sun.z >= 0) print_table("SUN-RISE", t);
-				if (sun0.z >= 0 && sun.z < 0) print_table("SUN-SET",  t);
-				if (moon0.z < 0 && moon.z >= 0) print_table("MOON-RISE", t);
-				if (moon0.z >= 0 && moon.z < 0) print_table("MOON-SET",  t);
-				// 前回時刻の東西と比較し、子午線を跨いだ時刻を南中時刻として表示する.
-				if (sun0.y >= 0 && sun.y < 0) print_table("SUN-CULM",  t);
-				if (moon0.y >= 0 && moon.y < 0) print_table("MOON-CULM",  t);
-			}
-			double z = min_value(fabs(sun.z), fabs(moon.z));
-			double y = min_value(fabs(sun.y), fabs(moon.y));
-			z = min_value(z, y);	// 地平線通過、子午線通過付近の最小座標値を求める.
-			if (z >= min30_z)
-				step = 20*60; // 高度が±時角30分以上なら20分単位で時刻を進める.
-			else if (z >= min3_z)
-				step = 2*60; // 高度が±時角3分以上なら2分単位で時刻を進める.
-			else if (z >= sec15_z)
-				step = 10; // 高度が±時角15秒以上なら10秒単位で時刻を進める.
-			else
-				step = 1; // 1秒単位で時刻を進める.
-		}
-	}
+		if (++repeat > 1) puts("---"); // 2回以後の繰り返しに対して分離マーカを出力する.
+		acoord.setTime(atime);
+		calc_main(acoord, pl);
 	} // endfor gRepeatCount.
 	return EXIT_SUCCESS;
 }
