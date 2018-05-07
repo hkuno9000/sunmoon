@@ -69,13 +69,9 @@ inline double min_value(double a, double b)
 }
 
 //------------------------------------------------------------------------
-void print(const AstroCoordinate& acoord, double sea, const Vec3& sunH, const Vec3& moonH, double moonPhase)
+void print_location(const AstroCoordinate& acoord, double sea)
 {
 	char buf[256];
-	char c;
-	int y, m, d, hh, mm;
-	double utc, sec;
-	Degree az, alt;
 
 	acoord.latitude().sprintDms(buf, NULL);
 	printf("LT: %s\n", buf);
@@ -84,6 +80,15 @@ void print(const AstroCoordinate& acoord, double sea, const Vec3& sunH, const Ve
 	printf("LG: %c%s\n", (buf[0]=='-' ? 'W' : 'E'), buf+1);
 
 	printf("SEA: %.0fm\n", sea);
+}
+
+//------------------------------------------------------------------------
+void print_time(const AstroCoordinate& acoord)
+{
+	char buf[256];
+	char c;
+	int y, m, d, hh, mm;
+	double utc, sec;
 
 	acoord.getTime().get(y, m, d, utc);
 	sec2ims(utc, c, hh, mm, sec);
@@ -96,6 +101,12 @@ void print(const AstroCoordinate& acoord, double sea, const Vec3& sunH, const Ve
 
 	Degree lst; lst.setHs(acoord.lst()); lst.sprintHms(buf, NULL);
 	printf("LST: %s\n", buf);
+}
+
+//------------------------------------------------------------------------
+void print_alt(const Vec3& sunH, const Vec3& moonH, double moonPhase)
+{
+	Degree az, alt;
 
 	sunH.getLtLg(alt, az);
 	printf("SUN-ALT: %+05.2fd\n", alt.degree());
@@ -125,7 +136,7 @@ void print_table(const char* prompt, const AstroTime& atime)
 
 //------------------------------------------------------------------------
 /** short help-message */
-const char gUsage[] = "usage: sunmoon [-h?rp] [lt=<LT>] [lg=<LG>] [sea=<SEA>] [utc=<UTC>] [leap=<LEAP>] [table=<DAYS>]\n";
+const char gUsage[] = "usage: sunmoon [-h?rp] [lt=<LT>] [lg=<LG>] [sea=<SEA>] [utc=<UTC>] [repeat=<N>,<STEP>] [leap=<LEAP>] [table=<DAYS>]\n";
 
 /** detail help-message for options and version */
 const char gDetailHelp[] =
@@ -137,6 +148,8 @@ const char gDetailHelp[] =
 	"  LG   : longitude. default is NAGOYA '136d55m00s'\n"
 	"  SEA  : sea level altitude[m]. default is 0\n"
 	"  UTC  : ISO 8601 time format '2014-12-31T23:59:59'. default is current time\n"
+	"  N    : repeat count. default is 1\n"
+	"  STEP : repeat step days,hours,minutes or seconds. default is '1day'\n"
 	"  DAYS : time table days of sunrise, sunset, moonrise, moonset and culmination. default is 0\n"
 	"  LEAP : TAI-UTC leap seconds. default is %s\n"
 	"\n  supports and source codes at: https://github.com/hkuno9000/sunmoon/\n"
@@ -150,6 +163,12 @@ bool gPlanetRaDc = false;
 
 /** table: 出没表日数. */
 unsigned gTableDays = 0;
+
+/** repeat count: 繰り返し回数. */
+unsigned gRepeatCount = 1;
+
+/** repeat step: 繰り返し刻み値 [秒単位]. */
+long gRepeatStep = 1;
 
 //------------------------------------------------------------------------
 /** usageとエラーメッセージを表示後に、exitする */
@@ -208,6 +227,7 @@ int main(int argc, char** argv)
 	//--- コマンドラインを解析する.
 	while (argc > 1) {
 		char* arg = argv[1];
+		char unit = 'd';
 		if (arg[0] == '-') {
 			char* sw = arg+1;
 			do {
@@ -242,6 +262,17 @@ show_help:
 			AstroTime atime(Jday(y, m, d), hh*3600+mm*60+sec);
 			acoord.setTime(atime);
 		}
+		else if (sscanf(arg, "repeat=%u,%ld%c", &gRepeatCount, &gRepeatStep, &unit) >= 1) {
+			//--- 繰り返し設定.
+			switch (unit) {
+			default:
+			error_abort("unknown repeat step unit: '%c', unit should be 'd/h/m/s'.\n", unit, arg);
+			case 'd': gRepeatStep *= 24*3600L; break;
+			case 'h': gRepeatStep *= 3600L; break;
+			case 'm': gRepeatStep *= 60L; break;
+			case 's': break;
+			}
+		}
 		else {
 			error_abort("unknown argument: %s\n", arg);
 		}
@@ -252,6 +283,10 @@ show_help:
 	//--- 計算実行.
 	acoord.setPosition(lg, lt);			// 天文緯度経度を設定する.　厳密には測地緯度経度と同じ値を与えてはいけない.
 	acoord.setLocation(lg, lt, sea);	// 測地緯度経度と海抜高度を設定する.
+	print_location(acoord, sea);
+	unsigned repeat = 0;
+	for (AstroTime atime = acoord.getTime(); gRepeatCount--; atime.addSec(gRepeatStep)) {
+	acoord.setTime(atime);
 	acoord.beginConvert();
 	pl.calc(acoord);
 	Vec3 sun  = pl.vecQ(Planets::SUN);
@@ -273,7 +308,9 @@ show_help:
 	}
 
 	//--- 結果表示.
-	print(acoord, sea, sun, moon, phase.degree());
+	if (++repeat > 1) puts("---"); // 2回以後の繰り返しに対して分離マーカを出力する.
+	print_time(acoord);
+	print_alt(sun, moon, phase.degree());
 
 	//--- 全惑星の赤経赤緯表示.
 	if (gPlanetRaDc) {
@@ -340,6 +377,7 @@ show_help:
 				step = 1; // 1秒単位で時刻を進める.
 		}
 	}
+	} // endfor gRepeatCount.
 	return EXIT_SUCCESS;
 }
 // sunmoon.cpp - end.
