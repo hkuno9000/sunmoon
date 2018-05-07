@@ -136,7 +136,7 @@ void print_table(const char* prompt, const AstroTime& atime)
 
 //------------------------------------------------------------------------
 /** short help-message */
-const char gUsage[] = "usage: sunmoon [-h?rp] [lt=<LT>] [lg=<LG>] [sea=<SEA>] [utc=<UTC>] [repeat=<N>,<STEP>] [leap=<LEAP>] [table=<DAYS>]\n";
+const char gUsage[] = "usage: sunmoon [-h?rpj] [lt=<LT>] [lg=<LG>] [sea=<SEA>] [utc=<UTC>] [repeat=<N>,<STEP>] [leap=<LEAP>] [table=<DAYS>]\n";
 
 /** detail help-message for options and version */
 const char gDetailHelp[] =
@@ -144,6 +144,7 @@ const char gDetailHelp[] =
 	"  -h -?: this help\n"
 	"  -r   : add refraction to ALT\n"
 	"  -p   : print RADEC,J2000,AZALT of Sun, Moon and planets\n"
+	"  -j   : print J2000 only for -p\n"
 	"  LT   : latidute.  default is NAGOYA '35d10m00s'\n"
 	"  LG   : longitude. default is NAGOYA '136d55m00s'\n"
 	"  SEA  : sea level altitude[m]. default is 0\n"
@@ -160,6 +161,9 @@ bool gAddRefraction = false;
 
 /** -p: 全惑星の赤経赤緯表示ON */
 bool gPlanetRaDc = false;
+
+/** -j: J2000限定表示ON */
+bool gJ2000only = false;
 
 /** table: 出没表日数. */
 unsigned gTableDays = 0;
@@ -191,6 +195,11 @@ void print_planet(const AstroCoordinate& acoord, const Planets& pl, const char* 
 	char radec[256];
 	char j2000[256];
 
+	sprintRaDec(j2000, pl.vecJ(id));
+	if (gJ2000only) {
+		printf("%-8s: J2000[%s]\n", name, j2000);
+		return;
+	}
 	Vec3 v = pl.vecQ(id);	// 地心平均赤道座標(MOONのみ測心)
 	acoord.conv_q2tq(v);	// 平均位置→真位置(章動補正).
 	Vec3 q = v;
@@ -199,7 +208,6 @@ void print_planet(const AstroCoordinate& acoord, const Planets& pl, const char* 
 
 	sprintAzAlt(azalt, v);
 	sprintRaDec(radec, q);
-	sprintRaDec(j2000, pl.vecJ(id));
 	printf("%-8s: RADEC[%s], J2000[%s], AZALT[%s]\n", name, radec, j2000, azalt);
 }
 
@@ -238,6 +246,8 @@ int main(int argc, char** argv)
 					gAddRefraction = true; break;
 				case 'p':
 					gPlanetRaDc = true; break;
+				case 'j':
+					gJ2000only = true; break;
 				default:
 					error_abort("unknown option: -%c\n", *sw);
 				}
