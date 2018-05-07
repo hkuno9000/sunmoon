@@ -24,8 +24,8 @@ namespace astro {
 // 厳密な計算のためには、setDUT1(),setLeapSec()で設定すること。
 
 // 閏秒の初期値 [TAI-UTC]
-int AstroTime::initLeapSec = 36;
-const char* AstroTime::initLeapText = "+36(2015 July 1). see https://hpiers.obspm.fr/iers/bul/bulc/bulletinc.dat";
+int AstroTime::initLeapSec = 37;
+const char* AstroTime::initLeapText = "+37(2017 January 1). see https://hpiers.obspm.fr/iers/bul/bulc/bulletinc.dat";
 
 // 現在時刻で生成する
 AstroTime::AstroTime()
