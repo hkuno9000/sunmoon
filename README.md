@@ -119,7 +119,7 @@ git push -u -f origin master
 
 ## Source
 The formulas used in this program were obtained from the textbooks below.
-- 天体の位置計算（増補版）/長沢工/株式会社地人書館/ISBN4-8052-0225-4 C3044
+- 天体の位置計算（増補版）, 長沢　工, 株式会社地人書館, ISBN4-8052-0225-4 C3044
 
 ## License
 This project is licensed under the terms of the MIT license.
