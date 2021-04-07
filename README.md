@@ -118,4 +118,4 @@ git push -u -f origin master
 * start the project.
 
 ## License
-pending
+This project is licensed under the terms of the MIT license.
