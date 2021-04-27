@@ -118,8 +118,11 @@ git push -u -f origin master
 * start the project.
 
 ## Source
-The formulas used in this program were obtained from the textbooks below.
+The formulas used in this project were obtained from the textbooks below.
 - 天体の位置計算（増補版）, 長沢 工, 株式会社 地人書館, ISBN4-8052-0225-4 C3044
+- 新こよみ便利帳, 暦計算研究会編, 株式会社 恒星社厚生閣, ISBN4-7699-0700-1 C0044
+  - Ⅵ 天体の位置
+  - 表26 天体位置略算式
 
 ## License
 This project is licensed under the terms of the MIT license.
