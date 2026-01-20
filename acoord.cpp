@@ -1,6 +1,8 @@
-﻿//. acoord.cpp - 天文座標系
-//	Copyright (C) 1997,1998 hkuno
-//	mailto:hkuno.kuno@nifty.ne.jp
+﻿/// @file
+/// 天文座標系
+/// @author hkuno9000@gmail.com
+/// @copyright 1997,1998,2026 Hiroshi Kuno. MIT License
+/// @see <https://github.com/hkuno9000/sunmoon.git>
 #include "acoord.h"
 #include "planets.h"
 using namespace std;
@@ -15,7 +17,7 @@ namespace astro {
 //------------------------------------------------------------------------
 //. 平均恒星時・日月平均黄経・歳差・章動を計算する
 
-//. AstroCoordinate::calc - 計算メイン
+/// AstroCoordinate::calc - 計算メイン
 void
 AstroCoordinate::calc()
 {
@@ -33,7 +35,7 @@ AstroCoordinate::calc()
 	recalcMat = true;
 }
 
-//. AstroCoordinate::calc2 - 歳差・章動の計算
+/// AstroCoordinate::calc2 - 歳差・章動の計算
 void
 AstroCoordinate::calc2(double T)
 {
@@ -169,7 +171,7 @@ AstroCoordinate::calc2(double T)
 //------------------------------------------------------------------------
 //. 座標変換行列を計算する
 
-//. AstroCoordinate::calcMat - 視赤道／地平座標変換行列の計算
+/// AstroCoordinate::calcMat - 視赤道／地平座標変換行列の計算
 void
 AstroCoordinate::calcMat()
 {
@@ -190,7 +192,7 @@ AstroCoordinate::calcMat()
 	recalcMat = false;
 }
 
-//. AstroCoordinate::calcMat2 - 歳差・章動・赤道／黄道座標変換行列の計算
+/// AstroCoordinate::calcMat2 - 歳差・章動・赤道／黄道座標変換行列の計算
 void
 AstroCoordinate::calcMat2()
 {
@@ -255,7 +257,7 @@ AstroCoordinate::calcMat2()
 //------------------------------------------------------------------------
 //. 光行差
 
-//. AstroCoordinate::addAnnualAberration - 恒星の年周光行差追加
+/// AstroCoordinate::addAnnualAberration - 恒星の年周光行差追加
 void
 AstroCoordinate::addAnnualAberration(Vec3& v) const
 {
@@ -276,7 +278,7 @@ AstroCoordinate::addAnnualAberration(Vec3& v) const
 #endif
 }
 
-//. AstroCoordinate::subAnnualAberration - 恒星の年周光行差除去
+/// AstroCoordinate::subAnnualAberration - 恒星の年周光行差除去
 void
 AstroCoordinate::subAnnualAberration(Vec3& v) const
 {
@@ -301,35 +303,36 @@ AstroCoordinate::subAnnualAberration(Vec3& v) const
 //------------------------------------------------------------------------
 //. 大気差 (大気差 = 視高度 - 真高度)
 
-//. refractionApp - 視高度に対する大気差を得る.
-// 文献１のラドーの大気差表(RADAU'S REFRACTION)に近似した値が得られる
-// ように実験式を組み立てて計算している。式の精度は、
-// 視高度 90°～11°に対して ±0.1″、
-// 視高度 11°～-1°に対して ±2″の精度である。
-// [文献1]平成９年 天体位置表、海上保安庁
-//
-//	視高度	大気差[″]
-//	-1	3387.5
-//	0	2196.0
-//	2	1146.6
-//	5	613.5
-//	8	406.8
-//	11	300.8
-//	15	221.0
-//	20	163.8
-//	25	128.3
-//	30	103.8
-//	35	85.6
-//	40	71.5
-//	45	60.0
-//	50	50.4
-//	60	34.7
-//	70	21.9
-//	80	10.6
-//	90	0
-// @param sinAlt sin(視高度)
-// @param cosAlt cos(視高度)
-// @return 大気差
+/// refractionApp - 視高度に対する大気差を得る.
+/// 文献１のラドーの大気差表(RADAU'S REFRACTION)に近似した値が得られる
+/// ように実験式を組み立てて計算している。式の精度は、
+/// 視高度 90°～11°に対して ±0.1″、
+/// 視高度 11°～-1°に対して ±2″の精度である。
+/// [文献1]平成９年 天体位置表、海上保安庁
+/// ```
+///	視高度	大気差[″]
+///	-1	3387.5
+///	0	2196.0
+///	2	1146.6
+///	5	613.5
+///	8	406.8
+///	11	300.8
+///	15	221.0
+///	20	163.8
+///	25	128.3
+///	30	103.8
+///	35	85.6
+///	40	71.5
+///	45	60.0
+///	50	50.4
+///	60	34.7
+///	70	21.9
+///	80	10.6
+///	90	0
+/// ```
+/// @param sinAlt sin(視高度)
+/// @param cosAlt cos(視高度)
+/// @return 大気差
 Degree
 AstroCoordinate::refractionApp(double sinAlt, double cosAlt) const
 {
@@ -365,9 +368,9 @@ AstroCoordinate::refractionApp(double sinAlt, double cosAlt) const
 	return Degree(ds);
 }
 
-//. refractionTrue - 真高度に対する大気差を得る
-// @param alt 真高度
-// @return 大気差
+/// refractionTrue - 真高度に対する大気差を得る
+/// @param alt 真高度
+/// @return 大気差
 Degree
 AstroCoordinate::refractionTrue(Degree alt) const
 {
@@ -380,9 +383,9 @@ AstroCoordinate::refractionTrue(Degree alt) const
 	return ref;
 }
 
-//. 視地平座標に対する大気差を得る
-// @param vh 視地平座標
-// @return 大気差 (視高度 - 真高度)
+/// 視地平座標に対する大気差を得る
+/// @param vh 視地平座標
+/// @return 大気差 (視高度 - 真高度)
 Degree
 AstroCoordinate::refractionApp(const Vec3& vh) const
 {
@@ -394,9 +397,9 @@ AstroCoordinate::refractionApp(const Vec3& vh) const
 		return Degree(0);
 }
 
-//. 真地平座標に対する大気差を得る
-// @param vh 真地平座標
-// @return 大気差 (視高度 - 真高度)
+/// 真地平座標に対する大気差を得る
+/// @param vh 真地平座標
+/// @return 大気差 (視高度 - 真高度)
 Degree
 AstroCoordinate::refractionTrue(const Vec3& vh) const
 {
@@ -406,7 +409,7 @@ AstroCoordinate::refractionTrue(const Vec3& vh) const
 	return refractionTrue(alt);
 }
 
-//. AstroCoordinate::addRefraction -大気差追加
+/// AstroCoordinate::addRefraction -大気差追加
 void
 AstroCoordinate::addRefraction(Vec3& vh) const
 {
@@ -438,7 +441,7 @@ AstroCoordinate::addRefraction(Vec3& vh) const
 	vh.z = r * (cos_z * cos_ref + sin_z * sin_ref);
 }
 
-//. AstroCoordinate::subRefraction - 大気差除去
+/// AstroCoordinate::subRefraction - 大気差除去
 void
 AstroCoordinate::subRefraction(Vec3& vh) const
 {
@@ -474,11 +477,11 @@ AstroCoordinate::subRefraction(Vec3& vh) const
 //------------------------------------------------------------------------
 //. 地心座標変換
 
-//. AstroCoordinate::setLocation - 観測位置を設定する
-// 月や人工衛星など地球近傍の天体に対する補正を行うために使用する
-// @param longitude 測地経度(東経を正、西経を負とする)
-// @param latitude  測地緯度
-// @param h         海抜高度[m]
+/// AstroCoordinate::setLocation - 観測位置を設定する.
+/// @details 月や人工衛星など地球近傍の天体に対する補正を行うために使用する
+/// @param longitude 測地経度(東経を正、西経を負とする)
+/// @param latitude  測地緯度
+/// @param h         海抜高度[m]
 void
 AstroCoordinate::setLocation(const Degree& longitude, const Degree& latitude, double h)
 {

@@ -1,6 +1,8 @@
-﻿//. atime.cpp - 天文時刻
-//	Copyright (C) 1997,1998,2014,2015,2018 hkuno
-//	mailto:hkuno.kuno@nifty.ne.jp
+﻿/// @file
+/// 天文時刻
+/// @author hkuno9000@gmail.com
+/// @copyright 1997,1998,2014,2015,2018,2026 Hiroshi Kuno. MIT License
+/// @see <https://github.com/hkuno9000/sunmoon.git>
 #include <ctime>
 #include "jday.h"
 #include "degree.h"	//!@bug VC6 bug? 直前に"namespace astro {}"を置くと degree.hの ostream参照でコンパイルエラーとなる.
@@ -23,20 +25,20 @@ namespace astro {
 // dut1とleapSecは適当な初期値にする。
 // 厳密な計算のためには、setDUT1(),setLeapSec()で設定すること。
 
-// 閏秒の初期値 [TAI-UTC]
+/// 閏秒の初期値 [TAI-UTC]
 int AstroTime::initLeapSec = 37;
 const char* AstroTime::initLeapText = "+37(2017 January 1). see https://hpiers.obspm.fr/iers/bul/bulc/bulletinc.dat";
 
-// 現在時刻で生成する
+/// 現在時刻で生成する
 AstroTime::AstroTime()
 	: d(0), s(0), dut1(0), leapSec(initLeapSec)
 {
 	update();
 }
 
-// 指定の日付と時刻で生成する
-// @param jd  世界時正午の日付
-// @param utc 世界時０時からの経過秒数
+/// 指定の日付と時刻で生成する
+/// @param jd  世界時正午の日付
+/// @param utc 世界時０時からの経過秒数
 AstroTime::AstroTime(const Jday& jday, double utc)
 	: d(jday), s(utc - 12*3600L), dut1(0), leapSec(initLeapSec)
 {
@@ -45,7 +47,7 @@ AstroTime::AstroTime(const Jday& jday, double utc)
 
 
 //----- 日付と時刻の調整 -------------------------------------------------
-//. AstroTime::adjust - 秒が日を越えないようにする
+/// AstroTime::adjust - 秒が日を越えないようにする
 void
 AstroTime::adjust()
 {
@@ -56,7 +58,7 @@ AstroTime::adjust()
 }
 
 //----- 現在時刻に更新する -----------------------------------------------
-//. AstroTime::update - 現在時刻(秒単位)に更新する
+/// AstroTime::update - 現在時刻(秒単位)に更新する
 void
 AstroTime::update()
 {
@@ -68,7 +70,7 @@ AstroTime::update()
 	adjust();
 }
 
-//. AstroTime::updateSystemTime - 現在時刻(ミリ秒単位)に更新する
+/// AstroTime::updateSystemTime - 現在時刻(ミリ秒単位)に更新する
 void
 AstroTime::updateSystemTime()
 {
@@ -92,7 +94,7 @@ AstroTime::updateSystemTime()
 }
 
 //----- 恒星時 -----------------------------------------------------------
-//. AstroTime::gmst - グリニジ平均恒星時[秒] [0～86400)
+/// AstroTime::gmst - グリニジ平均恒星時[秒] [0～86400)
 double
 AstroTime::gmst() const
 {

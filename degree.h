@@ -1,6 +1,8 @@
-﻿//. degree.h - 角度と時間の変換
-//	Copyright (C) 1997,1998,1999,2000 hkuno
-//	mailto:hkuno.kuno@nifty.ne.jp
+﻿/// @file
+/// 角度と時間の変換
+/// @author hkuno9000@gmail.com
+/// @copyright 1997,1998,1999,2000,2026 Hiroshi Kuno. MIT License
+/// @see <https://github.com/hkuno9000/sunmoon.git>
 #ifndef DEGREE_H_
 #define DEGREE_H_
 #include <iostream>
@@ -13,58 +15,88 @@ using namespace std;
 //------------------------------------------------------------------------
 //.----- 定数 PI (π) ----------------------------------------------------
 //------------------------------------------------------------------------
-extern const double PI;    	// π
-extern const double DD2RAD;	// π/180
-extern const double HH2RAD;	// π/12
-extern const double DS2RAD;	// π/180/3600
-extern const double HS2RAD;	// π/12/3600
-extern const double RAD2DD;	// 180/π
-extern const double RAD2HH;	// 12/π
-extern const double RAD2DS;	// 180*3600/π
-extern const double RAD2HS;	// 12*3600/π
+extern const double PI;    	///< π
+extern const double DD2RAD;	///< π/180
+extern const double HH2RAD;	///< π/12
+extern const double DS2RAD;	///< π/180/3600
+extern const double HS2RAD;	///< π/12/3600
+extern const double RAD2DD;	///< 180/π
+extern const double RAD2HH;	///< 12/π
+extern const double RAD2DS;	///< 180*3600/π
+extern const double RAD2HS;	///< 12*3600/π
 
 //------------------------------------------------------------------------
-//.----- fmod1, fmod2 : 丸め変換 -----------------------------------------
-//------------------------------------------------------------------------
-//. fmod1(x, r) - x を r で剰余を得て [0...r)      の範囲に丸める
-//. fmod2(x, r) - x を r で剰余を得て [-r/2...r/2) の範囲に丸める
-//	※rは正の数であること
+/// 丸め変換 - x を r で剰余を得て [0...r)      の範囲に丸める.
+/// example: fmod1(710, 360) => 350
+/// @param x 丸め対象値
+/// @param r 丸め範囲
+/// @return 丸め値 [0...r)
+/// @attention rは正の数であること
 double fmod1(double x, double r);
+
+/// 丸め変換 - x を r で剰余を得て [-r/2...r/2) の範囲に丸める.
+/// example: fmod2(710, 360) => -10
+/// @param x 丸め対象値
+/// @param r 丸め範囲
+/// @return 丸め値 [-r/2...r/2)
+/// @attention rは正の数であること
 double fmod2(double x, double r);
 
 //------------------------------------------------------------------------
-//.----- round : 四捨五入 ------------------------------------------------
-//------------------------------------------------------------------------
-//. round(x) - 小数部を四捨五入して整数を得る
+/// 四捨五入 - x の小数部を四捨五入して整数を得る.
 double round(double x);
 
-//. round(x, point) - 小数部point-1桁を四捨五入し、小数部をpoint桁に丸める
+/// 四捨五入 - x の小数部point-1桁を四捨五入し、小数部をpoint桁に丸める.
 double round(double x, int point);
 
 //------------------------------------------------------------------------
-//.----- sec2ims, min2im : 分秒変換 --------------------------------------
-//------------------------------------------------------------------------
-//. sec2ims(sec, sign, i, m, s) - 秒(sec)の値を符号、度分秒(i,m,s)に分ける
-//. min2im(min, sign, i, m)     - 分(min)の値を符号、度分(i,m)に分ける
-//	※符号は０以上を '+' とする
+/// 秒から度分秒へ変換する - 秒(sec)の値を符号、度分秒(i,m,s)に分ける.
+/// example: sec2ims(3678.9) => sign:'+', i:1, m:1, s:18.9
+/// @param sec [in] 秒値
+/// @param sign [out] 符号. '+' or '-'. sec==0 は '+' とする
+/// @param i [out] 度
+/// @param m [out] 分
+/// @param s [out] 秒
 void sec2ims(double sec, char& sign, double& i, double& m, double& s);
 void sec2ims(double sec, char& sign, int&    i, int&    m, double& s);
-void min2im (double sec, char& sign, double& i, double& m);
-void min2im (double sec, char& sign, int&    i, double& m);
+
+/// 分から度分へ変換する - 分(min)の値を符号、度分(i,m)に分ける.
+/// example: min2im(3678.9) =>  sign:'+', i:61, m:18.9
+/// @param min [in] 分値
+/// @param sign [out] 符号. '+' or '-'. min==0 は '+' とする
+/// @param i [out] 度
+/// @param m [out] 分
+void min2im(double min, char& sign, double& i, double& m);
+void min2im(double min, char& sign, int&    i, double& m);
 
 //------------------------------------------------------------------------
-//.----- dms2xx : 度分秒の変換 -------------------------------------------
-//------------------------------------------------------------------------
-//. dms2dd(d,m,s)  - 度分秒を度の小数にする
-//. dms2ds(d,m,s)  - 度分秒を度秒にする
-//. dms2rad(d,m,s) - 度分秒をラジアンにする
-//	※d,m,sは正の値であること
+/// 度分秒を度の小数にする.
+/// example: dms2dd(1, 30, 36) => 1.51
+/// @param d [in] 度
+/// @param m [in] 分
+/// @param s [in] 秒
+/// @return 度 + 分/60 + 秒/3600
+/// @attention d,m,sは正の値であること
 inline double dms2dd(double d, double m=0, double s=0) {
 	return d + m / 60 + s / 3600;
 }
+/// 度分秒を度秒にする.
+/// example: dms2ds(1, 30, 36) => 5436
+/// @param d [in] 度
+/// @param m [in] 分
+/// @param s [in] 秒
+/// @return 度*3600 + 分*60 + 秒
+/// @attention d,m,sは正の値であること
 inline double dms2ds(double d, double m=0, double s=0) {
 	return d * 3600 + m * 60 + s;
 }
+/// 度分秒をラジアンにする.
+/// example: dms2rad(1, 30, 36) => 5436 * π / (180*3600)
+/// @param d [in] 度
+/// @param m [in] 分
+/// @param s [in] 秒
+/// @return (度*3600 + 分*60 + 秒) * π / (180*3600)
+/// @attention d,m,sは正の値であること
 inline double dms2rad(double d, double m=0, double s=0) {
 	return dms2ds(d, m, s) * DS2RAD;
 }
@@ -72,16 +104,33 @@ inline double dms2rad(double d, double m=0, double s=0) {
 //------------------------------------------------------------------------
 //.----- hms2xx : 時分秒の変換 -------------------------------------------
 //------------------------------------------------------------------------
-//. hms2hh(h,m,s)  - 時分秒を時の小数にする
-//. hms2hs(h,m,s)  - 時分秒を時秒にする
-//. hms2rad(h,m,s) - 時分秒をラジアンにする
-//	※h,m,sは正の値であること
+/// 時分秒を時の小数にする.
+/// example: hms2hh(1, 30, 36) => 1.51
+/// @param h [in] 時
+/// @param m [in] 分
+/// @param s [in] 秒
+/// @return 時 + 分/60 + 秒/3600
+/// @attention h,m,sは正の値であること
 inline double hms2hh(double h, double m=0, double s=0) {
 	return h + m / 60 + s / 3600;
 }
+/// 時分秒を時秒にする.
+/// example: hms2hs(1, 30, 36) => 5436
+/// @param h [in] 時
+/// @param m [in] 分
+/// @param s [in] 秒
+/// @return 時*3600 + 分*60 + 秒
+/// @attention h,m,sは正の値であること
 inline double hms2hs(double h, double m=0, double s=0) {
 	return h * 3600 + m * 60 + s;
 }
+/// 時分秒をラジアンにする.
+/// example: hms2rad(1, 30, 36) => 5436 * π / (12*3600)
+/// @param h [in] 時
+/// @param m [in] 分
+/// @param s [in] 秒
+/// @return (時*3600 + 分*60 + 秒) * π / (12*3600)
+/// @attention h,m,sは正の値であること
 inline double hms2rad(double h, double m=0, double s=0) {
 	return hms2hs(h, m, s) * HS2RAD;
 }
@@ -138,10 +187,10 @@ class asDm {};
 class asDd {};
 
 //------------------------------------------------------------------------
-//.----- class Degree : 角度 ---------------------------------------------
-//------------------------------------------------------------------------
+/// 角度クラス.
 class Degree {
-	double ds;		// 角秒[″]  １°の3600倍。
+	/// 角秒[″]  １°の3600倍.
+	double ds;
 
 public:
 	//----- コンストラクタ -------------------------------------------
@@ -225,14 +274,14 @@ public:
 	void setInv() { ds = 1 / ds; }
 
 	//----- 角度の丸め -----------------------------------------------
-	//. mod360 - 360度の範囲で角度を丸め、 [0°...360°) とする
+	/// 360度の範囲で角度を丸め、 [0°...360°) とする
 	void mod360() { ds = fmod1(ds, 360*3600L); }
 
-	//. mod180 - ±180度の範囲で角度を丸め、[-180°...180°) とする
+	/// ±180度の範囲で角度を丸め、[-180°...180°) とする
 	void mod180() { ds = fmod2(ds, 360*3600L); }
 
-	//. mod90 - ±180度の範囲で角度を丸め、さらに±90度以上は角度を折り返してtrueを返す
-	// 緯度に対してtrueが返るときは、経度に180度加える必要がある
+	/// ±180度の範囲で角度を丸め、さらに±90度以上は角度を折り返してtrueを返す.
+	/// @attention 緯度に対してtrueが返るときは、経度に180度加える必要がある
 	bool mod90() {
 		mod180();
 		if (ds > 90*3600L) {
@@ -252,36 +301,36 @@ public:
 	void sub90()  { ds -=  90 * 3600L; }
 
 	//----- 角度取得・設定 -------------------------------------------
-	//. 角度 [°]
+	/// 角度 [°]
 	double degree() const    { return ds / 3600; }
 	void setDegree(double d) { ds = d * 3600; }
 
-	//. 角度分 [′]
+	/// 角度分 [′]
 	double minute() const    { return ds / 60; }
 	void setMinute(double m) { ds = m * 60; }
 
-	//. 角度秒 [″]
+	/// 角度秒 [″]
 	double sec() const      { return ds; }
 	void setSec(double s)   { ds = s; }
 
-	//. 時角時 [h]
+	/// 時角時 [h]
 	double hh() const       { return ds / (15*3600L); }
 	void setHh(double h)    { ds =   h  * (15*3600L); }
 
-	//. 時角分 [m]
+	/// 時角分 [m]
 	double hm() const       { return ds / (15*60); }
 	void setHm(double m)    { ds =   m  * (15*60); }
 
-	//. 時角秒 [s]
+	/// 時角秒 [s]
 	double hs() const           { return ds / 15; }
 	void setHs(double s)        { ds =    s * 15; }
 
-	//. ラジアン
+	/// ラジアン
 	double radian() const       { return ds * DS2RAD; }
 	void setRadian(double rad)  { ds =  rad * RAD2DS; }
 
 	//----- 分秒を分離して設定・取得する -----------------------------
-	//. 度分秒
+	/// 度分秒
 	void setDms(double d, double m, double s) {
 		ds = d * 3600 + m * 60 + s;
 	}
@@ -304,7 +353,7 @@ public:
 		min2im(round(minute(), point), sign, d, m);
 	}
 
-	//. 時分秒（時角)
+	/// 時分秒（時角)
 	void setHms(double h, double m, double s) {
 		ds = (h * 3600 + m * 60 + s) * 15;
 	}
@@ -354,14 +403,14 @@ public:
 	void setArcTan2(double y, double x)  { setRadian(atan2(y, x)); }
 };//endclass Degree
 
-// 緯度経度の値を、緯度±90度、経度±180度に正規化する
+/// 緯度経度の値を、緯度±90度、経度±180度に正規化する
 inline void normLtLg(Degree& lt, Degree& lg) {
 	if (lt.mod90())
 		lg.add180();
 	lg.mod180();
 }
 
-// 赤経赤緯の値を、赤緯±90度、赤経0～360度に正規化する
+/// 赤経赤緯の値を、赤緯±90度、赤経0～360度に正規化する
 inline void normRaDec(Degree& ra, Degree& dec) {
 	if (dec.mod90())
 		ra.add180();

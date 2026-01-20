@@ -1,6 +1,8 @@
-﻿//. Vec3.h - 3D vector
-//	Copyright (C) 1997,1998 hkuno
-//	mailto:hkuno.kuno@nifty.ne.jp
+﻿/// @file
+/// 3次元ベクトルとアフィン変換行列クラスの定義モジュール.
+/// @author hkuno9000@gmail.com
+/// @copyright 1997,1998,2026 Hiroshi Kuno. MIT License
+/// @see <https://github.com/hkuno9000/sunmoon.git>
 #ifndef VEC3_H_
 #define VEC3_H_
 #include "defs.h"
@@ -9,28 +11,32 @@ namespace util {
 using namespace std;
 class Degree;
 
-//------------------------------------------------------------------------
-//.----- class Mat3x3 ----------------------------------------------------
-//------------------------------------------------------------------------
-// １行３列のベクトルをアフィン変換する３行３列の行列である
-//	加減乗算の他に、回転行列設定、単位行列設定ができる。
+/// @brief １行３列のベクトルを拡大回転する３行３列の行列クラス.
+/// @details 加減乗算の他に、回転行列設定、単位行列設定ができる。
 class Mat3x3 {
 public:
 	//----- コンストラクタ -------------------------------------------
-
-	// 単位行列として生成する
+	/// コンストラクタ.
+	/// @details 単位行列 として生成する.
+	/// @see setE()
 	Mat3x3() {
 		setE();
 	}
 
-	// 回転行列として生成する
-	// @param angle 回転角度
-	// @param axis  回転軸('X','Y','Z' のいずれかを指定する)
+	/// コンストラクタ.
+	/// @details 回転行列として生成する.
+	/// @param angle [in] 回転角度
+	/// @param axis  [in] 回転軸('X','Y','Z' のいずれかを指定する)
+	/// @see setRotate()
 	Mat3x3(const Degree& angle, int axis='Z') {
 		setRotate(angle, axis);
 	}
 
-	// 指定の3x3要素を持った行列として生成する
+	/// コンストラクタ.
+	/// @details 指定の3x3要素を持った行列 @f$ \begin{pmatrix} m11 & m12 & m13 \\ m21 & m22 & m23 \\ m31 & m32 & m33 \end{pmatrix} @f$ として生成する.
+	/// @param m11,m12,m13 [in] 1行目の要素.
+	/// @param m21,m22,m23 [in] 2行目の要素.
+	/// @param m31,m32,m33 [in] 3行目の要素.
 	Mat3x3(double m11, double m12, double m13,
 	       double m21, double m22, double m23,
 	       double m31, double m32, double m33)
@@ -38,20 +44,22 @@ public:
 		  m21(m21), m22(m22), m23(m23),
 		  m31(m31), m32(m32), m33(m33) {}
 
-
-	//----- 単位行列設定 ---------------------------------------------
+	//----- 行列設定 -------------------------------------------------
+	/// 単位行列設定.
+	/// @details 単位行列 @f$ \begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{pmatrix} @f$ を設定する.
 	void setE();
 
-
-	//----- 回転行列設定 ---------------------------------------------
-	// ベクトルの直交座標成分が、右手系(親指=x、人差し指=y、中指=z)のとき
-	// 回転行列は、ベクトルを次のように回転する。
-	//	・軸の＋方向から原点を見て、軸の回りを反時計回り(左ネジ)
-	//	・原点から軸の＋方向を見て、軸の回りを時計回り(右ネジ)
-	// ベクトルを固定して座標系の回転とみれば次のようになる。
-	//	・軸の＋方向から原点を見て、軸の回りを時計回り(右ネジ)
-	// @param angle 回転角度
-	// @param axis  回転軸('X','Y','Z' のいずれかを指定する)
+	/// 回転行列設定.
+	/// @details ベクトルの直交座標成分が、右手系(親指=x、人差し指=y、中指=z)のとき
+	/// 回転行列は、ベクトルを次のように回転する。
+	/// - 軸の＋方向から原点を見て、軸の回りを反時計回り(左ネジ)
+	/// - 原点から軸の＋方向を見て、軸の回りを時計回り(右ネジ)
+	///
+	/// ベクトルを固定して座標系の回転とみれば次のようになる。
+	/// - 軸の＋方向から原点を見て、軸の回りを時計回り(右ネジ)
+	///
+	/// @param angle [in] 回転角度
+	/// @param axis  [in] 回転軸('X','Y','Z' のいずれかを指定する)
 	void setRotate(const Degree& angle, int axis='Z');
 
 
@@ -98,42 +106,39 @@ public:
 
 };//endclass Mat3x3
 
-// コンストラクタに渡すダミー型。別の引数で渡す数値型の意味付けをする。
+/// コンストラクタに渡すダミー型。別の引数で渡す数値型の意味付けをする。
 class asLtLg {};
 
-//------------------------------------------------------------------------
-//.----- class Vec3 : １行３列のベクトル ---------------------------------
-//------------------------------------------------------------------------
-// １行３列の実数ベクトル。３次元直交座標を保持する
+/// @brief １行３列のベクトル.
+/// @details １行３列の実数ベクトル。３次元直交座標を保持する
 class Vec3 {
 public:
 	//----- コンストラクタ -------------------------------------------
-
-	// 全て0で生成する
+	/// コンストラクタ. 全て0で生成する.
 	Vec3()
 		: x(0), y(0), z(0) {}
 
-	// 直交座標値で生成する
+	/// コンストラクタ. 直交座標値で生成する.
 	Vec3(double x, double y, double z)
 		: x(x), y(y), z(z) {}
 
-	// 極座標値で生成する
-	// @param radius  動径ｒ
-	// @param phi     天頂角φ
-	// @param theta   方位角θ
+	/// コンストラクタ. 極座標値で生成する.
+	/// @param radius  動径ｒ
+	/// @param phi     天頂角φ
+	/// @param theta   方位角θ
 	Vec3(double radius, const Degree& phi, const Degree& theta) {
 		setPolar(radius, phi, theta);
 	}
 
-	// 緯度経度値で生成する
-	// @param radius    動径ｒ
-	// @param latitude  緯度
-	// @param longitude 経度(東経を正とする)
+	/// コンストラクタ. 緯度経度値で生成する.
+	/// @param radius    動径ｒ
+	/// @param latitude  緯度
+	/// @param longitude 経度(東経を正とする)
 	Vec3(double radius, const Degree& latitude, const Degree& longitude, asLtLg) {
 		setLtLg(radius, latitude, longitude);
 	}
 
-	// 直交座標値の配列から生成する
+	/// コンストラクタ. 直交座標値の配列から生成する.
 	Vec3(const int*    p) : x(p[0]), y(p[1]), z(p[2]) {}
 	Vec3(const short*  p) : x(p[0]), y(p[1]), z(p[2]) {}
 	Vec3(const long*   p) : x(p[0]), y(p[1]), z(p[2]) {}
@@ -215,7 +220,8 @@ public:
 
 
 	//----- 内積 -----------------------------------------------------
-	// 内積値 = |a|*|b|*cosθ = a.x * b.x + a.y * b.y + a.z * b.z
+	/// 内積値.
+	/// @return |a|*|b|*cosθ = a.x * b.x + a.y * b.y + a.z * b.z
 	double inner(const Vec3& a) const {
 		return x * a.x + y * a.y + z * a.z;
 	}
@@ -233,31 +239,31 @@ public:
 
 	//----- 極座標の設定・取得 ---------------------------------------
 
-	// 動径、ベクトルの長さ
+	/// 動径、ベクトルの長さ
 	double radius() const;
 
-	// 極座標を得る
-	// @param phi     天頂角φ
-	// @param theta   方位角θ
-	// @return        動径ｒ
+	/// 極座標を得る
+	/// @param phi     天頂角φ
+	/// @param theta   方位角θ
+	/// @return        動径ｒ
 	double getPolar(Degree& phi, Degree& theta) const;
 
-	// 極座標を設定する
-	// @param radius  動径ｒ
-	// @param phi     天頂角φ
-	// @param theta   方位角θ
+	/// 極座標を設定する
+	/// @param radius  動径ｒ
+	/// @param phi     天頂角φ
+	/// @param theta   方位角θ
 	void setPolar(double radius, const Degree& phi, const Degree& theta);
 
-	// 緯度経度を得る
-	// @param latitude  緯度
-	// @param longitude 経度(東経を正とする)
-	// @return          動径ｒ
+	/// 緯度経度を得る
+	/// @param latitude  緯度
+	/// @param longitude 経度(東経を正とする)
+	/// @return          動径ｒ
 	double getLtLg(Degree& latitude, Degree& longitude) const;
 
-	// 緯度経度を設定する
-	// @param radius    動径ｒ
-	// @param latitude  緯度
-	// @param longitude 経度(東経を正とする)
+	/// 緯度経度を設定する
+	/// @param radius    動径ｒ
+	/// @param latitude  緯度
+	/// @param longitude 経度(東経を正とする)
 	void setLtLg(double radius, const Degree& latitude, const Degree& longitude);
 
 

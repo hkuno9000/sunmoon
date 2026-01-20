@@ -1,6 +1,8 @@
-﻿//. jday.cpp - ユリウス日(暦日)
-//	Copyright (C) 1997,1998 hkuno
-//	mailto:hkuno.kuno@nifty.ne.jp
+﻿/// @file
+/// ユリウス日(暦日)
+/// @author hkuno9000@gmail.com
+/// @copyright 1997,1998,2026 Hiroshi Kuno. MIT License
+/// @see <https://github.com/hkuno9000/sunmoon.git>
 #include <cstdlib>
 #include "jday.h"
 using namespace std;
@@ -10,12 +12,13 @@ namespace astro {
 //------------------------------------------------------------------------
 //.----- class Jday : ユリウス日(暦日) -----------------------------------
 //------------------------------------------------------------------------
+///
 const long BC0001_1_1 = 1721058L;	//  BC1.Jan.1
 
 //------------------------------------------------------------------------
 //. 日付設定
 
-//. march_days - 3月1日からの通日(3月1日 = 0)
+/// march_days - 3月1日からの通日(3月1日 = 0)
 static int
 march_days(int& y, int m)
 {
@@ -26,7 +29,7 @@ march_days(int& y, int m)
 	return (m - 2) * 979 / 32 - 31;	// 979/32=30.593 平均月日数
 }
 
-//. Jday::setGdate - グレゴリオ暦の日付を設定する (AD1582～現代用)
+/// Jday::setGdate - グレゴリオ暦の日付を設定する (AD1582～現代用)
 void
 Jday::setGdate(int y, int m, int day)
 {
@@ -41,7 +44,7 @@ Jday::setGdate(int y, int m, int day)
 	d = y * 365L + q * 97L + r / 4 - r / 100 + day + 62 + BC0001_1_1;
 }
 
-//. Jday::setJdate - ユリウス暦の日付を設定する (BC4713～AD1582 の期間用)
+/// Jday::setJdate - ユリウス暦の日付を設定する (BC4713～AD1582 の期間用)
 void
 Jday::setJdate(int y, int m, int day)
 {
@@ -58,7 +61,7 @@ Jday::setJdate(int y, int m, int day)
 //------------------------------------------------------------------------
 //. 日付取得(グレゴリオ暦、ユリウス暦)
 
-//. Jday::getGdate - グレゴリオ暦の日付を得る (AD1582～現代用)
+/// Jday::getGdate - グレゴリオ暦の日付を得る (AD1582～現代用)
 void
 Jday::getGdate(int& year, int& month, int& day, int& day_of_week) const
 {
@@ -90,7 +93,7 @@ Jday::getGdate(int& year, int& month, int& day, int& day_of_week) const
 	day_of_week = (int) w;
 }
 
-//. Jday::getJdate - ユリウス暦の日付を得る (BC4713～AD1582 の期間用)
+/// Jday::getJdate - ユリウス暦の日付を得る (BC4713～AD1582 の期間用)
 void
 Jday::getJdate(int& year, int& month, int& day, int& day_of_week) const
 {
@@ -123,9 +126,9 @@ Jday::getJdate(int& year, int& month, int& day, int& day_of_week) const
 }
 
 //------------------------------------------------------------------------
-//. 年月日と曜日 (グレゴリオ暦)
-//	計算結果をキャッシュしておき、同じ日付なら再計算を省くことで
-//	高速化をはかっている
+/// 年月日と曜日 (グレゴリオ暦).
+/// 計算結果をキャッシュしておき、同じ日付なら再計算を省くことで
+/// 高速化をはかっている
 static class jday_cache {
 	long jd;
 	int y, m, d, w;

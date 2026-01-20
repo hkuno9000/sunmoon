@@ -1,6 +1,8 @@
-﻿//. degree.cpp - 角度と時間の変換
-//	Copyright (C) 1997,1998,1999,2000,2014 hkuno
-//	mailto:hkuno.kuno@nifty.ne.jp
+﻿/// @file
+/// 角度と時間の変換
+/// @author hkuno9000@gmail.com
+/// @copyright 1997,1998,1999,2000,2014,2026 Hiroshi Kuno. MIT License
+/// @see <https://github.com/hkuno9000/sunmoon.git>
 #include <iostream>
 #include <cstdio>
 #include <cstring>

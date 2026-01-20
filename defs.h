@@ -1,6 +1,8 @@
-﻿//. defs.h - common, basic definitions
-//	Copyright (C) 1997,1998 hkuno
-//	mailto:hkuno.kuno@nifty.ne.jp
+﻿/// @file
+/// common, basic definitions
+/// @author hkuno9000@gmail.com
+/// @copyright 1997,1998,2026 Hiroshi Kuno. MIT License
+/// @see <https://github.com/hkuno9000/sunmoon.git>
 #ifndef DEFS_H_
 #define DEFS_H_
 #include <stdexcept>
@@ -70,7 +72,7 @@ public: NullPointer(const char* msg) : std::logic_error(msg) {}
 //. macros
 //------------------------------------------------------------------------
 
-//. ELEMENTS_OF - 配列要素数の取得
+/// ELEMENTS_OF - 配列要素数の取得
 #define ELEMENTS_OF(array) \
 	(sizeof(array) / sizeof(array[0]))
 

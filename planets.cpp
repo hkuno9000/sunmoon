@@ -1,7 +1,8 @@
-﻿//. planets.cpp - 惑星位置計算
-//	Copyright (C) 1997,1998,1999,2000 hkuno
-//	mailto:hkuno.kuno@nifty.ne.jp
-
+﻿/// @file
+/// 惑星位置計算
+/// @author hkuno9000@gmail.com
+/// @copyright 1997,1998,1999,2000,2026 Hiroshi Kuno. MIT License
+/// @see <https://github.com/hkuno9000/sunmoon.git>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -13,14 +14,13 @@ using namespace astro;
 namespace astro {
 
 //------------------------------------------------------------------------
-//.----- class PlanetData : 惑星位置計算用のデータ項目 -------------------
-//------------------------------------------------------------------------
+/// 惑星位置計算用のデータ項目.
 struct PlanetData {
-    double a, b, c;             // 係数
-    bool at;                    // a 項にTを掛けるなら true
+    double a, b, c;             ///< 係数
+    bool at;                    ///< a 項にTを掛けるなら true
 
-    // １項目分の計算
-    // @param T J2000.0[TDT]からのユリウス世紀
+    /// １項目分の計算
+    /// @param T J2000.0[TDT]からのユリウス世紀
     double operator()(double T) const {
         double x = a * cos(dd2mod1(b * T + c) * DD2RAD);
         if (at) x *= T;
@@ -28,7 +28,7 @@ struct PlanetData {
     }
 };//endclass PlanetData
 
-//----- 太陽 SUN
+/// 太陽 SUN
 const PlanetData
 sunL[] = {                      // 平均黄経[°]
     {36000.7695,        0   ,     0   , true},
@@ -62,7 +62,7 @@ sunR[] = {                      // 地心距離[AU]
     {    0.000005,  33718   ,   226   , },
 };
 
-//----- 月 MOON
+/// 月 MOON
 const PlanetData
 moonL[] = {                     // 視黄経[°]
         { 481267.8809,      0    ,     0    , true},
@@ -223,7 +223,7 @@ moonP[] = {                     // 地平視差
         {    0.000005, 405201    ,   140    , },
 };
 
-//----- 水星 MERCURY
+/// 水星 MERCURY
 const PlanetData
 mercuryL[] = {                  // 日心平均黄経[°]
         { 149474.0714,     0     ,     0     , true},
@@ -289,7 +289,7 @@ mercuryR[] = {                  // 動径[AU]
         {    0.000002,298945     ,   170     , true},
 };
 
-//----- 金星 VENUS
+/// 金星 VENUS
 const PlanetData
 venusL[] = {                    // 日心平均黄経[°]
         { 58519.2125,      0     ,     0     , true},
@@ -326,7 +326,7 @@ venusR[] = {                    // 動径[AU]
         {     0.000004, 55483    ,   121     , },
 };
 
-//----- 火星 MARS
+/// 火星 MARS
 const PlanetData
 marsL[] = {                     // 日心平均黄経[°]
         { 19141.6999,      0     ,     0     , true},
@@ -396,7 +396,7 @@ marsR[] = {                     // 動径[AU]
         {     0.000008,  2281    ,   311     , },
 };
 
-//----- 木星 JUPITER
+/// 木星 JUPITER
 const PlanetData
 jupiterL[] = {                  // 日心平均黄経[°]
         {  3036.08406,     0     ,     0     , true},
@@ -477,7 +477,7 @@ jupiterR[] = {                  // 動径[AU]
         {    0.000005,   9560    ,   138     , },
 };
 
-//----- 土星 SATURN
+/// 土星 SATURN
 const PlanetData
 saturnL[] = {                   // 日心平均黄経[°]
         {  1224.04687,     0     ,     0     , true},
@@ -546,7 +546,7 @@ saturnR[] = {                   // 動径[AU]
         {    0.000004,  12669    ,   244     , },
 };
 
-//----- 天王星 URANUS
+/// 天王星 URANUS
 const PlanetData
 uranusL[] = {                   // 日心平均黄経[°]
         {   428.72880,     0     ,     0     , true},
@@ -588,7 +588,7 @@ uranusR[] = {                   // 動径[AU]
         {    0.000120,   5652    ,   100     , },
 };
 
-//----- 海王星 NEPTUNE
+/// 海王星 NEPTUNE
 const PlanetData
 neptuneL[] = {                  // 日心平均黄経[°]
         {   219.93503,     0     ,     0     , true},
@@ -620,7 +620,7 @@ neptuneR[] = {                  // 動径[AU]
         {    0.000120,   5845    ,   111     , },
 };
 
-//----- 冥王星 PLUTO
+/// 冥王星 PLUTO
 const PlanetData
 plutoL[] = {                    // 日心平均黄経[°]
         {   241.82574,     0     ,     0     , },
@@ -662,11 +662,11 @@ plutoR[] = {                    // 動径[AU]
 //.----- class Planets : 惑星位置計算 ------------------------------------
 //------------------------------------------------------------------------
 
-// 計算集計
-// @param T J2000.0[TDT]からのユリウス世紀
-// @param data データ項目
-// @param n    データ項目数
-// @return 動径[AU]
+/// 計算集計
+/// @param T J2000.0[TDT]からのユリウス世紀
+/// @param data データ項目
+/// @param n    データ項目数
+/// @return 動径[AU]
 static double sumR(double T, const PlanetData* data, size_t n) {
     double x = 0;
     while (n--)
@@ -674,11 +674,11 @@ static double sumR(double T, const PlanetData* data, size_t n) {
     return x;
 }
 
-// 計算集計
-// @param T J2000.0[TDT]からのユリウス世紀
-// @param data データ項目
-// @param n    データ項目数
-// @return 角度
+/// 計算集計
+/// @param T J2000.0[TDT]からのユリウス世紀
+/// @param data データ項目
+/// @param n    データ項目数
+/// @return 角度
 static Degree sumDeg(double T, const PlanetData* data, size_t n) {
     double x = 0;
     while (n--)
@@ -687,11 +687,11 @@ static Degree sumDeg(double T, const PlanetData* data, size_t n) {
 }
 
 //------------------------------------------------------------------------
-// 日心幾何学黄道座標を、惑星光行差付きの地心黄道座標に変換する
-// @param r 動径[AU]
-// @param b 日心黄緯
-// @param l 日心黄経
-// @param c 光行差定数
+/// 日心幾何学黄道座標を、惑星光行差付きの地心黄道座標に変換する
+/// @param r 動径[AU]
+/// @param b 日心黄緯
+/// @param l 日心黄経
+/// @param c 光行差定数
 Vec3
 Planets::conv(double r, Degree b, Degree l, Degree c) const
 {
@@ -717,7 +717,7 @@ Planets::conv(double r, Degree b, Degree l, Degree c) const
 }
 
 //------------------------------------------------------------------------
-// 月・惑星の位置を計算する
+/// 月・惑星の位置を計算する
 void
 Planets::calc(const AstroCoordinate& acoord)
 {
@@ -782,11 +782,11 @@ Planets::calc(const AstroCoordinate& acoord)
     }
 }
 //------------------------------------------------------------------------
-// 太陽の位置(平均黄経、地心距離)を計算する
-// @param T J2000.0からのユリウス世紀[TDT]
-// @param l 瞬時の平均春分点による黄経(光行差補正なし)
-//			 ※光行差補正には -0.00569度 加算すれば良い
-// @param r 地心距離[AU]
+/// 太陽の位置(平均黄経、地心距離)を計算する
+/// @param T J2000.0からのユリウス世紀[TDT]
+/// @param l 瞬時の平均春分点による黄経(光行差補正なし)
+///			 ※光行差補正には -0.00569度 加算すれば良い
+/// @param r 地心距離[AU]
 void
 Planets::calc_sun(double T, Degree& l, double& r)
 {

@@ -1,6 +1,8 @@
-﻿//. vec3.cpp - 3D vector
-//	Copyright (C) 1997,1998 hkuno
-//	mailto:hkuno.kuno@nifty.ne.jp
+﻿/// @file
+/// 3D vector
+/// @author hkuno9000@gmail.com
+/// @copyright 1997,1998,2026 Hiroshi Kuno. MIT License
+/// @see <https://github.com/hkuno9000/sunmoon.git>
 #include "vec3.h"
 #include "degree.h"
 
@@ -9,7 +11,7 @@ namespace util {
 //.----- class Mat3x3 ----------------------------------------------------
 //------------------------------------------------------------------------
 
-//. Mat3x3::setE() - 単位行列設定
+/// Mat3x3::setE() - 単位行列設定
 void
 Mat3x3::setE()
 {
@@ -17,7 +19,7 @@ Mat3x3::setE()
 	m12 = m13 = m21 = m23 = m31 = m32 = 0;
 }
 
-//. Mat3x3::setRotate - 回転行列設定
+/// Mat3x3::setRotate - 回転行列設定
 void
 Mat3x3::setRotate(const Degree& angle, int axis)
 {
@@ -45,7 +47,7 @@ Mat3x3::setRotate(const Degree& angle, int axis)
 }
 
 
-//. Mat3x3::operator+=() - 加算
+/// Mat3x3::operator+=() - 加算
 Mat3x3&
 Mat3x3::operator+=(const Mat3x3& m)
 {
@@ -57,7 +59,7 @@ Mat3x3::operator+=(const Mat3x3& m)
 	return *this;
 }
 
-//. Mat3x3::operator-=() - 減算
+/// Mat3x3::operator-=() - 減算
 Mat3x3&
 Mat3x3::operator-=(const Mat3x3& m)
 {
@@ -69,7 +71,7 @@ Mat3x3::operator-=(const Mat3x3& m)
 	return *this;
 }
 
-//. Mat3x3::operator*=() - 係数乗算
+/// Mat3x3::operator*=() - 係数乗算
 Mat3x3&
 Mat3x3::operator*=(double k)
 {
@@ -81,7 +83,7 @@ Mat3x3::operator*=(double k)
 	return *this;
 }
 
-//. Mat3x3::operator/=() - 係数除算
+/// Mat3x3::operator/=() - 係数除算
 Mat3x3&
 Mat3x3::operator/=(double k)
 {
@@ -93,7 +95,7 @@ Mat3x3::operator/=(double k)
 	return *this;
 }
 
-//. Mat3x3::operator*=() - 乗算
+/// Mat3x3::operator*=() - 乗算
 Mat3x3&
 Mat3x3::operator*=(const Mat3x3& m)
 {
@@ -114,7 +116,7 @@ Mat3x3::operator*=(const Mat3x3& m)
 //.----- class Vec3 : １行３列のベクトル ---------------------------------
 //------------------------------------------------------------------------
 
-//. Vec3::setDirectionCosines - 方向余弦化
+/// Vec3::setDirectionCosines - 方向余弦化
 void
 Vec3::setDirectionCosines()
 {
@@ -123,17 +125,17 @@ Vec3::setDirectionCosines()
 		*this /= r;
 }
 
-//. Vec3::radius - 動径、ベクトルの長さ
+/// Vec3::radius - 動径、ベクトルの長さ
 double
 Vec3::radius() const
 {
 	return ::sqrt(square());
 }
 
-//. Vec3::getPolar - 極座標を得る
-// @param phi     天頂角φ (0～180°)
-// @param theta   方位角θ (-180°～+180°)
-// @return        動径ｒ
+/// Vec3::getPolar - 極座標を得る
+///@param phi     天頂角φ (0～180°)
+///@param theta   方位角θ (-180°～+180°)
+///@return        動径ｒ
 double
 Vec3::getPolar(Degree& phi, Degree& theta) const
 {
@@ -147,10 +149,10 @@ Vec3::getPolar(Degree& phi, Degree& theta) const
 	return radius();
 }
 
-//. Vec3::getLtLg - 緯度経度を得る
-// @param latitude  緯度
-// @param longitude 経度(東経を正とする)
-// @return          動径ｒ
+/// Vec3::getLtLg - 緯度経度を得る
+///@param latitude  緯度
+///@param longitude 経度(東経を正とする)
+///@return          動径ｒ
 double
 Vec3::getLtLg(Degree& latitude, Degree& longitude) const
 {
@@ -164,10 +166,10 @@ Vec3::getLtLg(Degree& latitude, Degree& longitude) const
 	return radius();
 }
 
-//. Vec3::setPolar - 極座標を設定する
-// @param radius  動径ｒ
-// @param phi     天頂角φ
-// @param theta   方位角θ
+/// Vec3::setPolar - 極座標を設定する
+///@param radius  動径ｒ
+///@param phi     天頂角φ
+///@param theta   方位角θ
 void
 Vec3::setPolar(double radius, const Degree& phi, const Degree& theta)
 {
@@ -177,10 +179,10 @@ Vec3::setPolar(double radius, const Degree& phi, const Degree& theta)
 	z = radius * cos(phi);
 }
 
-//. Vec3::setLtLg - 緯度経度を設定する
-// @param radius    動径ｒ
-// @param latitude  緯度
-// @param longitude 経度(東経を正とする)
+/// Vec3::setLtLg - 緯度経度を設定する
+///@param radius    動径ｒ
+///@param latitude  緯度
+///@param longitude 経度(東経を正とする)
 void
 Vec3::setLtLg(double radius, const Degree& latitude, const Degree& longitude)
 {
