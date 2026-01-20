@@ -1,6 +1,8 @@
-﻿/**@file sunmoon - 太陽、月の高度計算
- * @copyright 2006,2014,2015,2018 hkuno@willsoft.co.jp
- * $Id: sunmoon.cpp,v 1.3 2006-08-08 07:01:16 hkuno Exp $
+﻿/**@file
+ * 太陽、月の高度計算
+ * @author hkuno9000@gmail.com
+ * @copyright 2006,2014,2015,2018,2026 Hiroshi Kuno. MIT License
+ * @see <https://github.com/hkuno9000/sunmoon.git>
  */
 #include <cstdio>
 #include <cstdarg>
