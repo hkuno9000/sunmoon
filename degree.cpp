@@ -10,23 +10,6 @@
 using namespace std;
 using namespace util;
 namespace util {
-
-//------------------------------------------------------------------------
-//.----- 定数 PI (π) ----------------------------------------------------
-//------------------------------------------------------------------------
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
-extern const double PI = M_PI;
-extern const double DD2RAD = M_PI / 180;
-extern const double HH2RAD = M_PI /  12;
-extern const double DS2RAD = M_PI / (180*3600L);
-extern const double HS2RAD = M_PI / ( 12*3600L);
-extern const double RAD2DD = 180 / M_PI;
-extern const double RAD2HH = 12  / M_PI;
-extern const double RAD2DS = (180*3600L) / M_PI;
-extern const double RAD2HS = ( 12*3600L) / M_PI;
-
 //------------------------------------------------------------------------
 //.----- fmod1, fmod2 : 丸め変換 -----------------------------------------
 //------------------------------------------------------------------------

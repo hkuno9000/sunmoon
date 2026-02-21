@@ -15,15 +15,19 @@ using namespace std;
 //------------------------------------------------------------------------
 //.----- 定数 PI (π) ----------------------------------------------------
 //------------------------------------------------------------------------
-extern const double PI;    	///< π
-extern const double DD2RAD;	///< π/180
-extern const double HH2RAD;	///< π/12
-extern const double DS2RAD;	///< π/180/3600
-extern const double HS2RAD;	///< π/12/3600
-extern const double RAD2DD;	///< 180/π
-extern const double RAD2HH;	///< 12/π
-extern const double RAD2DS;	///< 180*3600/π
-extern const double RAD2HS;	///< 12*3600/π
+#ifdef M_PI
+constexpr double PI = M_PI;
+#else
+constexpr double PI = 3.14159265358979323846;
+#endif
+constexpr double DD2RAD = PI / 180;
+constexpr double HH2RAD = PI /  12;
+constexpr double DS2RAD = PI / (180*3600L);
+constexpr double HS2RAD = PI / ( 12*3600L);
+constexpr double RAD2DD = 180 / PI;
+constexpr double RAD2HH = 12  / PI;
+constexpr double RAD2DS = (180*3600L) / PI;
+constexpr double RAD2HS = ( 12*3600L) / PI;
 
 //------------------------------------------------------------------------
 /// 丸め変換 - x を r で剰余を得て [0...r)      の範囲に丸める.
@@ -77,7 +81,7 @@ void min2im(double min, char& sign, int&    i, double& m);
 /// @param s [in] 秒
 /// @return 度 + 分/60 + 秒/3600
 /// @attention d,m,sは正の値であること
-inline double dms2dd(double d, double m=0, double s=0) {
+inline constexpr double dms2dd(double d, double m=0, double s=0) {
 	return d + m / 60 + s / 3600;
 }
 /// 度分秒を度秒にする.
@@ -87,7 +91,7 @@ inline double dms2dd(double d, double m=0, double s=0) {
 /// @param s [in] 秒
 /// @return 度*3600 + 分*60 + 秒
 /// @attention d,m,sは正の値であること
-inline double dms2ds(double d, double m=0, double s=0) {
+inline constexpr double dms2ds(double d, double m=0, double s=0) {
 	return d * 3600 + m * 60 + s;
 }
 /// 度分秒をラジアンにする.
@@ -97,7 +101,7 @@ inline double dms2ds(double d, double m=0, double s=0) {
 /// @param s [in] 秒
 /// @return (度*3600 + 分*60 + 秒) * π / (180*3600)
 /// @attention d,m,sは正の値であること
-inline double dms2rad(double d, double m=0, double s=0) {
+inline constexpr double dms2rad(double d, double m=0, double s=0) {
 	return dms2ds(d, m, s) * DS2RAD;
 }
 
@@ -109,7 +113,7 @@ inline double dms2rad(double d, double m=0, double s=0) {
 /// @param s [in] 秒
 /// @return 時 + 分/60 + 秒/3600
 /// @attention h,m,sは正の値であること
-inline double hms2hh(double h, double m=0, double s=0) {
+inline constexpr double hms2hh(double h, double m=0, double s=0) {
 	return h + m / 60 + s / 3600;
 }
 /// 時分秒を時秒にする.
@@ -119,7 +123,7 @@ inline double hms2hh(double h, double m=0, double s=0) {
 /// @param s [in] 秒
 /// @return 時*3600 + 分*60 + 秒
 /// @attention h,m,sは正の値であること
-inline double hms2hs(double h, double m=0, double s=0) {
+inline constexpr double hms2hs(double h, double m=0, double s=0) {
 	return h * 3600 + m * 60 + s;
 }
 /// 時分秒をラジアンにする.
@@ -129,29 +133,29 @@ inline double hms2hs(double h, double m=0, double s=0) {
 /// @param s [in] 秒
 /// @return (時*3600 + 分*60 + 秒) * π / (12*3600)
 /// @attention h,m,sは正の値であること
-inline double hms2rad(double h, double m=0, double s=0) {
+inline constexpr double hms2rad(double h, double m=0, double s=0) {
 	return hms2hs(h, m, s) * HS2RAD;
 }
 
 //------------------------------------------------------------------------
 /// 度 を ラジアン にする.
-inline double dd2rad(double dd) { return dd * DD2RAD; }
+inline constexpr double dd2rad(double dd) { return dd * DD2RAD; }
 /// 時 を ラジアン にする.
-inline double hh2rad(double hh) { return hh * HH2RAD; }
+inline constexpr double hh2rad(double hh) { return hh * HH2RAD; }
 /// 度秒 を ラジアン にする.
-inline double ds2rad(double ds) { return ds * DS2RAD; }
+inline constexpr double ds2rad(double ds) { return ds * DS2RAD; }
 /// 時秒 を ラジアン にする.
-inline double hs2rad(double hs) { return hs * HS2RAD; }
+inline constexpr double hs2rad(double hs) { return hs * HS2RAD; }
 
 //------------------------------------------------------------------------
 /// ラジアン を 度 にする.
-inline double rad2dd(double rad) { return rad * RAD2DD; }
+inline constexpr double rad2dd(double rad) { return rad * RAD2DD; }
 /// ラジアン を 時 にする.
-inline double rad2hh(double rad) { return rad * RAD2HH; }
+inline constexpr double rad2hh(double rad) { return rad * RAD2HH; }
 /// ラジアン を 度秒 にする.
-inline double rad2ds(double rad) { return rad * RAD2DS; }
+inline constexpr double rad2ds(double rad) { return rad * RAD2DS; }
 /// ラジアン を 時秒 にする.
-inline double rad2hs(double rad) { return rad * RAD2HS; }
+inline constexpr double rad2hs(double rad) { return rad * RAD2HS; }
 
 //------------------------------------------------------------------------
 /// 度 を [0...360) の範囲に丸める.
