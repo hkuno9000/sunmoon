@@ -13,7 +13,7 @@ namespace astro {
 //.----- class Jday : ユリウス日(暦日) -----------------------------------
 //------------------------------------------------------------------------
 ///
-const long BC0001_1_1 = 1721058L;	//  BC1.Jan.1
+constexpr auto BC0001_1_1 = Jday::BC0001_1_1_12UT; // BC1.Jan.1
 
 //------------------------------------------------------------------------
 //. 日付設定
@@ -132,7 +132,7 @@ Jday::getJdate(int& year, int& month, int& day, int& day_of_week) const
 /// 年月日と曜日 (グレゴリオ暦).
 /// 計算結果をキャッシュしておき、同じ日付なら再計算を省くことで
 /// 高速化をはかっている
-static class jday_cache {
+static thread_local class jday_cache {
 	long jd;
 	int y, m, d, w;
 	void update(const Jday& j) {

@@ -79,12 +79,9 @@ class Jday {
 	long d;
 
 public:
-	/// 基準となる日付のユリウス日.
-	/// @todo constexpr long に変更する.
-	enum {
-		AD1900_1_1_12UT = 2415021L,	///< 暦表時(ET)の起算日.
-		AD2000_1_1_12UT = 2451545L,	///< 天体暦の起算日、J2000.0
-	};
+	static constexpr long BC0001_1_1_12UT = 1721058L;	///< BC1.Jan.1
+	static constexpr long AD1900_1_1_12UT = 2415021L;	///< 暦表時(ET)の起算日.
+	static constexpr long AD2000_1_1_12UT = 2451545L;	///< 天体暦の起算日、J2000.0
 
 	//----- コンストラクタ -------------------------------------------
 	/// コンストラクタ.
