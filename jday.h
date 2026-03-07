@@ -74,7 +74,7 @@ namespace astro {
 */
 class Jday {
 	/// ユリウス日.
-	long _jd;
+	long _jd = 0;
 
 public:
 	static constexpr long BC0001_1_1_12UT = 1721058L;	///< BC1.Jan.1
@@ -82,6 +82,9 @@ public:
 	static constexpr long AD2000_1_1_12UT = 2451545L;	///< 天体暦の起算日、J2000.0
 
 	//----- コンストラクタ -------------------------------------------
+	/// デフォルトコンストラクタ.
+	Jday() = default;
+
 	/// コンストラクタ.
 	/// @param year, month, day グレゴリオ暦の年月日.
 	Jday(int year, int month, int day=1) {
@@ -94,15 +97,13 @@ public:
 		: _jd(n) {}
 
 	/// コピーコンストラクタ.
-	Jday(const Jday& a)
-		: _jd(a._jd) {}
+	/// @param a コピー元のユリウス日
+	Jday(const Jday& a) = default;
 
 	/// コピー代入.
-	Jday& operator=(const Jday& a) {
-		if (this != &a)
-			_jd = a._jd;
-		return *this;
-	}
+	/// @param a 代入するユリウス日
+	/// @return 代入後の*this
+	Jday& operator=(const Jday& a) = default;
 
 	//----- 日の加減算 -----------------------------------------------
 	Jday& operator+=(long n) {

@@ -180,13 +180,12 @@ inline double rad2mod2(double rad) { return fmod2(rad, 2*PI); }
 /// 角度クラス.
 class Degree {
 	/// 秒単位の角度[″]  １°の3600倍.
-	double _ds;
+	double _ds = 0;
 
 public:
 	//----- コンストラクタ -------------------------------------------
-	/// デフォルトコンストラクタ - 0°で初期化.
-	Degree()
-		: _ds(0) {}
+	/// デフォルトコンストラクタ.
+	Degree() = default;
 
 	/// コンストラクタ - 秒単位の角度[″]で初期化.
 	/// @param ds 秒単位の角度[″]
@@ -216,15 +215,12 @@ public:
 
 	/// コピーコンストラクタ.
 	/// @param a コピー元の角度
-	Degree(const Degree& a)
-		: _ds(a._ds) {}
+	Degree(const Degree& a) = default;
 
-	/// 代入演算子.
+	/// コピー代入.
 	/// @param a 代入する角度
-	/// @return 代入された角度
-	Degree& operator=(const Degree& a) {
-		_ds = a._ds; return *this;
-	}
+	/// @return 代入後の*this
+	Degree& operator=(const Degree& a) = default;
 
 	//----- 四則演算 -------------------------------------------------
 	/// 単項マイナス.
