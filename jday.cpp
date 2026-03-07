@@ -134,9 +134,9 @@ Jday::getJdate(int& year, int& month, int& day, int& day_of_week) const
 /// 高速化をはかっている
 static thread_local class jday_cache {
 	long jd;
-	int y, m, d, w;
+	int y, m = 0, d = 0, w;
 	void update(const Jday& j) {
-		if (jd != j.jd()) {
+		if (m == 0 || jd != j.jd()) { // 計算済みならば m := 1..12 かつ d := 1..31 なので、もし m == 0 ならば未計算と判定できる.
 			jd = j.jd(); j.getGdate(y, m, d, w);
 		}
 	}
