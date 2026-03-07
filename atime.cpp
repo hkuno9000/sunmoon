@@ -49,10 +49,12 @@ AstroTime::AstroTime(const Jday& jday, double utc)
 void
 AstroTime::adjust()
 {
-	while (s >= 86400.0)
-		d += 1, s -= 86400.0;
-	while (s < 0)
-		d -= 1, s += 86400.0;
+	while (s >= 86400.0) {
+		d += 1; s -= 86400.0;
+	}
+	while (s < 0) {
+		d -= 1; s += 86400.0;
+	}
 }
 
 //----- 現在時刻に更新する -----------------------------------------------

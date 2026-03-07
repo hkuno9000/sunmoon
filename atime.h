@@ -186,8 +186,9 @@ public:
 	/// @param [out] utc 世界時.
 	void get(Jday& jday, double& utc) const {
 		jday = d; utc = s + 12*3600L;
-		if (utc >= 86400)
-			++jday, utc -= 86400;
+		if (utc >= 86400) {
+			++jday; utc -= 86400;
+		}
 	}
 
 	/// 時刻の取得.
