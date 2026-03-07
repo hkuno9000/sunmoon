@@ -132,7 +132,7 @@ Jday::getJdate(int& year, int& month, int& day, int& day_of_week) const
 /// 年月日と曜日 (グレゴリオ暦).
 /// 計算結果をキャッシュしておき、同じ日付なら再計算を省くことで
 /// 高速化をはかっている
-static thread_local class jday_cache {
+static thread_local class jday_gdate_cache {
 	long jd;
 	int y, m = 0, d = 0, w;
 	void update(const Jday& j) {
@@ -144,24 +144,24 @@ public:
 	int year(const Jday& j)  { update(j); return y; }
 	int month(const Jday& j) { update(j); return m; }
 	int day(const Jday& j)   { update(j); return d; }
-} cache;
+} cacheGdate;
 
 int
 Jday::year() const
 {
-	return cache.year(*this);
+	return cacheGdate.year(*this);
 }
 
 int
 Jday::month() const
 {
-	return cache.month(*this);
+	return cacheGdate.month(*this);
 }
 
 int
 Jday::day() const
 {
-	return cache.day(*this);
+	return cacheGdate.day(*this);
 }
 
 int
