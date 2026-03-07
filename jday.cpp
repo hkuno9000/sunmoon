@@ -47,7 +47,7 @@ Jday::setGdate(int y, int m, int day)
 	if (r < 0) {
 		r += 400; --q;
 	}
-	d = y * 365L + q * 97L + r / 4 - r / 100 + day + 62 + BC0001_1_1;
+	_jd = y * 365L + q * 97L + r / 4 - r / 100 + day + 62 + BC0001_1_1;
 }
 
 /// ユリウス暦の日付を設定する (BC4713～AD1582 の期間用)
@@ -61,7 +61,7 @@ Jday::setJdate(int y, int m, int day)
 	int q = y / 4;
 	if (y % 4 < 0)
 		--q;
-	d = y * 365L + q + day + 60 + BC0001_1_1;
+	_jd = y * 365L + q + day + 60 + BC0001_1_1;
 }
 
 //------------------------------------------------------------------------
@@ -75,7 +75,7 @@ Jday::getGdate(int& year, int& month, int& day, int& day_of_week) const
 
 	// グレゴリオ暦では 400年で閏年の暦が一巡するので
 	// 400年分の日数でユリウス日を割る
-	r  = d - 62 - BC0001_1_1;   // 0年3月1日(グレゴリオ暦)からの経過日数
+	r  = _jd - 62 - BC0001_1_1;   // 0年3月1日(グレゴリオ暦)からの経過日数
 	c4 = r / (365L * 400 + 97); // 400年単位
 	r  = r % (365L * 400 + 97); // 400年単位内の日数
 	if (r < 0) {
@@ -97,7 +97,7 @@ Jday::getGdate(int& year, int& month, int& day, int& day_of_week) const
 	year  = (int)(c4 * 400 + y);
 	month = (int) m;
 	day   = (int) r;
-	int w = (int)((d + 1) % 7); if (w < 0) w += 7;
+	int w = (int)((_jd + 1) % 7); if (w < 0) w += 7;
 	day_of_week = (int) w;
 }
 
@@ -109,7 +109,7 @@ Jday::getJdate(int& year, int& month, int& day, int& day_of_week) const
 
 	// ユリウス暦では 4年で閏年の暦が一巡するので
 	// 4年単位で年を求める
-	r = d - 60 - BC0001_1_1; // 0年3月1日(ユリウス暦)からの経過日数
+	r = _jd - 60 - BC0001_1_1; // 0年3月1日(ユリウス暦)からの経過日数
 	y4 = r / (365L * 4 + 1); // 4年単位
 	r  = r % (365L * 4 + 1); // 4年単位内の日数
 	if (r < 0) {
@@ -131,7 +131,7 @@ Jday::getJdate(int& year, int& month, int& day, int& day_of_week) const
 	year  = (int) (y4 * 4 + y);
 	month = (int) m;
 	day   = (int) r;
-	int w = (int)((d + 1) % 7); if (w < 0) w += 7;
+	int w = (int)((_jd + 1) % 7); if (w < 0) w += 7;
 	day_of_week = (int) w;
 }
 
@@ -176,7 +176,7 @@ Jday::dayOfWeek() const
 {	// 0=日、1=月、2=火 ... 6=土
 	// 曜日計算は、年月日を計算してキャッシュするより
 	// 自前でやった方が高速なので、この場で計算する
-	int w = (int)((d + 1) % 7); if (w < 0) w += 7;
+	int w = (int)((_jd + 1) % 7); if (w < 0) w += 7;
 	return w;
 }
 

@@ -74,7 +74,7 @@ namespace astro {
 */
 class Jday {
 	/// ユリウス日.
-	long d;
+	long _jd;
 
 public:
 	static constexpr long BC0001_1_1_12UT = 1721058L;	///< BC1.Jan.1
@@ -91,43 +91,43 @@ public:
 	/// コンストラクタ.
 	/// @param n ユリウス日.
 	explicit Jday(long n)
-		: d(n) {}
+		: _jd(n) {}
 
 	/// コピーコンストラクタ.
 	Jday(const Jday& a)
-		: d(a.d) {}
+		: _jd(a._jd) {}
 
 	/// コピー代入.
 	Jday& operator=(const Jday& a) {
 		if (this != &a)
-			d = a.d;
+			_jd = a._jd;
 		return *this;
 	}
 
 	//----- 日の加減算 -----------------------------------------------
 	Jday& operator+=(long n) {
-		d += n; return *this;
+		_jd += n; return *this;
 	}
 	Jday& operator-=(long n) {
-		d -= n; return *this;
+		_jd -= n; return *this;
 	}
 	Jday& operator++() {
-		++d; return *this;
+		++_jd; return *this;
 	}
 	Jday& operator--() {
-		--d; return *this;
+		--_jd; return *this;
 	}
 	friend long operator-(const Jday& a, const Jday& b) {
-		return a.d - b.d; // 差の日数を返す
+		return a._jd - b._jd; // 差の日数を返す
 	}
 
 	//----- 関係演算 -------------------------------------------------
-	bool operator==(const Jday& a) const { return d == a.d; }
-	bool operator!=(const Jday& a) const { return d != a.d; }
-	bool operator< (const Jday& a) const { return d <  a.d; }
-	bool operator<=(const Jday& a) const { return d <= a.d; }
-	bool operator> (const Jday& a) const { return d >  a.d; }
-	bool operator>=(const Jday& a) const { return d >= a.d; }
+	bool operator==(const Jday& a) const { return _jd == a._jd; }
+	bool operator!=(const Jday& a) const { return _jd != a._jd; }
+	bool operator< (const Jday& a) const { return _jd <  a._jd; }
+	bool operator<=(const Jday& a) const { return _jd <= a._jd; }
+	bool operator> (const Jday& a) const { return _jd >  a._jd; }
+	bool operator>=(const Jday& a) const { return _jd >= a._jd; }
 
 	//----- 年月日と曜日 (グレゴリオ暦) ------------------------------
 	/// 年(グレゴリオ暦)
@@ -145,11 +145,11 @@ public:
 	//----- 日数 -----------------------------------------------------
 	/// ユリウス日.
 	long jd() const {
-		return d;
+		return _jd;
 	}
 	/// 準ユリウス日.
 	long mjd() const {
-		return d - 2400000L;
+		return _jd - 2400000L;
 	}
 
 	//----- J2000.0 --------------------------------------------------
