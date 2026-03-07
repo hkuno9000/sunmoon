@@ -105,10 +105,9 @@ using namespace std;
 */
 class AstroTime {
 	Jday _jday;		///< ユリウス日 (世界時正午のユリウス日)
-	double _sec;		///< ユリウス日の秒数(0～86400.0) ※世界時正午が0
-	double _dut1;	///< UT1 - UTC の値。0.1秒の精度。
-	int _leapSec;	///< 閏秒、TAI - UTC の値。1997.7～1999.1までは +31秒
-
+	double _sec = 0;	///< ユリウス日の秒数(0～86400.0) ※世界時正午が0
+	double _dut1 = 0;	///< UT1 - UTC の値。0.1秒の精度。
+	int _leapSec = 0;	///< 閏秒、TAI - UTC の値. +37(2017 January 1).
 protected:
 	/// 秒が日を越えないようにする.
 	void adjust();
@@ -124,7 +123,7 @@ protected:
 	double tdt() const	{ return tai() + 32.184; }
 
 public:
-	/// 閏秒の初期値.
+	/// 閏秒の初期値. +37(2017 January 1).
 	static int initLeapSec;
 
 	/// 閏秒の初期値説明.

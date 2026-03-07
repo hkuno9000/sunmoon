@@ -16,9 +16,9 @@ using namespace util;
 /// @brief 天文座標系クラス.
 /// @details 地平、赤道、黄道座標を相互変換するクラス.
 class AstroCoordinate {
-	double _lastT;		///< calc()で使用するキャッシュ.
-	bool _recalcMat;	///< calcMat()の再計算フラグ.
-	bool _recalcMat2;	///< calcMat2()の再計算フラグ.
+	double _lastT = 0;			///< calc()で使用するキャッシュ.
+	bool _recalcMat = true;		///< calcMat()の再計算フラグ.
+	bool _recalcMat2 = true;	///< calcMat2()の再計算フラグ.
 protected:
 	// 天文経緯度(極運動も含めた瞬時の天文経緯度)
 	Degree lt;		///< 天文緯度 [°]

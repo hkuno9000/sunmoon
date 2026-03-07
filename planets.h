@@ -18,10 +18,10 @@ class AstroCoordinate;
 /// 惑星位置計算
 class Planets {
     Degree L;                   ///< 太陽の幾何学平均黄経
-    double R;                   ///< 太陽の地心距離[AU]
+    double R = 0;               ///< 太陽の地心距離[AU]
     Vec3 sunVc;                 ///< 太陽の幾何学地心平均黄道座標
     Degree Lm, Bm;              ///< 月の地心視黄経、視黄緯
-    double Pm;                  ///< 月の地平視差
+    double Pm = 0;              ///< 月の地平視差
     Vec3 vc[10];                ///< SUNからPLUTOまでの瞬時の平均黄道座標位置[惑星光行差含む]
     Vec3 vq[10];                ///< SUNからPLUTOまでの瞬時の平均赤道座標
     Vec3 vj[10];                ///< SUNからPLUTOまでのJ2000.0赤道座標
