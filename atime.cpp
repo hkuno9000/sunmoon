@@ -29,14 +29,14 @@ const char* AstroTime::initLeapText = "+37(2017 January 1). see https://hpiers.o
 
 /// 現在時刻で生成する
 AstroTime::AstroTime()
-	: d(0), s(0), dut1(0), leapSec(initLeapSec)
+	: _jday(0), _sec(0), _dut1(0), _leapSec(initLeapSec)
 {
 	update();
 }
 
 /// 指定の日付と時刻で生成する
 AstroTime::AstroTime(const Jday& jday, double utc)
-	: d(jday), s(utc - 12*3600L), dut1(0), leapSec(initLeapSec)
+	: _jday(jday), _sec(utc - 12*3600L), _dut1(0), _leapSec(initLeapSec)
 {
 	adjust();
 }
@@ -47,11 +47,11 @@ AstroTime::AstroTime(const Jday& jday, double utc)
 void
 AstroTime::adjust()
 {
-	while (s >= 86400.0) {
-		d += 1; s -= 86400.0;
+	while (_sec >= 86400.0) {
+		_jday += 1; _sec -= 86400.0;
 	}
-	while (s < 0) {
-		d -= 1; s += 86400.0;
+	while (_sec < 0) {
+		_jday -= 1; _sec += 86400.0;
 	}
 }
 
@@ -62,8 +62,8 @@ AstroTime::update()
 {
 	time_t tt = time(0);
 	struct tm& t = *gmtime(&tt);
-	d.setGdate(t.tm_year + 1900, t.tm_mon + 1, t.tm_mday);
-	s = hms2hs(t.tm_hour, t.tm_min, t.tm_sec)
+	_jday.setGdate(t.tm_year + 1900, t.tm_mon + 1, t.tm_mday);
+	_sec = hms2hs(t.tm_hour, t.tm_min, t.tm_sec)
 		- 12 * 3600.0; // 世界時正午が0になるように補正する
 	adjust();
 }
@@ -76,16 +76,16 @@ AstroTime::updateSystemTime()
 #if defined(WIN32)
 	::SYSTEMTIME t;
 	::GetSystemTime(&t); // 世界時で日付時刻を得る
-	d.setGdate(t.wYear, t.wMonth, t.wDay);
-	s = hms2hs(t.wHour, t.wMinute, t.wSecond + t.wMilliseconds / 1000.0)
+	_jday.setGdate(t.wYear, t.wMonth, t.wDay);
+	_sec = hms2hs(t.wHour, t.wMinute, t.wSecond + t.wMilliseconds / 1000.0)
 		- 12 * 3600.0; // 世界時正午が0になるように補正する
 	adjust();
 #elif defined(BSD) || defined(__APPLE__) || defined(__CYGWIN__) || defined(__linux__)
 	struct timeval tv;
 	gettimeofday(&tv, nullptr);
-	d.setGdate(1970, 1, 1);
-	d += (tv.tv_sec / 86400);
-	s =  (tv.tv_sec % 86400) + (tv.tv_usec / 1e6) - 12 * 3600;
+	_jday.setGdate(1970, 1, 1);
+	_jday += (tv.tv_sec / 86400);
+	_sec =  (tv.tv_sec % 86400) + (tv.tv_usec / 1e6) - 12 * 3600;
 	adjust();
 #else
 #error implements to your OS

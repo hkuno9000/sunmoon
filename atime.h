@@ -123,10 +123,10 @@ namespace astro {
 	@see https://eco.mtk.nao.ac.jp/koyomi/wiki/BAC2C9B8BBFE.html
 */
 class AstroTime {
-	Jday d;			///< ユリウス日 (世界時正午のユリウス日)
-	double s;		///< ユリウス日の秒数(0～86400.0) ※世界時正午が0
-	double dut1;	///< UT1 - UTC の値。0.1秒の精度。
-	int leapSec;	///< 閏秒、TAI - UTC の値。1997.7～1999.1までは +31秒
+	Jday _jday;		///< ユリウス日 (世界時正午のユリウス日)
+	double _sec;		///< ユリウス日の秒数(0～86400.0) ※世界時正午が0
+	double _dut1;	///< UT1 - UTC の値。0.1秒の精度。
+	int _leapSec;	///< 閏秒、TAI - UTC の値。1997.7～1999.1までは +31秒
 
 protected:
 	/// 秒が日を越えないようにする.
@@ -134,10 +134,10 @@ protected:
 
 	//----- 各時刻系の日の秒数 ---------------------------------------
 	/// UT1[秒]         ※正午を0とする
-	double ut1() const	{ return s + dut1; }
+	double ut1() const	{ return _sec + _dut1; }
 
 	/// 国際原子時[秒]  ※正午を0とする
-	double tai() const	{ return s + leapSec; }
+	double tai() const	{ return _sec + _leapSec; }
 
 	/// 地球力学時[秒]  ※正午を0とする
 	double tdt() const	{ return tai() + 32.184; }
@@ -177,14 +177,14 @@ public:
 	/// @param utc 世界時.
 	/// @attention dut1とleapSecは変更しない. 厳密な計算のためには、setDUT1(),setLeapSec()で設定すること.
 	void set(const Jday& jday, double utc = 0) {
-		d = jday; s = utc - 12*3600L; adjust();
+		_jday = jday; _sec = utc - 12*3600L; adjust();
 	}
 
 	/// 時刻の取得.
 	/// @param [out] jday 日付.
 	/// @param [out] utc 世界時.
 	void get(Jday& jday, double& utc) const {
-		jday = d; utc = s + 12*3600L;
+		jday = _jday; utc = _sec + 12*3600L;
 		if (utc >= 86400) {
 			++jday; utc -= 86400;
 		}
@@ -202,55 +202,55 @@ public:
 
 
 	/// 協定世界時からUT1への予測補正値設定.
-	void setDUT1(double _dut1) {
-		dut1 = _dut1; // UT1 - UTC の値 [秒]
+	void setDUT1(double du) {
+		_dut1 = du; // UT1 - UTC の値 [秒]
 	}
 
 
 	/// 協定世界時から国際原子時への変換値(閏秒)設定.
-	void setLeapSec(int _leapSec) {
-		leapSec = _leapSec; // 閏秒、TAI - UTC の値 [秒]
+	void setLeapSec(int ls) {
+		_leapSec = ls; // 閏秒、TAI - UTC の値 [秒]
 	}
 
 
 	//----- 日と秒の加減算 -------------------------------------------
-	void addSec(double n) { s += n; adjust(); }
-	void addDay(long n)   { d += n; adjust(); }
-	void subSec(double n) { s -= n; adjust(); }
-	void subDay(long n)   { d -= n; adjust(); }
+	void addSec(double n) { _sec += n; adjust(); }
+	void addDay(long n)   { _jday += n; adjust(); }
+	void subSec(double n) { _sec -= n; adjust(); }
+	void subDay(long n)   { _jday -= n; adjust(); }
 
 	//----- 関係演算 -------------------------------------------------
-	bool operator==(const AstroTime& a) const { return d == a.d && s == a.s; }
-	bool operator!=(const AstroTime& a) const { return d != a.d || s != a.s; }
-	bool operator< (const AstroTime& a) const { return d < a.d || (d == a.d && s <  a.s); }
-	bool operator<=(const AstroTime& a) const { return d < a.d || (d == a.d && s <= a.s); }
-	bool operator> (const AstroTime& a) const { return d > a.d || (d == a.d && s >  a.s); }
-	bool operator>=(const AstroTime& a) const { return d > a.d || (d == a.d && s >= a.s); }
+	bool operator==(const AstroTime& a) const { return _jday == a._jday && _sec == a._sec; }
+	bool operator!=(const AstroTime& a) const { return _jday != a._jday || _sec != a._sec; }
+	bool operator< (const AstroTime& a) const { return _jday < a._jday || (_jday == a._jday && _sec <  a._sec); }
+	bool operator<=(const AstroTime& a) const { return _jday < a._jday || (_jday == a._jday && _sec <= a._sec); }
+	bool operator> (const AstroTime& a) const { return _jday > a._jday || (_jday == a._jday && _sec >  a._sec); }
+	bool operator>=(const AstroTime& a) const { return _jday > a._jday || (_jday == a._jday && _sec >= a._sec); }
 
 
 	//----- 日の小数付きのユリウス日 ---------------------------------
 
 	/// ユリウス日[UTC]
 	double jd() const {
-		return d.jd() + s / 86400L;
+		return _jday.jd() + _sec / 86400L;
 	}
 
 	/// ユリウス日[UT1]
 	double jd1() const {
-		return d.jd() + ut1() / 86400L;
+		return _jday.jd() + ut1() / 86400L;
 	}
 
 	/// J2000.0(力学時2000年1月1日12時)からの経過日数[TDT]
 	/// @details TDTとTDBの違い(±0.002秒)が問題にならないような精度の計算
 	///   であれば、太陽系力学時(TDB)による経過日数として用いて良い。
 	double j2000() const {
-		return d.jd() - Jday::AD2000_1_1_12UT + tdt() / 86400L;
+		return _jday.jd() - Jday::AD2000_1_1_12UT + tdt() / 86400L;
 	}
 	/// J2000.0からの経過ユリウス世紀
 	/// @details 桁落ちを防ぐため、36525.0の割り算をjdとtdtそれぞれ別に行う.
 	double jc2000() const {
 		// return j2000() / 36525.0
-		return (d.jd() - Jday::AD2000_1_1_12UT) / 36525.0 + tdt() / (86400L * 36525.0);
+		return (_jday.jd() - Jday::AD2000_1_1_12UT) / 36525.0 + tdt() / (86400L * 36525.0);
 	}
 
 
