@@ -25,10 +25,14 @@ constexpr auto BC0001_1_1 = Jday::BC0001_1_1_12UT; // BC1.Jan.1
 static int
 march_days(int& y, int m)
 {
-	while (m > 12)
-		m -= 12, ++y;
-	while (m < 3)
-		m += 12, --y;		// 1,2月は前年の13,14月と見立てる
+	// 月を正規化: mが12以下となるように yを調整
+	while (m > 12) {
+		m -= 12; ++y;
+	}
+	// 1,2月は前年の13,14月と見立てる
+	while (m < 3) {
+		m += 12; --y;
+	}
 	return (m - 2) * 979 / 32 - 31;	// 979/32=30.593 平均月日数
 }
 
@@ -42,8 +46,9 @@ Jday::setGdate(int y, int m, int day)
 	// それに年の日数を加える(400年に97回の閏年)
 	int q = y / 400;
 	int r = y % 400;
-	if (r < 0)
-		r += 400, --q;
+	if (r < 0) {
+		r += 400; --q;
+	}
 	d = y * 365L + q * 97L + r / 4 - r / 100 + day + 62 + BC0001_1_1;
 }
 
@@ -75,8 +80,9 @@ Jday::getGdate(int& year, int& month, int& day, int& day_of_week) const
 	r  = d - 62 - BC0001_1_1;   // 0年3月1日(グレゴリオ暦)からの経過日数
 	c4 = r / (365L * 400 + 97); // 400年単位
 	r  = r % (365L * 400 + 97); // 400年単位内の日数
-	if (r < 0)
-		r += 365L * 400 + 97, --c4;
+	if (r < 0) {
+		r += 365L * 400 + 97; --c4;
+	}
 
 	// 閏年を考慮して年(年初3月1日)と、年初からの日数を計算する
 	int y = (int)(r / 365);	// 400年単位内の年
@@ -87,8 +93,9 @@ Jday::getGdate(int& year, int& month, int& day, int& day_of_week) const
 	// 月を決定し、残りを日とする
 	m = (r + 31) * 32 / 979 + 2;
 	r -= (m - 2) * 979 / 32 - 31;
-	if (m > 12)
-		m -= 12, ++y;
+	if (m > 12) {
+		m -= 12; ++y;
+	}
 	year  = (int)(c4 * 400 + y);
 	month = (int) m;
 	day   = (int) r;
@@ -107,8 +114,9 @@ Jday::getJdate(int& year, int& month, int& day, int& day_of_week) const
 	r = d - 60 - BC0001_1_1; // 0年3月1日(ユリウス暦)からの経過日数
 	y4 = r / (365L * 4 + 1); // 4年単位
 	r  = r % (365L * 4 + 1); // 4年単位内の日数
-	if (r < 0)
-		r += (365L * 4 + 1), --y4;
+	if (r < 0) {
+		r += (365L * 4 + 1); --y4;
+	}
 
 	// 閏年を考慮して年(年初3月1日)と、年初からの日数を計算する
 	int y = (int)(r / 365);
@@ -119,8 +127,9 @@ Jday::getJdate(int& year, int& month, int& day, int& day_of_week) const
 	// 月を決定し、残りを日とする
 	m = (r + 31) * 32 / 979 + 2;
 	r -= (m - 2) * 979 / 32 - 31;
-	if (m > 12)
-		m -= 12, ++y;
+	if (m > 12) {
+		m -= 12; ++y;
+	}
 	year  = (int) (y4 * 4 + y);
 	month = (int) m;
 	day   = (int) r;
