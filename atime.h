@@ -202,14 +202,16 @@ public:
 
 
 	/// 協定世界時からUT1への予測補正値設定.
-	void setDUT1(double du) {
-		_dut1 = du; // UT1 - UTC の値 [秒]
+	/// @param dut1 予測補正値.
+	void setDUT1(double dut1) {
+		_dut1 = dut1; // UT1 - UTC の値 [秒]
 	}
 
 
 	/// 協定世界時から国際原子時への変換値(閏秒)設定.
-	void setLeapSec(int ls) {
-		_leapSec = ls; // 閏秒、TAI - UTC の値 [秒]
+	/// @param leap_sec 閏秒.
+	void setLeapSec(int leap_sec) {
+		_leapSec = leap_sec; // 閏秒、TAI - UTC の値 [秒]
 	}
 
 
