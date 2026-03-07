@@ -16,9 +16,9 @@ using namespace util;
 /// @brief 天文座標系クラス.
 /// @details 地平、赤道、黄道座標を相互変換するクラス.
 class AstroCoordinate {
-	double lastT;		///< calc()で使用するキャッシュ.
-	bool recalcMat;		///< calcMat()の再計算フラグ.
-	bool recalcMat2;	///< calcMat2()の再計算フラグ.
+	double _lastT;		///< calc()で使用するキャッシュ.
+	bool _recalcMat;	///< calcMat()の再計算フラグ.
+	bool _recalcMat2;	///< calcMat2()の再計算フラグ.
 protected:
 	// 天文経緯度(極運動も含めた瞬時の天文経緯度)
 	Degree lt;		///< 天文緯度 [°]
@@ -89,7 +89,7 @@ protected:
 public:
 	//----- コンストラクタ -------------------------------------------
 	AstroCoordinate() {
-		lastT = 0; calc();
+		_lastT = 0; calc();
 	}
 
 
@@ -108,7 +108,7 @@ public:
 	void setPosition(const Degree& longitude, const Degree& latitude) {
 		lt = latitude;
 		lg = longitude;
-		recalcMat = true;
+		_recalcMat = true;
 	}
 
 	/// 天文緯度を得る.
@@ -203,8 +203,8 @@ public:
 	/// @brief 座標変換の前準備を行う.
 	/// @details 座標変換行列を必要に応じて再計算する.
 	void beginConvert() {
-		if (recalcMat)  calcMat();
-		if (recalcMat2) calcMat2();
+		if (_recalcMat)  calcMat();
+		if (_recalcMat2) calcMat2();
 	}
 
 	/// 赤道座標から地平座標へ変換する(視位置)

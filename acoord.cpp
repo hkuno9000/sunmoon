@@ -31,11 +31,11 @@ AstroCoordinate::calc()
 	const double T = atime.j2000() / 36525;
 
 	// 時刻差が10秒以内なら、歳差や章動は変化量が小さいので計算不要である
-	if (lastT == 0 || fabs(T - lastT) * (36525 * 86400.0) >= 10) {
-		calc2(lastT = T); // 歳差と章動、分点差の計算
-		recalcMat2 = true;
+	if (_lastT == 0 || fabs(T - _lastT) * (36525 * 86400.0) >= 10) {
+		calc2(_lastT = T); // 歳差と章動、分点差の計算
+		_recalcMat2 = true;
 	}
-	recalcMat = true;
+	_recalcMat = true;
 }
 
 /// calc()から呼び出される計算サブ.
@@ -197,7 +197,7 @@ AstroCoordinate::calcMat()
 	q2h *= Mat3x3(y, 'Y');
 
 	// 再計算完了
-	recalcMat = false;
+	_recalcMat = false;
 }
 
 /// 歳差・章動・赤道／黄道座標変換行列の計算
@@ -258,7 +258,7 @@ AstroCoordinate::calcMat2()
     sunQ *= c2q;
 
 	// 再計算完了
-	recalcMat2 = false;
+	_recalcMat2 = false;
 }
 
 #define NEWABR
