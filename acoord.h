@@ -138,7 +138,7 @@ public:
 	///   小さな値なので、ここでは無視する。
 	/// @return 地球重心を原点とした観測位置の平均赤道直交座標[m]
 	Vec3 getQLocation() const {
-		return location * Mat3x3(Degree(gmst(), asHs()), 'Z');
+		return location * Mat3x3(HourAngle(gmst()), 'Z');
 	}
 
 

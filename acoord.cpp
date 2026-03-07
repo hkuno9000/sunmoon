@@ -183,7 +183,7 @@ AstroCoordinate::calc2(double T)
 void
 AstroCoordinate::calcMat()
 {
-	Degree z(lst(), asHs());
+	HourAngle z(lst()); // 地方恒星時を時角に変換
 	Degree y(90, 0, -lt.sec()); // 90°- lt  赤道の高度
 
 	// 地平→赤道座標変換行列

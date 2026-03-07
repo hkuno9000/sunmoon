@@ -178,18 +178,6 @@ inline double ds2mod2(double ds)   { return fmod2(ds, 360*3600L); }
 inline double rad2mod2(double rad) { return fmod2(rad, 2*PI); }
 
 //------------------------------------------------------------------------
-//.----- class asXxxx : ダミー型 -----------------------------------------
-//------------------------------------------------------------------------
-// コンストラクタに渡すダミー型。別の引数で渡す数値型の意味付けをする。
-class asRadian {};
-class asHh {};
-class asHm {};
-class asHs {};
-class asDs {};
-class asDm {};
-class asDd {};
-
-//------------------------------------------------------------------------
 /// 角度クラス.
 class Degree {
 	/// 秒単位の角度[″]  １°の3600倍.
@@ -206,20 +194,26 @@ public:
 	explicit Degree(double ds)
 		: ds(ds) {}
 
-	Degree(double x, asRadian) { setRadian(x); }
-	Degree(double x, asHh)  { setHh(x); }
-	Degree(double x, asHm)  { setHm(x); }
-	Degree(double x, asHs)  { setHs(x); }
-	Degree(double x, asDd)  { setDegree(x); }
-	Degree(double x, asDm)  { setMinute(x); }
-	Degree(double x, asDs)  { setSec(x);    }
-
 	/// コンストラクタ - 度分秒で初期化.
 	/// @param d 度
 	/// @param m 分
 	/// @param s 秒
 	Degree(double d, double m, double s)
 		: ds(d * 3600 + m * 60 + s) { }
+
+	/// 静的コンストラクタ - 指定の時角で初期化.
+	/// @param h 時
+	/// @param m 分
+	/// @param s 秒
+	static Degree asHourAngle(double h, double m, double s) {
+		return Degree((h * 3600 + m * 60 + s)  * 15);
+	}
+
+	/// 静的コンストラクタ - 指定の角度で初期化.
+	/// @param rad ラジアン角
+	static Degree asRadian(double rad) {
+		return Degree(rad * RAD2DS);
+	}
 
 	/// コピーコンストラクタ.
 	/// @param a コピー元の角度
@@ -474,6 +468,35 @@ inline void normRaDec(Degree& ra, Degree& dec) {
 		ra.add180();
 	ra.mod360();
 }
+
+//------------------------------------------------------------------------
+/// 時角クラス.
+class HourAngle : public Degree {
+public:
+	//----- コンストラクタ -------------------------------------------
+	/// コンストラクタ - 時角で初期化.
+	/// @param h 時
+	/// @param m 分
+	/// @param s 秒
+	HourAngle(double h, double m, double s)
+		: Degree((h * 3600 + m * 60 + s)  * 15) {}
+
+	/// コンストラクタ - 秒単位の時角で初期化.
+	/// @param hs 秒単位の時角
+	HourAngle(double hs)
+		: Degree(hs * 15) {}
+};//endclass HourAngle
+
+//------------------------------------------------------------------------
+/// ラジアン角クラス.
+class Radian : public Degree {
+public:
+	//----- コンストラクタ -------------------------------------------
+	/// コンストラクタ - ラジアン角で初期化.
+	/// @param rad ラジアン角
+	Radian(double rad)
+		: Degree(rad * RAD2DS) {}
+};//endclass Radian
 
 }//endnamespace util
 #endif // DEGREE_H_
