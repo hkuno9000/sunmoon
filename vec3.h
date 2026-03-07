@@ -106,9 +106,6 @@ public:
 
 };//endclass Mat3x3
 
-/// コンストラクタに渡すダミー型。別の引数で渡す数値型の意味付けをする。
-class asLtLg {};
-
 /// @brief １行３列のベクトル.
 /// @details １行３列の実数ベクトル。３次元直交座標を保持する
 class Vec3 {
@@ -122,20 +119,24 @@ public:
 	Vec3(double x, double y, double z)
 		: x(x), y(y), z(z) {}
 
-	/// コンストラクタ. 極座標値で生成する.
+	/// 静的コンストラクタ. 極座標値で生成する.
 	/// @param radius  動径ｒ
 	/// @param phi     天頂角φ
 	/// @param theta   方位角θ
-	Vec3(double radius, const Degree& phi, const Degree& theta) {
-		setPolar(radius, phi, theta);
+	static Vec3 asPolar(double radius, const Degree& phi, const Degree& theta) {
+		Vec3 v;
+		v.setPolar(radius, phi, theta);
+		return v;
 	}
 
-	/// コンストラクタ. 緯度経度値で生成する.
+	/// 静的コンストラクタ. 緯度経度値で生成する.
 	/// @param radius    動径ｒ
 	/// @param latitude  緯度
 	/// @param longitude 経度(東経を正とする)
-	Vec3(double radius, const Degree& latitude, const Degree& longitude, asLtLg) {
-		setLtLg(radius, latitude, longitude);
+	static Vec3 asLtLg(double radius, const Degree& latitude, const Degree& longitude) {
+		Vec3 v;
+		v.setLtLg(radius, latitude, longitude);
+		return v;
 	}
 
 	/// コンストラクタ. 直交座標値の配列から生成する.
