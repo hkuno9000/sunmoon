@@ -541,7 +541,7 @@ int main(int argc, char** argv)
 			double h;	// 視高度
 			double d;	// 大気差 [″]
 			sscanf(buf, "%lf %lf", &h, &d);
-			Vec3 v(1, Degree(90 - h, 0, 0), Degree(0));
+			auto v = Vec3::asPolar(1, Degree(90 - h, 0, 0), Degree(0));
 			Degree ref(ac.refractionApp(v));
 			printf("%s\t%.3f\t%.3f\n", buf, ref.sec(), d - ref.sec());
 			// Degree trueAlt(h * 3600 - ref.sec());
@@ -560,7 +560,7 @@ int main(int argc, char** argv)
 				Degree dz(z, 0, 0);
 				Degree dt(ra * 15, 0, 0);
 				Degree d1, d2;
-				Vec3 v(1, dz, dt), v1, v2;
+				Vec3 v(Vec3::asPolar(1, dz, dt)), v1, v2;
 				v1 = v;
 				ac.addAnnualAberration(v1);
 				d1.setArcTan2((v1 - v).radius(), 1);
