@@ -69,6 +69,19 @@ Jday::setJdate(int y, int m, int day)
 //------------------------------------------------------------------------
 //. 日付取得(グレゴリオ暦、ユリウス暦)
 
+/// ユリウス日から曜日 (0=日、1=月、2=火 ... 6=土) を得る.
+/// ユリウス日が0のときは、BC4713.11.24の月曜日であるから、余りが1となるようにユリウス日に1を加算してから7で割る。
+/// ただし、ユリウス日が負のときは、余りも負になるので、もし余りが負ならば7を加算して正の値にする。
+/// @param jd ユリウス日
+/// @return 曜日 (0=日、1=月、2=火 ... 6=土)
+static inline int
+day_of_week_from_jd(long jd)
+{
+	int w = (int)((jd + 1) % 7);
+	if (w < 0) w += 7;
+	return w;
+}
+
 /// グレゴリオ暦の日付を得る (AD1582～現代用)
 void
 Jday::getGdate(int& year, int& month, int& day, int& day_of_week) const
@@ -99,8 +112,7 @@ Jday::getGdate(int& year, int& month, int& day, int& day_of_week) const
 	year  = (int)(c4 * 400 + y);
 	month = (int) m;
 	day   = (int) r;
-	int w = (int)((_jd + 1) % 7); if (w < 0) w += 7;
-	day_of_week = (int) w;
+	day_of_week = day_of_week_from_jd(_jd);
 }
 
 /// ユリウス暦の日付を得る (BC4713～AD1582 の期間用)
@@ -133,8 +145,7 @@ Jday::getJdate(int& year, int& month, int& day, int& day_of_week) const
 	year  = (int) (y4 * 4 + y);
 	month = (int) m;
 	day   = (int) r;
-	int w = (int)((_jd + 1) % 7); if (w < 0) w += 7;
-	day_of_week = (int) w;
+	day_of_week = day_of_week_from_jd(_jd);
 }
 
 //------------------------------------------------------------------------
@@ -178,8 +189,7 @@ Jday::dayOfWeek() const
 {	// 0=日、1=月、2=火 ... 6=土
 	// 曜日計算は、年月日を計算してキャッシュするより
 	// 自前でやった方が高速なので、この場で計算する
-	int w = (int)((_jd + 1) % 7); if (w < 0) w += 7;
-	return w;
+	return day_of_week_from_jd(_jd);
 }
 
 }//.endnamespace astro
