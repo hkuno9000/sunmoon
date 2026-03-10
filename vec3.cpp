@@ -132,7 +132,7 @@ Vec3::setDirectionCosines()
 double
 Vec3::radius() const
 {
-	return ::sqrt(square());
+	return std::sqrt(square());
 }
 
 /// 極座標を得る
@@ -143,7 +143,7 @@ Vec3::getPolar(Degree& phi, Degree& theta) const
 	theta.setArcTan2(y, x); // -180°～+180°
 
 	// 天頂角φを得る
-	phi.setArcTan2(::sqrt(x * x + y * y), z);
+	phi.setArcTan2(std::sqrt(x * x + y * y), z);
 
 	// 長さを計算する
 	return radius();
@@ -157,7 +157,7 @@ Vec3::getLtLg(Degree& latitude, Degree& longitude) const
 	longitude.setArcTan2(y, x); // -180°～+180°
 
 	// 緯度(==90°- 天頂角φ)を得る
-	latitude.setArcTan2(z, ::sqrt(x * x + y * y));
+	latitude.setArcTan2(z, std::sqrt(x * x + y * y));
 
 	// 長さを計算する
 	return radius();

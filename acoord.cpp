@@ -31,7 +31,7 @@ AstroCoordinate::calc()
 	const double T = atime.j2000() / 36525;
 
 	// 時刻差が10秒以内なら、歳差や章動は変化量が小さいので計算不要である
-	if (lastT == 0 || fabs(T - lastT) * (36525 * 86400.0) >= 10) {
+	if (lastT == 0 || std::fabs(T - lastT) * (36525 * 86400.0) >= 10) {
 		calc2(lastT = T); // 歳差と章動、分点差の計算
 		recalcMat2 = true;
 	}
@@ -387,7 +387,7 @@ AstroCoordinate::refractionTrue(Degree alt) const
 	do {
 		app = alt + ref;
 		ref = refractionApp(app);
-	} while (fabs((alt + ref - app).sec()) > 0.1);
+	} while (std::fabs((alt + ref - app).sec()) > 0.1);
 	return ref;
 }
 

@@ -452,13 +452,13 @@ public:
 	static Degree parseHms(const char* p);
 
 	//----- 三角関数 -------------------------------------------------
-	friend double sin(const Degree& a)   { return ::sin(a.radian()); }	///< sin関数のオーバロード. @return sin(a)
-	friend double cos(const Degree& a)   { return ::cos(a.radian()); }	///< cos関数のオーバロード. @return cos(a)
-	friend double tan(const Degree& a)   { return ::tan(a.radian()); }	///< tan関数のオーバロード. @return tan(a)
-	void setArcSin(double x)             { setRadian(asin(x)); }		///< *this = arcsin(x)
-	void setArcCos(double x)             { setRadian(acos(x)); }		///< *this = arccos(x
-	void setArcTan(double x)             { setRadian(atan(x)); }		///< *this = arctan(x)
-	void setArcTan2(double y, double x)  { setRadian(atan2(y, x)); }	///< *this = atan2(y,x)
+	friend double sin(const Degree& a)   { return std::sin(a.radian()); }	///< sin関数のオーバロード. @return sin(a)
+	friend double cos(const Degree& a)   { return std::cos(a.radian()); }	///< cos関数のオーバロード. @return cos(a)
+	friend double tan(const Degree& a)   { return std::tan(a.radian()); }	///< tan関数のオーバロード. @return tan(a)
+	void setArcSin(double x)             { setRadian(std::asin(x)); }		///< *this = arcsin(x)
+	void setArcCos(double x)             { setRadian(std::acos(x)); }		///< *this = arccos(x
+	void setArcTan(double x)             { setRadian(std::atan(x)); }		///< *this = arctan(x)
+	void setArcTan2(double y, double x)  { setRadian(std::atan2(y, x)); }	///< *this = atan2(y,x)
 };//endclass Degree
 
 /// 緯度経度の値を、緯度±90度、経度±180度に正規化する
