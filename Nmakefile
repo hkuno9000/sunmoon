@@ -1,10 +1,13 @@
-# Makefile
-# $Id: Makefile,v 1.4 2006-07-13 01:39:31 hkuno Exp $
+# @file
+# Makefile for Visual C++
+# @author hkuno9000@gmail.com
+# @copyright 2006,2026 Hiroshi Kuno. MIT License
+# @see <https://github.com/hkuno9000/sunmoon.git>
 #----- rules -------------------------------------------------------------
 RM=del
 TARGET=sunmoon.exe
 #CFLAGS=-W3 -MD -GX -O1 -nologo
-CFLAGS=-W3 -MD -EHsc -O1 -nologo -D_CRT_SECURE_NO_WARNINGS
+CFLAGS=-W3 -MD -EHsc -O1 -nologo -D_CRT_SECURE_NO_WARNINGS -std:c++17 -D_USE_MATH_DEFINES
 .cpp.obj:
 	cl $(CFLAGS) -c $<
 .cpp.exe:

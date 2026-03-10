@@ -5,10 +5,10 @@
 /// @see <https://github.com/hkuno9000/sunmoon.git>
 #include "acoord.h"
 #include "planets.h"
+namespace astro {
 using namespace std;
 using namespace util;
 using namespace astro;
-namespace astro {
 
 //------------------------------------------------------------------------
 //.----- class AstroCoordinate : 天文座標系 ------------------------------
