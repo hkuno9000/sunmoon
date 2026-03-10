@@ -18,7 +18,8 @@ namespace util {
 double fmod1(double x, double r)
 {
 	// m = fmod(x, r) にて mの符号はxと同じ
-	if ((x = std::fmod(x, r)) < 0)
+	x = std::fmod(x, r);
+	if (x < 0)
 		x += r;
 	return x;
 }
@@ -26,7 +27,8 @@ double fmod1(double x, double r)
 double fmod2(double x, double r)
 {
 	// m = fmod(x, r) にて mの符号はxと同じ
-	if ((x = std::fmod(x, r)) < 0)
+	x = std::fmod(x, r);
+	if (x < 0)
 		x += r;
 	if (x >= r/2)
 		x -= r;
