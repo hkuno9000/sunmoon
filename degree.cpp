@@ -20,7 +20,7 @@ namespace util {
 double fmod1(double x, double r)
 {
 	// m = fmod(x, r) にて mの符号はxと同じ
-	if ((x = fmod(x, r)) < 0)
+	if ((x = std::fmod(x, r)) < 0)
 		x += r;
 	return x;
 }
@@ -28,7 +28,7 @@ double fmod1(double x, double r)
 double fmod2(double x, double r)
 {
 	// m = fmod(x, r) にて mの符号はxと同じ
-	if ((x = fmod(x, r)) < 0)
+	if ((x = std::fmod(x, r)) < 0)
 		x += r;
 	if (x >= r/2)
 		x -= r;
@@ -42,12 +42,16 @@ double fmod2(double x, double r)
 //. round(x, point) - 小数部point-1桁を四捨五入し、小数部をpoint桁に丸める
 double round(double x)
 {
-	return (x < 0) ? ceil(x - 0.5) : floor(x + 0.5);
+#if 0 // for OLD C++
+	return (x < 0) ? std::ceil(x - 0.5) : std::floor(x + 0.5);
+#else // ISO C++11 or later
+	return std::round(x);
+#endif
 }
 
 double round(double x, int point)
 {
-	double base = ::pow(10.0, point);
+	double base = std::pow(10.0, point);
 	return round(x * base) / base;
 }
 
