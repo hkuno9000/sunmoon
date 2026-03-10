@@ -202,9 +202,9 @@ void
 AstroCoordinate::calcMat2()
 {
 	// 歳差（50.3″／年）補正行列
-	Degree d1(za); d1 -= Degree(90*3600); // ζA - 90°
-	Degree d2(ta); d2.setNeg();           // -θA
-	Degree d3(Za); d3 += Degree(90*3600); // ΖA + 90°
+	Degree d1(za); d1.sub90();	// ζA - 90°
+	Degree d2(ta); d2.setNeg();	// -θA
+	Degree d3(Za); d3.add90();	// ΖA + 90°
 	j2q.setRotate(d1, 'Z');
 	j2q *= Mat3x3(d2, 'X');
 	j2q *= Mat3x3(d3, 'Z'); 	// J2000.0赤道 → 平均赤道
