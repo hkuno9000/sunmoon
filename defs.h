@@ -66,7 +66,7 @@ class NullPointer : public std::logic_error {
 public: NullPointer(const char* msg) : std::logic_error(msg) {}
 };
 
-#define NULLCHECK(p) { if (p == 0) throw NullPointer(""); }
+#define NULLCHECK(p) { if (p == nullptr) throw NullPointer(""); }
 
 //------------------------------------------------------------------------
 //. macros

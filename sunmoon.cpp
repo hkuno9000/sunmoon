@@ -39,9 +39,9 @@ int sprintRaDec(char* buf, const Vec3& v)
 	Degree ra, dec;
 	v.getLtLg(dec, ra);
 	normRaDec(ra, dec);
-	p += ra.sprintHms(p, NULL);
+	p += ra.sprintHms(p, nullptr);
 	p += sprintf(p, "(%06.2fd)  ", ra.degree());
-	p += dec.sprintDms(p, NULL);
+	p += dec.sprintDms(p, nullptr);
 	p += sprintf(p, "(%+06.2fd)", dec.degree());
 	return p - buf;
 }
@@ -75,10 +75,10 @@ void print_location(const AstroCoordinate& acoord, double sea)
 {
 	char buf[256];
 
-	acoord.latitude().sprintDms(buf, NULL);
+	acoord.latitude().sprintDms(buf, nullptr);
 	printf("LT: %s\n", buf);
 
-	acoord.longitude().sprintDms(buf, NULL);
+	acoord.longitude().sprintDms(buf, nullptr);
 	printf("LG: %c%s\n", (buf[0]=='-' ? 'W' : 'E'), buf+1);
 
 	printf("SEA: %.0fm\n", sea);
@@ -101,7 +101,7 @@ void print_time(const AstroCoordinate& acoord)
 	strftime(buf, sizeof(buf), "%Y-%m-%d %X %Z", &t);
 	printf("LOC: %s\n", buf);
 
-	Degree lst; lst.setHs(acoord.lst()); lst.sprintHms(buf, NULL);
+	Degree lst; lst.setHs(acoord.lst()); lst.sprintHms(buf, nullptr);
 	printf("LST: %s\n", buf);
 }
 

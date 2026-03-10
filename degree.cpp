@@ -204,7 +204,7 @@ Degree::parseDms(const char* p)
 	else if (s = 0, sscanf(p, "%lf%c%lf", &d, sep, &m) == 3) {
 		// DD?MM
 	}
-	else if (strchr(p, '.') == NULL && strlen(p) > 4
+	else if (strchr(p, '.') == nullptr && strlen(p) > 4
 			&& sscanf(p, "%u", &i) == 1) {
 		// DDMMSS
 		d = (i / 10000);
@@ -249,7 +249,7 @@ Degree::parseHms(const char* p)
 	else if (s = 0, sscanf(p, "%lf%c%lf", &h, sep, &m) == 3) {
 		// HH?MM
 	}
-	else if (strchr(p, '.') == NULL && strlen(p) > 4
+	else if (strchr(p, '.') == nullptr && strlen(p) > 4
 			&& sscanf(p, "%u", &i) == 1) {
 		// HHMMSS
 		h = (i / 10000);

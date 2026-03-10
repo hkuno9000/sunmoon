@@ -84,7 +84,7 @@ AstroTime::updateSystemTime()
 	adjust();
 #elif defined(BSD) || defined(__APPLE__) || defined(__CYGWIN__) || defined(__linux__)
 	struct timeval tv;
-	gettimeofday(&tv, NULL);
+	gettimeofday(&tv, nullptr);
 	d.setGdate(1970, 1, 1);
 	d += (tv.tv_sec / 86400);
 	s =  (tv.tv_sec % 86400) + (tv.tv_usec / 1e6) - 12 * 3600;
