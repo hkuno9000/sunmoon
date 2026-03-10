@@ -192,18 +192,18 @@ class asDd {};
 /// 角度クラス.
 class Degree {
 	/// 秒単位の角度[″]  １°の3600倍.
-	double ds;
+	double _ds;
 
 public:
 	//----- コンストラクタ -------------------------------------------
 	/// デフォルトコンストラクタ - 0°で初期化.
 	Degree()
-		: ds(0) {}
+		: _ds(0) {}
 
 	/// コンストラクタ - 秒単位の角度[″]で初期化.
 	/// @param ds 秒単位の角度[″]
 	explicit Degree(double ds)
-		: ds(ds) {}
+		: _ds(ds) {}
 
 	Degree(double x, asRadian) { setRadian(x); }
 	Degree(double x, asHh)  { setHh(x); }
@@ -218,18 +218,18 @@ public:
 	/// @param m 分
 	/// @param s 秒
 	Degree(double d, double m, double s)
-		: ds(d * 3600 + m * 60 + s) { }
+		: _ds(d * 3600 + m * 60 + s) { }
 
 	/// コピーコンストラクタ.
 	/// @param a コピー元の角度
 	Degree(const Degree& a)
-		: ds(a.ds) {}
+		: _ds(a._ds) {}
 
 	/// 代入演算子.
 	/// @param a 代入する角度
 	/// @return 代入された角度
 	Degree& operator=(const Degree& a) {
-		ds = a.ds; return *this;
+		_ds = a._ds; return *this;
 	}
 
 	//----- 四則演算 -------------------------------------------------
@@ -237,139 +237,139 @@ public:
 	/// @param a 元の角度
 	/// @return 負にした角度
 	friend Degree operator-(const Degree& a) {
-		return Degree(-a.ds);
+		return Degree(-a._ds);
 	}
 	/// 自己加算.
 	Degree& operator+=(const Degree& a) {
-		ds += a.ds; return *this;
+		_ds += a._ds; return *this;
 	}
 	/// 自己減算.
 	Degree& operator-=(const Degree& a) {
-		ds -= a.ds; return *this;
+		_ds -= a._ds; return *this;
 	}
 	friend Degree operator+(const Degree& a, const Degree& b) {
 	/// 加算.
-		return Degree(a.ds + b.ds);
+		return Degree(a._ds + b._ds);
 	}
 	/// 減算.
 	friend Degree operator-(const Degree& a, const Degree& b) {
-		return Degree(a.ds - b.ds);
+		return Degree(a._ds - b._ds);
 	}
 	/// 自己係数乗算.
 	Degree& operator*=(double k) {
-		ds *= k; return *this;
+		_ds *= k; return *this;
 	}
 	/// 自己係数除算.
 	Degree& operator/=(double k) {
-		ds /= k; return *this;
+		_ds /= k; return *this;
 	}
 	/// 係数乗算.
 	friend Degree operator*(const Degree& a, double k) {
-		return Degree(a.ds * k);
+		return Degree(a._ds * k);
 	}
 	/// 係数乗算.
 	friend Degree operator*(double k, const Degree& a) {
-		return Degree(a.ds * k);
+		return Degree(a._ds * k);
 	}
 	/// 係数除算.
 	friend Degree operator/(const Degree& a, double k) {
-		return Degree(a.ds / k);
+		return Degree(a._ds / k);
 	}
 
 	//----- 関係演算 -------------------------------------------------
-	bool operator==(const Degree& a) const { return ds == a.ds; } ///< 等値判定.
-	bool operator!=(const Degree& a) const { return ds != a.ds; } ///< 不等値判定.
-	bool operator< (const Degree& a) const { return ds <  a.ds; } ///< 小なり判定.
-	bool operator<=(const Degree& a) const { return ds <= a.ds; } ///< 以下判定.
-	bool operator> (const Degree& a) const { return ds >  a.ds; } ///< 大なり判定.
-	bool operator>=(const Degree& a) const { return ds >= a.ds; } ///< 以上判定.
+	bool operator==(const Degree& a) const { return _ds == a._ds; } ///< 等値判定.
+	bool operator!=(const Degree& a) const { return _ds != a._ds; } ///< 不等値判定.
+	bool operator< (const Degree& a) const { return _ds <  a._ds; } ///< 小なり判定.
+	bool operator<=(const Degree& a) const { return _ds <= a._ds; } ///< 以下判定.
+	bool operator> (const Degree& a) const { return _ds >  a._ds; } ///< 大なり判定.
+	bool operator>=(const Degree& a) const { return _ds >= a._ds; } ///< 以上判定.
 
 	//----- 正負判定 -------------------------------------------------
-	bool isZero() const  { return ds == 0; } ///< 0と等しいか?
-	bool isPlus() const  { return ds > 0;  } ///< 0より大か? @note 0以下の判定は !isPlus()で可能.
-	bool isMinus() const { return ds < 0;  } ///< 0より小か? @note 0以上の判定は !isMinus()で可能.
+	bool isZero() const  { return _ds == 0; } ///< 0と等しいか?
+	bool isPlus() const  { return _ds > 0;  } ///< 0より大か? @note 0以下の判定は !isPlus()で可能.
+	bool isMinus() const { return _ds < 0;  } ///< 0より小か? @note 0以上の判定は !isMinus()で可能.
 
 	//----- 符号反転、逆数 -------------------------------------------
-	void setNeg() { ds = -ds; }     ///< 符号反転する.
-	void setInv() { ds = 1 / ds; }  ///< 逆数にする. @attention 0の場合はゼロ除算発生.
+	void setNeg() { _ds = -_ds; }     ///< 符号反転する.
+	void setInv() { _ds = 1 / _ds; }  ///< 逆数にする. @attention 0の場合はゼロ除算発生.
 
 	//----- 角度の丸め -----------------------------------------------
 	/// 360度の範囲で角度を丸め、 [0°...360°) とする
-	void mod360() { ds = fmod1(ds, 360*3600L); }
+	void mod360() { _ds = fmod1(_ds, 360*3600L); }
 
 	/// ±180度の範囲で角度を丸め、[-180°...180°) とする
-	void mod180() { ds = fmod2(ds, 360*3600L); }
+	void mod180() { _ds = fmod2(_ds, 360*3600L); }
 
 	/// ±180度の範囲で角度を丸め、さらに±90度以上は角度を折り返してtrueを返す.
 	/// @attention 緯度に対してtrueが返るときは、経度に180度加える必要がある
 	bool mod90() {
 		mod180();
-		if (ds > 90*3600L) {
-			ds =  180*3600L - ds; return true;
+		if (_ds > 90*3600L) {
+			_ds =  180*3600L - _ds; return true;
 		}
-		else if (ds < -90*3600L) {
-			ds = -180*3600L - ds; return true;
+		else if (_ds < -90*3600L) {
+			_ds = -180*3600L - _ds; return true;
 		}
 		else
 			return false;
 	}
 
 	//----- 角度の定数加算 -------------------------------------------
-	void add180() { ds += 180 * 3600L; } ///< 180度を加算する.
-	void sub180() { ds -= 180 * 3600L; } ///< 180度を減算する.
-	void add90()  { ds +=  90 * 3600L; } ///< 90度を加算する.
-	void sub90()  { ds -=  90 * 3600L; } ///< 90度を減算する.
+	void add180() { _ds += 180 * 3600L; } ///< 180度を加算する.
+	void sub180() { _ds -= 180 * 3600L; } ///< 180度を減算する.
+	void add90()  { _ds +=  90 * 3600L; } ///< 90度を加算する.
+	void sub90()  { _ds -=  90 * 3600L; } ///< 90度を減算する.
 
 	//----- 角度取得・設定 -------------------------------------------
 	/// 角度 [°].         @see setDegree
-	double degree() const    { return ds / 3600; }
-	void setDegree(double d) { ds =   d  * 3600; }	///< 角度設定. @param d 設定する @copybrief degree @see degree
+	double degree() const    { return _ds / 3600; }
+	void setDegree(double d) { _ds =   d  * 3600; }	///< 角度設定. @param d 設定する @copybrief degree @see degree
 
 	/// 分単位の角度 [′]. @see setMinute
-	double minute() const    { return ds / 60; }
-	void setMinute(double m) { ds =   m  * 60; }	///< 角度設定. @param m 設定する @copybrief minute @see minute
+	double minute() const    { return _ds / 60; }
+	void setMinute(double m) { _ds =   m  * 60; }	///< 角度設定. @param m 設定する @copybrief minute @see minute
 
 	/// 秒単位の角度 [″]. @see setSec
-	double sec() const      { return ds; }
-	void setSec(double s)   { ds = s; }				///< 角度設定. @param s 設定する @copybrief sec @see sec
+	double sec() const      { return _ds; }
+	void setSec(double s)   { _ds = s; }				///< 角度設定. @param s 設定する @copybrief sec @see sec
 
 	/// 時角 [h].         @see setHh
-	double hh() const       { return ds / (15*3600L); }
-	void setHh(double h)    { ds =   h  * (15*3600L); }	///< 時角設定. @param h 設定する @copybrief hh @see hh
+	double hh() const       { return _ds / (15*3600L); }
+	void setHh(double h)    { _ds =   h  * (15*3600L); }	///< 時角設定. @param h 設定する @copybrief hh @see hh
 
 	/// 分単位の時角 [m]. @see setHm
-	double hm() const       { return ds / (15*60); }
-	void setHm(double m)    { ds =   m  * (15*60); }	///< 時角設定. @param m 設定する @copybrief hm @see hm
+	double hm() const       { return _ds / (15*60); }
+	void setHm(double m)    { _ds =   m  * (15*60); }	///< 時角設定. @param m 設定する @copybrief hm @see hm
 
 	/// 秒単位の時角 [s]. @see setHs
-	double hs() const       { return ds / 15; }
-	void setHs(double s)    { ds =   s  * 15; }	///< 時角設定. @param s 設定する @copybrief hs @see hs
+	double hs() const       { return _ds / 15; }
+	void setHs(double s)    { _ds =   s  * 15; }	///< 時角設定. @param s 設定する @copybrief hs @see hs
 
 	/// ラジアン角. @see setRadian
-	double radian() const       { return ds * DS2RAD; }
-	void setRadian(double rad)  { ds =  rad * RAD2DS; } ///< ラジアン角設定. @param rad 設定するラジアン角 @see radian
+	double radian() const       { return _ds * DS2RAD; }
+	void setRadian(double rad)  { _ds =  rad * RAD2DS; } ///< ラジアン角設定. @param rad 設定するラジアン角 @see radian
 
 	//----- 角度の度分秒を設定・取得する -----------------------------
 	/// 度分秒で角度を設定する.
 	/// @param [in] d,m,s 設定する度分秒.
 	void setDms(double d, double m, double s) {
-		ds = d * 3600 + m * 60 + s;
+		_ds = d * 3600 + m * 60 + s;
 	}
 	/// 度分秒で角度を取得する.
 	/// @param [out] sign,d,m,s 符号と度分秒の取得先.
 	void getDms(char& sign, double& d, double& m, double& s) const {
-		sec2ims(ds, sign, d, m, s);
+		sec2ims(_ds, sign, d, m, s);
 	}
 	/// 度分秒で角度を取得する.
 	/// @param [out] sign,d,m,s 符号と度分秒の取得先.
 	void getDms(char& sign, int& d, int& m, double& s) const {
-		sec2ims(ds, sign, d, m, s);
+		sec2ims(_ds, sign, d, m, s);
 	}
 	/// 度分秒で角度を取得する.
 	/// @param [out] sign,d,m,s 符号と度分秒の取得先.
 	/// @param [in] point 秒の小数部をpoint桁に丸める.
 	void getDms(char& sign, int& d, int& m, double& s, int point) const {
-		sec2ims(round(ds, point), sign, d, m, s);
+		sec2ims(round(_ds, point), sign, d, m, s);
 	}
 	/// 度分で角度を取得する.
 	/// @param [out] sign,d,m 符号と度分の取得先.
@@ -392,7 +392,7 @@ public:
 	/// 時分秒で時角を設定する.
 	/// @param [in] h,m,s 設定する時分秒.
 	void setHms(double h, double m, double s) {
-		ds = (h * 3600 + m * 60 + s) * 15;
+		_ds = (h * 3600 + m * 60 + s) * 15;
 	}
 	/// 時分秒で時角を取得する.
 	/// @param [out] sign,h,m,s 符号と時分秒の取得先.
