@@ -213,8 +213,13 @@ public:
 	//----- 日の小数付きのユリウス日 ---------------------------------
 
 	/// ユリウス日[UTC]
-	double jd() const {
+	double jd_UTC() const {
 		return _jday.jd() + _sec / 86400L;
+	}
+
+	/// ユリウス日[UT1]
+	double jd_UT1() const {
+		return _jday.jd() + ut1() / 86400L;
 	}
 
 	/// J2000.0(世界時2000年1月1日12時)からの経過日数[UT1]

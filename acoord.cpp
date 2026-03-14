@@ -611,7 +611,7 @@ int main(int argc, char** argv)
 
 		ac.getTime().get(y, m, d, utc);
 		printf("%4d.%02d.%02d.%05d, jd:%.8g",
-			y, m, d, (int)utc, ac.getTime().jd());
+			y, m, d, (int)utc, ac.getTime().jd_UTC());
 
 		int hh, mm; double ss; char c;
 		sec2ims(ac.gmst(), c, hh, mm, ss);

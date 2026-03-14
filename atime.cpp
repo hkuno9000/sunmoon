@@ -155,7 +155,7 @@ int main(int argc, char** argv)
 		char c; int hh, mm; double ss;
 		sec2ims(gmst, c, hh, mm, ss);
 		printf("%4d.%02d.%02d.%05d, jd:%10.8g, gmst:%10.8g (%02dh %02dm %.3fs)\n",
-			y, m, d, sec, at.jd(), gmst, hh, mm, ss);
+			y, m, d, sec, at.jd_UTC(), gmst, hh, mm, ss);
 	}
 	return EXIT_SUCCESS;
 }
