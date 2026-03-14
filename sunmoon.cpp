@@ -257,13 +257,13 @@ void calc_main(AstroCoordinate& acoord, Planets& pl)
 	//--- 出没計算.
 	if (gTableDays != 0) {
 		AstroTime t = acoord.getTime();
-		const double jd_end = t.jd() + gTableDays;
+		const double jd_end = t.jd_UTC() + gTableDays;
 		const double sun_rz  = sin(dms2rad(0,0,960));	// 太陽視半径による出没補正. 視半径は 960" で決め打ち.
 		const double min30_z = sin(hms2rad(0,30,0));	// 時角30分の高度のz座標値.
 		const double min3_z  = sin(hms2rad(0,3,0));	// 時角1分の高度のz座標値.
 		const double sec15_z = sin(hms2rad(0,0,15));	// 時角15秒の高度のz座標値.
 		int step = -1;	// 初回は指定時刻の1秒前の高度を計算する.
-		for (t.addSec(step); t.jd() < jd_end; t.addSec(step)) {
+		for (t.addSec(step); t.jd_UTC() < jd_end; t.addSec(step)) {
 			// 前回時刻の高度を保存する. ただし、初回はこの値を使ってはいけない.
 			const Vec3 sun0 = sun;
 			const Vec3 moon0 = moon;
