@@ -24,8 +24,8 @@ AstroCoordinate::calc()
 	// 平均恒星時
 	m_gmst = atime.gmst();
 
-	// T = J2000.0からのユリウス世紀[TD]
-	const double T = atime.j2000() / 36525;
+	// T = J2000.0からのユリウス世紀[TT]
+	const double T = atime.jc2000_TT();
 
 	// 時刻差が10秒以内なら、歳差や章動は変化量が小さいので計算不要である
 	if (_lastT == 0 || std::fabs(T - _lastT) * (36525 * 86400.0) >= 10) {

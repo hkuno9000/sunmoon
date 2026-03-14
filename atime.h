@@ -141,6 +141,9 @@ protected:
 	/// 地球力学時[秒]  ※正午を0とする
 	double tdt() const	{ return tai() + 32.184; }
 
+	/// 地球時[秒]  ※正午を0とする
+	double tt() const	{ return tdt(); }
+
 public:
 	/// 閏秒の初期値. +37(2017 January 1).
 	static int initLeapSec;
@@ -245,17 +248,17 @@ public:
 	double jd2000_UT1() const {
 		return _jday.jd2000() + ut1() / 86400L;
 	}
-	/// J2000.0(力学時2000年1月1日12時)からの経過日数[TDT]
-	/// @details TDTとTDBの違い(±0.002秒)が問題にならないような精度の計算
+	/// J2000.0(地球時2000年1月1日12時)からの経過日数[TT]
+	/// @details TTとTDBの違い(±0.002秒)が問題にならないような精度の計算
 	///   であれば、太陽系力学時(TDB)による経過日数として用いて良い。
-	double j2000() const {
-		return _jday.jd2000() + tdt() / 86400L;
+	double jd2000_TT() const {
+		return _jday.jd2000() + tt() / 86400L;
 	}
-	/// J2000.0からの経過ユリウス世紀
-	/// @details 桁落ちを防ぐため、36525.0の割り算をjdとtdtそれぞれ別に行う.
-	double jc2000() const {
+	/// J2000.0(地球時2000年1月1日12時)からの経過ユリウス世紀[TT]
+	/// @details 桁落ちを防ぐため、36525.0の割り算をjd2000とttそれぞれ別に行う.
+	double jc2000_TT() const {
 		// return j2000() / 36525.0
-		return _jday.jd2000() / 36525.0 + tdt() / (86400L * 36525.0);
+		return _jday.jd2000() / 36525.0 + tt() / (86400L * 36525.0);
 	}
 
 
