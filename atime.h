@@ -102,6 +102,13 @@ using namespace std;
 	「地球力学時(TDT:Terrestrial Dynamical Time)」を用いる。
 	TDTは国際原子時(TAI)に対して、TDT = TAI + 32.184秒 と定められて
 	いる。TDTとTDBの差は ±0.002秒以内である。
+
+### 暦表時(ET:Ephemeris Time)と地球時(TT:Terrestrial Time)
+	力学時は、はじめ1952年に地球の公転運動に基づく時刻系「暦表時(ET:Ephemeris Time)」が定めらた。
+	次に1984年には精密な国際原子時に基づく時刻系「地球力学時(TDT:Terrestrial Dynamical Time)」と「太陽系力学時(TDB:Barycentric Dynamical Time)」に置き換えられた。
+	そして1991年に国際天文学連合（IAU）にて、「TDT」は「地球時(TT:Terrestrial Time)」に名称変更された。
+	太陽系全体を扱う時刻系としてのTDBと異なり、地球表面（ジオイド）の時刻系であるという性質を明確にするためである。
+	これらの時刻系は定義や名称が異なるが時刻系として連続性があり、天体位置計算において同一視できる。
 */
 class AstroTime {
 	Jday _jday;		///< ユリウス日 (世界時正午のユリウス日)
@@ -121,6 +128,9 @@ protected:
 
 	/// 地球力学時[秒]  ※正午を0とする
 	double tdt() const	{ return tai() + 32.184; }
+
+	/// 地球時[秒]  ※正午を0とする
+	double tt() const	{ return tdt(); }
 
 public:
 	/// 閏秒の初期値. +37(2017 January 1).
@@ -226,17 +236,17 @@ public:
 	double jd2000_UT1() const {
 		return _jday.jd2000() + ut1() / 86400L;
 	}
-	/// J2000.0(力学時2000年1月1日12時)からの経過日数[TDT]
-	/// @details TDTとTDBの違い(±0.002秒)が問題にならないような精度の計算
+	/// J2000.0(地球時2000年1月1日12時)からの経過日数[TT]
+	/// @details TTとTDBの違い(±0.002秒)が問題にならないような精度の計算
 	///   であれば、太陽系力学時(TDB)による経過日数として用いて良い。
-	double j2000() const {
-		return _jday.jd2000() + tdt() / 86400L;
+	double jd2000_TT() const {
+		return _jday.jd2000() + tt() / 86400L;
 	}
-	/// J2000.0からの経過ユリウス世紀
-	/// @details 桁落ちを防ぐため、36525.0の割り算をjdとtdtそれぞれ別に行う.
-	double jc2000() const {
+	/// J2000.0(地球時2000年1月1日12時)からの経過ユリウス世紀[TT]
+	/// @details 桁落ちを防ぐため、36525.0の割り算をjd2000とttそれぞれ別に行う.
+	double jc2000_TT() const {
 		// return j2000() / 36525.0
-		return _jday.jd2000() / 36525.0 + tdt() / (86400L * 36525.0);
+		return _jday.jd2000() / 36525.0 + tt() / (86400L * 36525.0);
 	}
 
 

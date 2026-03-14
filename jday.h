@@ -81,7 +81,7 @@ class Jday {
 public:
 	static constexpr long BC0001_1_1_12UT = 1721058L;	///< BC1.Jan.1
 	static constexpr long AD1900_1_1_12UT = 2415021L;	///< 暦表時(ET)の起算日.
-	static constexpr long AD2000_1_1_12UT = 2451545L;	///< 天体暦の起算日、J2000.0
+	static constexpr long AD2000_1_1_12UT = 2451545L;	///< 天体暦の起算日、J2000.0(地球時TT・力学時TDT2000年1月1日12時)
 
 	//----- コンストラクタ -------------------------------------------
 	/// デフォルトコンストラクタ.

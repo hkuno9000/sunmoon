@@ -80,7 +80,7 @@ protected:
 
 	/// 天文時刻から天体位置角度を計算する.
 	void calc();			///< 天文時刻 atime から平均恒星時・日月平均黄経・歳差・章動を計算する.
-	void calc2(double T);	///< @param T J2000.0からのユリウス世紀[TDT]
+	void calc2(double T);	///< @param T J2000.0からのユリウス世紀[TT]
 
 	// 天体位置角度から座標変換行列を計算する.
 	void calcMat();			///< calc()が計算した恒星時と緯度から、視赤道／地平座標変換行列を計算する.

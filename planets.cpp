@@ -744,8 +744,8 @@ Planets::calc(const AstroCoordinate& acoord)
     #define DEG(array)          sumDeg(T, array, ELEMENTS_OF(array))
     #define CONV(name, c)       conv(SUMR(name##R), DEG(name##B), DEG(name##L), Degree(c * 3600))
 
-    // T = J2000.0からのユリウス世紀[TDT]
-    const double T = acoord.getTime().jc2000();
+    // T = J2000.0からのユリウス世紀[TT]
+    const double T = acoord.getTime().jc2000_TT();
 
     // 太陽の黄道座標を得る
     L = DEG(sunL);
