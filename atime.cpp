@@ -111,7 +111,7 @@ AstroTime::updateSystemTime()
 double
 AstroTime::gmst() const
 {
-	const double Tu = (jd1() - Jday::AD2000_1_1_12UT) / 36525U;	// ユリウス世紀
+	const double Tu = jd2000_UT1() / 36525U;	// ユリウス世紀
 	const double Tu2 = Tu * Tu;
 	const double Tu3 = Tu * Tu * Tu;
 	const double am = hms2hs(18, 41, 50.54841)

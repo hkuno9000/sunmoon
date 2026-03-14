@@ -217,22 +217,21 @@ public:
 		return _jday.jd() + _sec / 86400L;
 	}
 
-	/// ユリウス日[UT1]
-	double jd1() const {
-		return _jday.jd() + ut1() / 86400L;
+	/// J2000.0(世界時2000年1月1日12時)からの経過日数[UT1]
+	double jd2000_UT1() const {
+		return _jday.jd2000() + ut1() / 86400L;
 	}
-
 	/// J2000.0(力学時2000年1月1日12時)からの経過日数[TDT]
 	/// @details TDTとTDBの違い(±0.002秒)が問題にならないような精度の計算
 	///   であれば、太陽系力学時(TDB)による経過日数として用いて良い。
 	double j2000() const {
-		return _jday.jd() - Jday::AD2000_1_1_12UT + tdt() / 86400L;
+		return _jday.jd2000() + tdt() / 86400L;
 	}
 	/// J2000.0からの経過ユリウス世紀
 	/// @details 桁落ちを防ぐため、36525.0の割り算をjdとtdtそれぞれ別に行う.
 	double jc2000() const {
 		// return j2000() / 36525.0
-		return (_jday.jd() - Jday::AD2000_1_1_12UT) / 36525.0 + tdt() / (86400L * 36525.0);
+		return _jday.jd2000() / 36525.0 + tdt() / (86400L * 36525.0);
 	}
 
 
