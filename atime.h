@@ -109,6 +109,15 @@ using namespace std;
 	そして1991年に国際天文学連合（IAU）にて、「TDT」は「地球時(TT:Terrestrial Time)」に名称変更された。
 	太陽系全体を扱う時刻系としてのTDBと異なり、地球表面（ジオイド）の時刻系であるという性質を明確にするためである。
 	これらの時刻系は定義や名称が異なるが時刻系として連続性があり、天体位置計算において同一視できる。
+
+### 座標時(TC:Coordinate Time)
+	一般相対性理論の重力による時間の遅れを除いた時刻系である。
+	太陽系重心を原点とする時空間の時刻を「太陽系座標時(TCB:Barycentric Coordinate Time)」、
+	地球重心を原点とする時空間の時刻を「地心座標時(TCG:Geocentric Coordinate Time)」、
+	月重心を原点とする時空間の時刻を「月心座標時(TCL:Lunar Coordinate Time)」と呼ぶ。
+	ET/TD/TTに対して、TCG は 6.969290134e-10、TCB は 1.550505e−8 の因子で時間が早く進むので、
+	ET/TD/TTと連続性をもたせるためユリウス通日2443144.5(1977年1月1日0時TAI)で時刻が一致するよう定義された。
+	@see https://eco.mtk.nao.ac.jp/koyomi/wiki/BAC2C9B8BBFE.html
 */
 class AstroTime {
 	Jday _jday;		///< ユリウス日 (世界時正午のユリウス日)
