@@ -10,7 +10,6 @@
 #include "defs.h"
 
 namespace util {
-using namespace std;
 
 //------------------------------------------------------------------------
 //.----- 定数 PI (π) ----------------------------------------------------
@@ -429,11 +428,11 @@ public:
 	}
 
 	//----- 文字列化 -------------------------------------------------
-	ostream& printDegree(ostream& o) const; ///< 角度を出力する.         例: "180.5"
-	ostream& printRadian(ostream& o) const; ///< ラジアン角を出力する.   例: "3.150319" (180.5/180*π)
-	ostream& printDms(ostream& o) const;    ///< 角度の度分秒を出力する. 例: "+180d30m0s"
-	ostream& printHms(ostream& o) const;    ///< 時角の時分秒を出力する. 例: "+12h30m0s"
-	friend ostream& operator<<(ostream& o, const Degree& a) { /// 度の実数値を出力するストリーム出力演算子.
+	std::ostream& printDegree(std::ostream& o) const; ///< 角度を出力する.         例: "180.5"
+	std::ostream& printRadian(std::ostream& o) const; ///< ラジアン角を出力する.   例: "3.150319" (180.5/180*π)
+	std::ostream& printDms(std::ostream& o) const;    ///< 角度の度分秒を出力する. 例: "+180d30m0s"
+	std::ostream& printHms(std::ostream& o) const;    ///< 時角の時分秒を出力する. 例: "+12h30m0s"
+	friend std::ostream& operator<<(std::ostream& o, const Degree& a) { /// 度の実数値を出力するストリーム出力演算子.
 		return a.printDegree(o);
 	}
 	int sprintDms(char* buf, const char* fmt, int point=0) const; ///< 角度をmod180で正規化して度分秒を書式展開する. @param fmt 書式. nullptr なら "%c%02dd %02dm %02.0fs"

@@ -8,7 +8,6 @@
 #include "defs.h"
 
 namespace util {
-using namespace std;
 class Degree;
 
 /// @brief １行３列のベクトルを拡大回転する３行３列の行列クラス.

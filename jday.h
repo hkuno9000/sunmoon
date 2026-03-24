@@ -8,8 +8,6 @@
 #include "defs.h"
 
 namespace astro {
-using namespace std;
-
 /** ユリウス暦、グレゴリオ暦に対応した通日クラス.
 @todo 陰暦や節気については派生クラスで対応を予定
 @see [ユリウス暦、グレゴリオ暦、協定世界時について](https://qiita.com/hkuno/items/7a519cef20f04a44c67d)

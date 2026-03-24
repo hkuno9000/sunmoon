@@ -8,7 +8,6 @@
 #include "jday.h"
 
 namespace astro {
-using namespace std;
 
 /** ユリウス日、日の秒数を保持し、必要に応じて恒星時等を計算する天文時刻クラス.
 @attention ユリウス日は世界時12時に日付が変る。

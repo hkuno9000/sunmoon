@@ -10,7 +10,6 @@
 #include "vec3.h"
 
 namespace astro {
-using namespace std;
 using namespace util;
 
 /// @brief 天文座標系クラス.
