@@ -49,7 +49,7 @@ using namespace std;
 	t = 年初からの経過時間[年単位]
 	x,y = 極運動による極の位置
 	Δλ = -(x sinλ + y cosλ) tanφ  (およそ ±0.3″tanφ)
-	ΔTs = 0.022″ain2πt - 0.012″cos2πt - 0.006″sin4πt + 0.007″cos4πt
+	ΔTs = 0.022″sin2πt - 0.012″cos2πt - 0.006″sin4πt + 0.007″cos4πt
 	αm = グリニジ基準天体(平均太陽)
 	UT0 = LMST - λ - αm + 12h
 	UT1 = UT0 + Δλ
