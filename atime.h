@@ -92,16 +92,36 @@ using namespace std;
 	無線報時やIERSからDUT1(0.1秒単位)を得る必要がある。
 
 ### 力学時(TD:Dynamical Time)
-	世界時(UT)は予測不可能な閏秒の調整が入るため一様な時刻系ではなく、
+	協定世界時(UTC)は予測不可能な閏秒の調整が入るため一様な時刻系ではなく、
+	地球の自転速度に基づく世界時(UT1)も季節変動や長期的な自転速度低下があり、
 	惑星の軌道計算等の天体力学で用いるには都合が悪い。
 	そこで時間経過が一様な時刻系として用意されたのが力学時である。
+#### 暦表時ET
+	力学時は、はじめ1952年に地球の公転運動に基づく時刻系「暦表時(ET:Ephemeris Time)」が定めらた。
+#### 地球力学時TDT, 太陽系力学時TDB
+	次に1984年には、さらに精密な国際原子時に基づく時刻系「地球力学時(TDT:Terrestrial Dynamical Time)」と「太陽系力学時(TDB:Barycentric Dynamical Time)」に置き換えられた。
 	一般相対性理論から、空間位置によって時刻の進みは均質でないため、
 	太陽系重心を基準とした惑星の位置計算には、
 	「太陽系力学時(TDB:Barycentric Dynamical Time)」を用い、
 	地心視位置の計算には、
 	「地球力学時(TDT:Terrestrial Dynamical Time)」を用いる。
-	TDTは国際原子時(TAI)に対して、TDT = TAI + 32.184秒 と定められて
-	いる。TDTとTDBの差は ±0.002秒以内である。
+	\n
+	TDTは国際原子時(TAI)に対して、TDT = TAI + 32.184秒 と定められている。
+	TDTとTDBの差は ±0.002秒以内である。
+#### 地球時TT
+	そして1991年に国際天文学連合（IAU）にて、「TDT」は「地球時(TT:Terrestrial Time)」に名称変更された。
+	地球表面（ジオイド）の時刻系であるという性質を明確にするためである。
+	\n
+	ET/TDT/TTは定義や名称が異なるが時刻系として連続性があり、天体位置計算において同一視できる。
+
+### 座標時(TC:Coordinate Time)
+	一般相対性理論の重力による時間の遅れを除いた時刻系である。
+	太陽系重心を原点とする時空間の時刻を「太陽系座標時(TCB:Barycentric Coordinate Time)」、
+	地球重心を原点とする時空間の時刻を「地心座標時(TCG:Geocentric Coordinate Time)」、
+	月重心を原点とする時空間の時刻を「月心座標時(TCL:Lunar Coordinate Time)」と呼ぶ。
+	ET/TD/TTに対して、TCG は 6.969290134e-10、TCB は 1.550505e−8 の因子で時間が早く進むので、
+	ET/TD/TTと連続性をもたせるためユリウス通日2443144.5(1977年1月1日0時TAI)で時刻が一致するよう定義された。
+	@see https://eco.mtk.nao.ac.jp/koyomi/wiki/BAC2C9B8BBFE.html
 */
 class AstroTime {
 	Jday d;			///< ユリウス日 (世界時正午のユリウス日)
