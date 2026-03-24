@@ -5,8 +5,6 @@
 /// @see <https://github.com/hkuno9000/sunmoon.git>
 #include <cstdlib>
 #include "jday.h"
-using namespace std;
-using namespace astro;
 namespace astro {
 
 //------------------------------------------------------------------------

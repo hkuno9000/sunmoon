@@ -12,10 +12,8 @@
 #elif defined(BSD) || defined(__APPLE__) || defined(__CYGWIN__) || defined(__linux__)
 #include <sys/time.h>
 #endif
-using namespace std;
-using namespace util;
-using namespace astro;
 namespace astro {
+using namespace util;
 
 //------------------------------------------------------------------------
 //.----- class AstroTime : 天文時刻 --------------------------------------

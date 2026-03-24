@@ -7,8 +7,6 @@
 #include <cstdio>
 #include <cstring>
 #include "degree.h"
-using namespace std;
-using namespace util;
 namespace util {
 //------------------------------------------------------------------------
 //.----- fmod1, fmod2 : 丸め変換 -----------------------------------------
@@ -97,20 +95,20 @@ void min2im(double min, char& sign, int&i, double& m)
 
 //----- 文字列化 ---------------------------------------------------------
 
-ostream&
-Degree::printDegree(ostream& o) const
+std::ostream&
+Degree::printDegree(std::ostream& o) const
 {
 	return o << degree();
 }
 
-ostream&
-Degree::printRadian(ostream& o) const
+std::ostream&
+Degree::printRadian(std::ostream& o) const
 {
 	return o << radian();
 }
 
-ostream&
-Degree::printDms(ostream& o) const
+std::ostream&
+Degree::printDms(std::ostream& o) const
 {
 	char c;
 	double d, m, s;
@@ -118,8 +116,8 @@ Degree::printDms(ostream& o) const
 	return o << c << d << "d" << m << "m" << s << "s";
 }
 
-ostream&
-Degree::printHms(ostream& o) const
+std::ostream&
+Degree::printHms(std::ostream& o) const
 {
 	char c;
 	double h, m, s;
@@ -191,7 +189,7 @@ Degree::parseDms(const char* p)
 	unsigned i;
 
 	// 空白を読み飛ばす
-	while (*p && isspace((uchar) *p))
+	while (*p && std::isspace((uchar) *p))
 		++p;
 
 	// 符号を得る
@@ -199,23 +197,23 @@ Degree::parseDms(const char* p)
 		sign = *p++;
 
 	// 各書式でd,m,sの取得を試みる
-	if (sscanf(p, "%lf%c%lf%1[m']%lf", &d, sep, &m, sep, &s) == 5) {
+	if (std::sscanf(p, "%lf%c%lf%1[m']%lf", &d, sep, &m, sep, &s) == 5) {
 		// DD?MM'SS["] or DDdMMmSS[s]
 	}
-	else if (s = 0, sscanf(p, "%lf %lf %lf", &d, &m, &s) >= 2) {
+	else if (s = 0, std::sscanf(p, "%lf %lf %lf", &d, &m, &s) >= 2) {
 		// DD MM SS or DD MM
 	}
-	else if (s = 0, sscanf(p, "%lf%c%lf", &d, sep, &m) == 3) {
+	else if (s = 0, std::sscanf(p, "%lf%c%lf", &d, sep, &m) == 3) {
 		// DD?MM
 	}
-	else if (strchr(p, '.') == nullptr && strlen(p) > 4
-			&& sscanf(p, "%u", &i) == 1) {
+	else if (std::strchr(p, '.') == nullptr && std::strlen(p) > 4
+			&& std::sscanf(p, "%u", &i) == 1) {
 		// DDMMSS
 		d = (i / 10000);
 		m = (i / 100) % 100;
 		s = i % 100;
 	}
-	else if (sscanf(p, "%lf", &d) == 1) {
+	else if (std::sscanf(p, "%lf", &d) == 1) {
 		// DD.DDD
 		m = s = 0;
 	}
@@ -236,7 +234,7 @@ Degree::parseHms(const char* p)
 	unsigned i;
 
 	// 空白を読み飛ばす
-	while (*p && isspace((uchar) *p))
+	while (*p && std::isspace((uchar) *p))
 		++p;
 
 	// 符号を得る
@@ -244,23 +242,23 @@ Degree::parseHms(const char* p)
 		sign = *p++;
 
 	// 各書式でh,m,sの取得を試みる
-	if (sscanf(p, "%lf%1[h:]%lf%1[m:]%lf", &h, sep, &m, sep, &s) == 5) {
+	if (std::sscanf(p, "%lf%1[h:]%lf%1[m:]%lf", &h, sep, &m, sep, &s) == 5) {
 		// HH:MM:SS or HHhMMmSS[s]
 	}
-	else if (s = 0, sscanf(p, "%lf %lf %lf", &h, &m, &s) >= 2) {
+	else if (s = 0, std::sscanf(p, "%lf %lf %lf", &h, &m, &s) >= 2) {
 		// HH MM SS or HH MM
 	}
-	else if (s = 0, sscanf(p, "%lf%c%lf", &h, sep, &m) == 3) {
+	else if (s = 0, std::sscanf(p, "%lf%c%lf", &h, sep, &m) == 3) {
 		// HH?MM
 	}
-	else if (strchr(p, '.') == nullptr && strlen(p) > 4
-			&& sscanf(p, "%u", &i) == 1) {
+	else if (std::strchr(p, '.') == nullptr && std::strlen(p) > 4
+			&& std::sscanf(p, "%u", &i) == 1) {
 		// HHMMSS
 		h = (i / 10000);
 		m = (i / 100) % 100;
 		s = i % 100;
 	}
-	else if (sscanf(p, "%lf", &h) == 1) {
+	else if (std::sscanf(p, "%lf", &h) == 1) {
 		// HH.HHH .
 		m = s = 0;
 	}

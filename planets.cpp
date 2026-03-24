@@ -8,9 +8,6 @@
 #include <cstdlib>
 #include "acoord.h"
 #include "planets.h"
-using namespace std;
-using namespace util;
-using namespace astro;
 namespace astro {
 
 //------------------------------------------------------------------------
@@ -816,6 +813,9 @@ Planets::calc_sun(double T, Degree& l, double& r)
 }//.endnamespace astro
 //------------------------------------------------------------------------
 #ifdef TEST
+using namespace std;
+using namespace util;
+using namespace astro;
 int main()
 {
     Planets pl;
