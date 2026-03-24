@@ -1,5 +1,8 @@
-# Makefile
-# $Id: GNUmakefile,v 1.5 2006-08-24 09:14:43 hkuno Exp $
+# @file
+# Makefile for GNUmake
+# @author hkuno9000@gmail.com
+# @copyright 2006,2026 Hiroshi Kuno. MIT License
+# @see <https://github.com/hkuno9000/sunmoon.git>
 #----- rules -------------------------------------------------------------
 TARGET=sunmoon.out
 ifndef PREFIX
@@ -26,7 +29,7 @@ sunmoon.out: sunmoon.o astro.a
 	$(CXX) $(CFLAGS) -o $@ $^
 
 astro.a: $(OBJ)
-	ar cru $@ $^
+	ar rcs $@ $^
 	ranlib $@
 
 $(OBJ): defs.h GNUmakefile
