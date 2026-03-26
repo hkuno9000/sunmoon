@@ -86,7 +86,7 @@ SUN-RISE: 2026-01-02 07:00:15 JST
 endef
 sunmoon.test: $(TARGET)
 	$(file >in.tmp,$(SUNMOON_TEXT))
-	./$(TARGET) utc=2026-1-1T0:0:0 leap=37 table=1 -p >out.tmp
+	TZ=JST-9 ./$(TARGET) utc=2026-1-1T0:0:0 leap=37 table=1 -p >out.tmp
 	diff -w in.tmp out.tmp
 
 jday.out atime.out acoord.out planets.out: astro.a
