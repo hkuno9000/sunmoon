@@ -11,25 +11,28 @@
 
 namespace util {
 
-//------------------------------------------------------------------------
-//.----- 定数 PI (π) ----------------------------------------------------
-//------------------------------------------------------------------------
+/*========================================================================
+## 定数
+*/
 #ifdef M_PI
-constexpr double PI = M_PI;
+constexpr double PI = M_PI; ///< 定数 PI (π).
 #else
-constexpr double PI = 3.14159265358979323846;
+constexpr double PI = 3.14159265358979323846; ///< 定数 PI (π).
 #endif
-constexpr double DD2RAD = PI / 180;
-constexpr double HH2RAD = PI /  12;
-constexpr double DS2RAD = PI / (180*3600L);
-constexpr double HS2RAD = PI / ( 12*3600L);
-constexpr double RAD2DD = 180 / PI;
-constexpr double RAD2HH = 12  / PI;
-constexpr double RAD2DS = (180*3600L) / PI;
-constexpr double RAD2HS = ( 12*3600L) / PI;
+constexpr double DD2RAD = PI / 180;			///< 角度からラジアン角への変換係数.
+constexpr double HH2RAD = PI /  12;			///< 時角からラジアン角への変換係数.
+constexpr double DS2RAD = PI / (180*3600L);	///< 秒単位の角度からラジアン角への変換係数.
+constexpr double HS2RAD = PI / ( 12*3600L);	///< 秒単位の時角からラジアン角への変換係数.
+constexpr double RAD2DD = 180 / PI;			///< ラジアン角から角度への変換係数.
+constexpr double RAD2HH = 12  / PI;			///< ラジアン角から時角への変換係数.
+constexpr double RAD2DS = (180*3600L) / PI;	///< ラジアン角から秒単位の角度への変換係数.
+constexpr double RAD2HS = ( 12*3600L) / PI;	///< ラジアン角から秒単位の時角への変換係数.
 
-//------------------------------------------------------------------------
-/// 丸め変換 - x を r で剰余を得て [0...r)      の範囲に丸める.
+/*========================================================================
+## 丸め変換
+*/
+/// x を r で剰余を得て [0...r) の範囲に丸める.
+///
 /// example: fmod1(710, 360) => 350
 /// @param x 丸め対象値
 /// @param r 丸め範囲
@@ -37,7 +40,8 @@ constexpr double RAD2HS = ( 12*3600L) / PI;
 /// @attention rは正の数であること
 double fmod1(double x, double r);
 
-/// 丸め変換 - x を r で剰余を得て [-r/2...r/2) の範囲に丸める.
+/// x を r で剰余を得て [-r/2...r/2) の範囲に丸める.
+///
 /// example: fmod2(710, 360) => -10
 /// @param x 丸め対象値
 /// @param r 丸め範囲
@@ -45,35 +49,50 @@ double fmod1(double x, double r);
 /// @attention rは正の数であること
 double fmod2(double x, double r);
 
-//------------------------------------------------------------------------
-/// 四捨五入 - x の小数部を四捨五入して整数を得る.
+/*========================================================================
+## 四捨五入
+*/
+/// x の小数部を四捨五入して整数を得る.
+///
+/// example: round(3.14) => 3
+/// @param x 四捨五入対象値
+/// @return 四捨五入値
 double round(double x);
 
-/// 四捨五入 - x の小数部point-1桁を四捨五入し、小数部をpoint桁に丸める.
+/// x の小数部point-1桁を四捨五入し、小数部をpoint桁に丸める.
+///
+/// example: round(3.14159, 2) => 3.14
+/// @param x 四捨五入対象値
+/// @param point 丸める少数部桁数
+/// @return 四捨五入値
 double round(double x, int point);
 
-//------------------------------------------------------------------------
-/// 秒から度分秒へ変換する - 秒(sec)の値を符号、度分秒(i,m,s)に分ける.
+/*========================================================================
+## 度分秒変換
+*/
+/// 秒単位の角度(sec)の値を符号、度分秒(i,m,s)に分ける.
+///
 /// example: sec2ims(3678.9) => sign:'+', i:1, m:1, s:18.9
-/// @param sec [in] 秒値
+/// @param sec [in] 秒単位の角度
 /// @param sign [out] 符号. '+' or '-'. sec==0 は '+' とする
 /// @param i [out] 度
 /// @param m [out] 分
 /// @param s [out] 秒
 void sec2ims(double sec, char& sign, double& i, double& m, double& s);
-void sec2ims(double sec, char& sign, int&    i, int&    m, double& s);
+void sec2ims(double sec, char& sign, int&    i, int&    m, double& s); ///< @copydoc util::sec2ims()
 
-/// 分から度分へ変換する - 分(min)の値を符号、度分(i,m)に分ける.
+/// 分単位の角度(min)の値を符号、度分(i,m)に分ける.
+///
 /// example: min2im(3678.9) =>  sign:'+', i:61, m:18.9
-/// @param min [in] 分値
+/// @param min [in] 分単位の角度
 /// @param sign [out] 符号. '+' or '-'. min==0 は '+' とする
 /// @param i [out] 度
 /// @param m [out] 分
 void min2im(double min, char& sign, double& i, double& m);
-void min2im(double min, char& sign, int&    i, double& m);
+void min2im(double min, char& sign, int&    i, double& m); ///< @copydoc util::min2im()
 
-//------------------------------------------------------------------------
 /// 度分秒を度の小数にする.
+///
 /// example: dms2dd(1, 30, 36) => 1.51
 /// @param d [in] 度
 /// @param m [in] 分
@@ -84,6 +103,7 @@ inline constexpr double dms2dd(double d, double m=0, double s=0) {
 	return d + m / 60 + s / 3600;
 }
 /// 度分秒を秒単位の角度にする.
+///
 /// example: dms2ds(1, 30, 36) => 5436
 /// @param d [in] 度
 /// @param m [in] 分
@@ -94,6 +114,7 @@ inline constexpr double dms2ds(double d, double m=0, double s=0) {
 	return d * 3600 + m * 60 + s;
 }
 /// 度分秒をラジアン角にする.
+///
 /// example: dms2rad(1, 30, 36) => 5436 * π / (180*3600)
 /// @param d [in] 度
 /// @param m [in] 分
@@ -104,8 +125,11 @@ inline constexpr double dms2rad(double d, double m=0, double s=0) {
 	return dms2ds(d, m, s) * DS2RAD;
 }
 
-//------------------------------------------------------------------------
+/*========================================================================
+## 時分秒変換
+*/
 /// 時分秒を少数付き時間数にする.
+///
 /// example: hms2hh(1, 30, 36) => 1.51
 /// @param h [in] 時
 /// @param m [in] 分
@@ -116,6 +140,7 @@ inline constexpr double hms2hh(double h, double m=0, double s=0) {
 	return h + m / 60 + s / 3600;
 }
 /// 時分秒を秒数にする.
+///
 /// example: hms2hs(1, 30, 36) => 5436
 /// @param h [in] 時
 /// @param m [in] 分
@@ -126,6 +151,7 @@ inline constexpr double hms2hs(double h, double m=0, double s=0) {
 	return h * 3600 + m * 60 + s;
 }
 /// 時分秒をラジアン角にする.
+///
 /// example: hms2rad(1, 30, 36) => 5436 * π / (12*3600)
 /// @param h [in] 時
 /// @param m [in] 分
@@ -136,54 +162,92 @@ inline constexpr double hms2rad(double h, double m=0, double s=0) {
 	return hms2hs(h, m, s) * HS2RAD;
 }
 
-//------------------------------------------------------------------------
+/*========================================================================
+## ラジアン角変換
+*/
 /// 角度 を ラジアン角 にする.
+/// @param dd 角度
+/// @return 角度 * π / 180
 inline constexpr double dd2rad(double dd) { return dd * DD2RAD; }
 /// 時角 を ラジアン角 にする.
+/// @param hh 時角
+/// @return 時角 * π / 12
 inline constexpr double hh2rad(double hh) { return hh * HH2RAD; }
 /// 秒単位の角度 を ラジアン角 にする.
+/// @param ds 秒単位の角度
+/// @return 秒単位の角度 * π / (180*3600)
 inline constexpr double ds2rad(double ds) { return ds * DS2RAD; }
 /// 秒単位の時角 を ラジアン角 にする.
+/// @param hs 秒単位の時角
+/// @return 秒単位の時角 * π / (12*3600)
 inline constexpr double hs2rad(double hs) { return hs * HS2RAD; }
-
-//------------------------------------------------------------------------
 /// ラジアン角 を 角度 にする.
+/// @param rad ラジアン角
+/// @return ラジアン角 * 180 / π
 inline constexpr double rad2dd(double rad) { return rad * RAD2DD; }
 /// ラジアン角 を 時角 にする.
+/// @param rad ラジアン角
+/// @return ラジアン角 * 12 / π
 inline constexpr double rad2hh(double rad) { return rad * RAD2HH; }
 /// ラジアン角 を 秒単位の角度 にする.
+/// @param rad ラジアン角
+/// @return ラジアン角 * 180 / π * 3600
 inline constexpr double rad2ds(double rad) { return rad * RAD2DS; }
 /// ラジアン角 を 秒単位の時角 にする.
+/// @param rad ラジアン角
+/// @return ラジアン角 * 12 / π * 3600
 inline constexpr double rad2hs(double rad) { return rad * RAD2HS; }
 
-//------------------------------------------------------------------------
+/*========================================================================
+## 角度を360度の範囲に丸める
+*/
 /// 角度 を [0...360) の範囲に丸める.
+/// @param dd 角度
+/// @return 角度 を [0...360) の範囲に丸めた値
 inline double dd2mod1(double dd)   { return fmod1(dd, 360); }
 /// 秒単位の角度 を [0...360*3600) の範囲に丸める.
+/// @param ds 秒単位の角度
+/// @return 秒単位の角度 を [0...360*3600) の範囲に丸めた値
 inline double ds2mod1(double ds)   { return fmod1(ds, 360*3600L); }
 /// 時間数 を [0...24) の範囲に丸める.
+/// @param hh 時間数
+/// @return 時間数 を [0...24) の範囲に丸めた値
 inline double hh2mod1(double hh)   { return fmod1(hh, 24); }
 /// 秒数 を [0...24*3600) の範囲に丸める.
+/// @param hs 秒数
+/// @return 秒数 を [0...24*3600) の範囲に丸めた値
 inline double hs2mod1(double hs)   { return fmod1(hs, 24*3600L); }
 /// ラジアン角 を [0...2π) の範囲に丸める.
+/// @param rad ラジアン角
+/// @return ラジアン角 を [0...2π) の範囲に丸めた値
 inline double rad2mod1(double rad) { return fmod1(rad, 2*PI); }
 
-//------------------------------------------------------------------------
+/*========================================================================
+## 角度を±180度の範囲に丸める
+*/
 /// 角度 を [-180...180) の範囲に丸める.
+/// @param dd 角度
+/// @return 角度 を [-180...180) の範囲に丸めた値
 inline double dd2mod2(double dd)   { return fmod2(dd, 360); }
 /// 秒単位の角度 を [-180*3600...180*3600) の範囲に丸める.
+/// @param ds 秒単位の角度
+/// @return 秒単位の角度 を [-180*3600...180*3600) の範囲に丸めた値
 inline double ds2mod2(double ds)   { return fmod2(ds, 360*3600L); }
 /// ラジアン角 を [-π...π) の範囲に丸める.
+/// @param rad ラジアン角
+/// @return ラジアン角 を [-π...π) の範囲に丸めた値
 inline double rad2mod2(double rad) { return fmod2(rad, 2*PI); }
 
-//------------------------------------------------------------------------
+//////////////////////////////////////////////////////////////////////////
 /// 角度クラス.
 class Degree {
 	/// 秒単位の角度[″]  １°の3600倍.
 	double _ds = 0;
 
 public:
-	//----- コンストラクタ -------------------------------------------
+	/*====================================================================
+	## コンストラクタ
+	*/
 	/// デフォルトコンストラクタ.
 	Degree() = default;
 
@@ -222,7 +286,9 @@ public:
 	/// @return 代入後の*this
 	Degree& operator=(const Degree& a) = default;
 
-	//----- 四則演算 -------------------------------------------------
+	/*====================================================================
+	## 四則演算
+	*/
 	/// 単項マイナス.
 	/// @param a 元の角度
 	/// @return 負にした角度
@@ -237,8 +303,8 @@ public:
 	Degree& operator-=(const Degree& a) {
 		_ds -= a._ds; return *this;
 	}
-	friend Degree operator+(const Degree& a, const Degree& b) {
 	/// 加算.
+	friend Degree operator+(const Degree& a, const Degree& b) {
 		return Degree(a._ds + b._ds);
 	}
 	/// 減算.
@@ -266,7 +332,9 @@ public:
 		return Degree(a._ds / k);
 	}
 
-	//----- 関係演算 -------------------------------------------------
+	/*====================================================================
+	## 関係演算
+	*/
 	bool operator==(const Degree& a) const { return _ds == a._ds; } ///< 等値判定.
 	bool operator!=(const Degree& a) const { return _ds != a._ds; } ///< 不等値判定.
 	bool operator< (const Degree& a) const { return _ds <  a._ds; } ///< 小なり判定.
@@ -274,16 +342,22 @@ public:
 	bool operator> (const Degree& a) const { return _ds >  a._ds; } ///< 大なり判定.
 	bool operator>=(const Degree& a) const { return _ds >= a._ds; } ///< 以上判定.
 
-	//----- 正負判定 -------------------------------------------------
+	/*====================================================================
+	## 正負判定
+	*/
 	bool isZero() const  { return _ds == 0; } ///< 0と等しいか?
 	bool isPlus() const  { return _ds > 0;  } ///< 0より大か? @note 0以下の判定は !isPlus()で可能.
 	bool isMinus() const { return _ds < 0;  } ///< 0より小か? @note 0以上の判定は !isMinus()で可能.
 
-	//----- 符号反転、逆数 -------------------------------------------
+	/*====================================================================
+	## 符号反転、逆数
+	*/
 	void setNeg() { _ds = -_ds; }     ///< 符号反転する.
 	void setInv() { _ds = 1 / _ds; }  ///< 逆数にする. @attention 0の場合はゼロ除算発生.
 
-	//----- 角度の丸め -----------------------------------------------
+	/*====================================================================
+	## 角度の丸め
+	*/
 	/// 360度の範囲で角度を丸め、 [0°...360°) とする
 	void mod360() { _ds = fmod1(_ds, 360*3600L); }
 
@@ -304,13 +378,17 @@ public:
 			return false;
 	}
 
-	//----- 角度の定数加算 -------------------------------------------
+	/*====================================================================
+	## 角度の定数加算
+	*/
 	void add180() { _ds += 180 * 3600L; } ///< 180度を加算する.
 	void sub180() { _ds -= 180 * 3600L; } ///< 180度を減算する.
 	void add90()  { _ds +=  90 * 3600L; } ///< 90度を加算する.
 	void sub90()  { _ds -=  90 * 3600L; } ///< 90度を減算する.
 
-	//----- 角度取得・設定 -------------------------------------------
+	/*====================================================================
+	## 角度取得・設定
+	*/
 	/// 角度 [°].         @see setDegree
 	double degree() const    { return _ds / 3600; }
 	void setDegree(double d) { _ds =   d  * 3600; }	///< 角度設定. @param d 設定する @copybrief degree @see degree
@@ -339,7 +417,9 @@ public:
 	double radian() const       { return _ds * DS2RAD; }
 	void setRadian(double rad)  { _ds =  rad * RAD2DS; } ///< ラジアン角設定. @param rad 設定するラジアン角 @see radian
 
-	//----- 角度の度分秒を設定・取得する -----------------------------
+	/*====================================================================
+	## 角度の度分秒を設定・取得する
+	*/
 	/// 度分秒で角度を設定する.
 	/// @param [in] d,m,s 設定する度分秒.
 	void setDms(double d, double m, double s) {
@@ -378,7 +458,9 @@ public:
 		min2im(round(minute(), point), sign, d, m);
 	}
 
-	//----- 時角の時分秒を設定・取得する -----------------------------
+	/*====================================================================
+	## 時角の時分秒を設定・取得する
+	*/
 	/// 時分秒で時角を設定する.
 	/// @param [in] h,m,s 設定する時分秒.
 	void setHms(double h, double m, double s) {
@@ -417,7 +499,9 @@ public:
 		min2im(round(hm(), point), sign, h, m);
 	}
 
-	//----- 文字列化 -------------------------------------------------
+	/*====================================================================
+	## 文字列化
+	*/
 	std::ostream& printDegree(std::ostream& o) const; ///< 角度を出力する.         例: "180.5"
 	std::ostream& printRadian(std::ostream& o) const; ///< ラジアン角を出力する.   例: "3.150319" (180.5/180*π)
 	std::ostream& printDms(std::ostream& o) const;    ///< 角度の度分秒を出力する. 例: "+180d30m0s"
@@ -425,12 +509,30 @@ public:
 	friend std::ostream& operator<<(std::ostream& o, const Degree& a) { /// 度の実数値を出力するストリーム出力演算子.
 		return a.printDegree(o);
 	}
-	int sprintDms(char* buf, const char* fmt, int point=0) const; ///< 角度をmod180で正規化して度分秒を書式展開する. @param fmt 書式. nullptr なら "%c%02dd %02dm %02.0fs"
-	int sprintDm (char* buf, const char* fmt, int point=1) const; ///< 角度をmod180で正規化して度分を書式展開する.   @param fmt 書式. nullptr なら "%c%02dd %04.1fm"
-	int sprintHms(char* buf, const char* fmt, int point=0) const; ///< 時角をmod360で正規化して時分秒を書式展開する. @param fmt 書式. nullptr なら "%02dh %02dm %02.0fs"
-	int sprintHm (char* buf, const char* fmt, int point=1) const; ///< 時角のmod360で正規化して時分を書式展開する.   @param fmt 書式. nullptr なら "%02dh %04.1fm"
+	/// 角度をmod180で正規化して度分秒を書式展開する.
+	/// @param [out] buf 文字列展開先.
+	/// @param [in] fmt 書式. nullptr なら "%c%02dd %02dm %02.0fs"
+	/// @param [in] point 秒の小数部をpoint桁に丸める.
+	int sprintDms(char* buf, const char* fmt, int point=0) const;
+	/// 角度をmod180で正規化して度分を書式展開する.
+	/// @param [out] buf 文字列展開先.
+	/// @param [in] fmt 書式. nullptr なら "%c%02dd %04.1fm"
+	/// @param [in] point 分の小数部をpoint桁に丸める.
+	int sprintDm (char* buf, const char* fmt, int point=1) const;
+	/// 時角をmod360で正規化して時分秒を書式展開する.
+	/// @param [out] buf 文字列展開先.
+	/// @param [in] fmt 書式. nullptr なら "%02dh %02dm %02.0fs"
+	/// @param [in] point 秒の小数部をpoint桁に丸める.
+	int sprintHms(char* buf, const char* fmt, int point=0) const;
+	/// 時角をmod360で正規化して時分を書式展開する.
+	/// @param [out] buf 文字列展開先.
+	/// @param [in] fmt 書式. nullptr なら "%02dh %04.1fm"
+	/// @param [in] point 分の小数部をpoint桁に丸める.
+	int sprintHm (char* buf, const char* fmt, int point=1) const;
 
-	//----- 文字列解析 -----------------------------------------------
+	/*====================================================================
+	## 文字列解析
+	*/
 	/// 度分秒の表記を解析して角度にして返す.
 	/// 表記の解析パターン: 空白と省略可能な符号"+"/"-" に続いて "DD?MM'SS" or "DDdMMmSS" or "DD MM SS" or "DD?MM" or "DDMMSS" or "DD.DDD"
 	/// @param [in] p 解析文字列バッファ.
@@ -440,17 +542,21 @@ public:
 	/// @param [in] p 解析文字列バッファ.
 	static Degree parseHms(const char* p);
 
-	//----- 三角関数 -------------------------------------------------
+	/*====================================================================
+	## 三角関数
+	*/
 	friend double sin(const Degree& a)   { return std::sin(a.radian()); }	///< sin関数のオーバロード. @return sin(a)
 	friend double cos(const Degree& a)   { return std::cos(a.radian()); }	///< cos関数のオーバロード. @return cos(a)
 	friend double tan(const Degree& a)   { return std::tan(a.radian()); }	///< tan関数のオーバロード. @return tan(a)
-	void setArcSin(double x)             { setRadian(std::asin(x)); }		///< *this = arcsin(x)
-	void setArcCos(double x)             { setRadian(std::acos(x)); }		///< *this = arccos(x
-	void setArcTan(double x)             { setRadian(std::atan(x)); }		///< *this = arctan(x)
-	void setArcTan2(double y, double x)  { setRadian(std::atan2(y, x)); }	///< *this = atan2(y,x)
+	void setArcSin(double x)             { setRadian(std::asin(x)); }		///< *this = @f$ \arcsin(x) @f$
+	void setArcCos(double x)             { setRadian(std::acos(x)); }		///< *this = @f$ \arccos(x) @f$
+	void setArcTan(double x)             { setRadian(std::atan(x)); }		///< *this = @f$ \arctan(x) @f$
+	void setArcTan2(double y, double x)  { setRadian(std::atan2(y, x)); }	///< *this = @f$ \arctan2(y,x) @f$
 };//endclass Degree
 
 /// 緯度経度の値を、緯度±90度、経度±180度に正規化する
+/// @param lt 緯度
+/// @param lg 経度
 inline void normLtLg(Degree& lt, Degree& lg) {
 	if (lt.mod90())
 		lg.add180();
@@ -458,17 +564,18 @@ inline void normLtLg(Degree& lt, Degree& lg) {
 }
 
 /// 赤経赤緯の値を、赤緯±90度、赤経0～360度に正規化する
+/// @param ra 赤経
+/// @param dec 赤緯
 inline void normRaDec(Degree& ra, Degree& dec) {
 	if (dec.mod90())
 		ra.add180();
 	ra.mod360();
 }
 
-//------------------------------------------------------------------------
+//////////////////////////////////////////////////////////////////////////
 /// 時角クラス.
 class HourAngle : public Degree {
 public:
-	//----- コンストラクタ -------------------------------------------
 	/// コンストラクタ - 時角で初期化.
 	/// @param h 時
 	/// @param m 分
@@ -482,11 +589,10 @@ public:
 		: Degree(hs * 15) {}
 };//endclass HourAngle
 
-//------------------------------------------------------------------------
+//////////////////////////////////////////////////////////////////////////
 /// ラジアン角クラス.
 class Radian : public Degree {
 public:
-	//----- コンストラクタ -------------------------------------------
 	/// コンストラクタ - ラジアン角で初期化.
 	/// @param rad ラジアン角
 	Radian(double rad)
