@@ -54,11 +54,9 @@ Mat3x3::setRotate(const Degree& angle, int axis)
 Mat3x3&
 Mat3x3::operator+=(const Mat3x3& m)
 {
-	#define M(N)	m##N += m.m##N
-	M(11); M(12); M(13);
-	M(21); M(22); M(23);
-	M(31); M(32); M(33);
-	#undef  M
+	m11 += m.m11; m12 += m.m12; m13 += m.m13;
+	m21 += m.m21; m22 += m.m22; m23 += m.m23;
+	m31 += m.m31; m32 += m.m32; m33 += m.m33;
 	return *this;
 }
 
@@ -66,11 +64,9 @@ Mat3x3::operator+=(const Mat3x3& m)
 Mat3x3&
 Mat3x3::operator-=(const Mat3x3& m)
 {
-	#define M(N)	m##N -= m.m##N
-	M(11); M(12); M(13);
-	M(21); M(22); M(23);
-	M(31); M(32); M(33);
-	#undef  M
+	m11 -= m.m11; m12 -= m.m12; m13 -= m.m13;
+	m21 -= m.m21; m22 -= m.m22; m23 -= m.m23;
+	m31 -= m.m31; m32 -= m.m32; m33 -= m.m33;
 	return *this;
 }
 
@@ -78,11 +74,9 @@ Mat3x3::operator-=(const Mat3x3& m)
 Mat3x3&
 Mat3x3::operator*=(double k)
 {
-	#define M(N)	m##N *= k
-	M(11); M(12); M(13);
-	M(21); M(22); M(23);
-	M(31); M(32); M(33);
-	#undef  M
+	m11 *= k; m12 *= k; m13 *= k;
+	m21 *= k; m22 *= k; m23 *= k;
+	m31 *= k; m32 *= k; m33 *= k;
 	return *this;
 }
 
@@ -90,11 +84,9 @@ Mat3x3::operator*=(double k)
 Mat3x3&
 Mat3x3::operator/=(double k)
 {
-	#define M(N)	m##N /= k
-	M(11); M(12); M(13);
-	M(21); M(22); M(23);
-	M(31); M(32); M(33);
-	#undef  M
+	m11 /= k; m12 /= k; m13 /= k;
+	m21 /= k; m22 /= k; m23 /= k;
+	m31 /= k; m32 /= k; m33 /= k;
 	return *this;
 }
 
@@ -102,15 +94,16 @@ Mat3x3::operator/=(double k)
 Mat3x3&
 Mat3x3::operator*=(const Mat3x3& m)
 {
-	#define M(L,C) \
-		m##L##C = a.m##L##1 * m.m1##C \
-		        + a.m##L##2 * m.m2##C \
-		        + a.m##L##3 * m.m3##C
-	Mat3x3 a(*this);
-	M(1,1); M(1,2); M(1,3);
-	M(2,1); M(2,2); M(2,3);
-	M(3,1); M(3,2); M(3,3);
-	#undef  M
+	const Mat3x3 a(*this);
+	m11 = a.m11 * m.m11 + a.m12 * m.m21 + a.m13 * m.m31;
+	m12 = a.m11 * m.m12 + a.m12 * m.m22 + a.m13 * m.m32;
+	m13 = a.m11 * m.m13 + a.m12 * m.m23 + a.m13 * m.m33;
+	m21 = a.m21 * m.m11 + a.m22 * m.m21 + a.m23 * m.m31;
+	m22 = a.m21 * m.m12 + a.m22 * m.m22 + a.m23 * m.m32;
+	m23 = a.m21 * m.m13 + a.m22 * m.m23 + a.m23 * m.m33;
+	m31 = a.m31 * m.m11 + a.m32 * m.m21 + a.m33 * m.m31;
+	m32 = a.m31 * m.m12 + a.m32 * m.m22 + a.m33 * m.m32;
+	m33 = a.m31 * m.m13 + a.m32 * m.m23 + a.m33 * m.m33;
 	return *this;
 }
 
