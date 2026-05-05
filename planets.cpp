@@ -680,25 +680,25 @@ plutoR[] = {
 
 /// 計算集計
 /// @param T J2000.0[TDT]からのユリウス世紀
-/// @param data データ項目
-/// @param n    データ項目数
+/// @param array データ配列
 /// @return 動径[AU]
-static double sumR(double T, const PlanetData* data, size_t n) {
+template<size_t N> double sumR(double T, const PlanetData (&array)[N]) {
     double x = 0;
-    while (n--)
-        x += (*data++)(T);
+    for (auto& e : array) {
+        x += e(T);
+    }
     return x;
 }
 
 /// 計算集計
 /// @param T J2000.0[TDT]からのユリウス世紀
-/// @param data データ項目
-/// @param n    データ項目数
+/// @param array データ配列
 /// @return 角度
-static Degree sumDeg(double T, const PlanetData* data, size_t n) {
+template<size_t N> Degree sumDeg(double T, const PlanetData (&array)[N]) {
     double x = 0;
-    while (n--)
-        x += dd2mod2((*data++)(T));
+    for (auto& e : array) {
+        x += dd2mod2(e(T));
+    }
     return Degree(x * 3600);
 }
 
@@ -737,8 +737,8 @@ Planets::conv(double r, Degree b, Degree l, Degree c) const
 void
 Planets::calc(const AstroCoordinate& acoord)
 {
-    #define SUMR(array)         sumR(T, array, ELEMENTS_OF(array))
-    #define DEG(array)          sumDeg(T, array, ELEMENTS_OF(array))
+    #define SUMR(array)         sumR(T, array)
+    #define DEG(array)          sumDeg(T, array)
     #define CONV(name, c)       conv(SUMR(name##R), DEG(name##B), DEG(name##L), Degree(c * 3600))
 
     // T = J2000.0からのユリウス世紀[TT]

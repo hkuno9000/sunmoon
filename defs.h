@@ -68,12 +68,4 @@ public: NullPointer(const char* msg) : std::logic_error(msg) {}
 
 #define NULLCHECK(p) { if (p == nullptr) throw NullPointer(""); }
 
-//------------------------------------------------------------------------
-//. macros
-//------------------------------------------------------------------------
-
-/// ELEMENTS_OF - 配列要素数の取得
-#define ELEMENTS_OF(array) \
-	(sizeof(array) / sizeof(array[0]))
-
 #endif // DEFS_H_
